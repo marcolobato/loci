@@ -9,6 +9,8 @@ import Note from './components/Note.jsx'
 import Caption from './components/Caption.jsx'
 import Icon from './components/Icon.jsx'
 import Button from './components/Button.jsx'
+import Backdrop from './components/Backdrop.jsx'
+import granite from './assets/granite-dusk.webp'
 
 // The four Button states for the "live" variant.
 // previewState lets the catalog show focus and pressed without a keyboard or finger.
@@ -73,6 +75,18 @@ function Catalog() {
         <div className="stack-tight">
           <Caption>default</Caption>
           <Caption>6:42 PM · 41.38° N · wind 14 km/h</Caption>
+        </div>
+      </section>
+
+      {/* Backdrop: shown inside a small box; on a screen it fills the whole screen. */}
+      <section className="stack-loose">
+        <Label as="h2">Backdrop</Label>
+        <div className="stack-tight">
+          <Caption>granite · 80% scrim</Caption>
+          <div className="page has-backdrop">
+            <Backdrop image={granite} />
+            <Note tone="soft">Nothing kept yet. Your first moment starts here.</Note>
+          </div>
         </div>
       </section>
 

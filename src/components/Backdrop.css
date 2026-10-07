@@ -1,0 +1,17 @@
+/*
+  Fills its "has-backdrop" container, behind the content.
+  Two background layers, drawn top to bottom:
+    1. the scrim (--scrim, 80% dark), as a flat "gradient" of one color
+    2. the texture image, scaled to cover and centered
+  Contrast was measured over the image's lightest pixel; see design/tokens.json.
+*/
+.backdrop {
+  position: absolute;
+  inset: 0;          /* top, right, bottom, left all at the container's edges */
+  z-index: -1;       /* behind the content */
+  background-image:
+    linear-gradient(var(--scrim), var(--scrim)),
+    var(--backdrop-image);
+  background-size: cover;
+  background-position: center;
+}
