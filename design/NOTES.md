@@ -30,6 +30,15 @@ Ser is the stone and never changes. Estar is the light on it, and it fades with 
 On `stone.brand` #17353B: every text color passes AA (4.5). Lowest is `afterglow.month` at 4.90.
 On `stone.paper` #F3F5F2: lowest is `warm-on-paper` at 4.83. Passes AA, not AAA.
 
+Over the granite texture (Capture screen), measured at the image's lightest pixel (#FFFFFF):
+| Scrim | Background there | Label (#A9BEC0) | Note soft (#C9D6D8) | Live button (#A8E6CF) |
+|---|---|---|---|---|
+| none | #FFFFFF | 1.94 ✗ | 1.49 ✗ | 1.41 ✗ |
+| 72% (card-on-texture) | #4F5A5F | 3.64 ✗ | 4.75 | 5.02 |
+| **80% (screen-on-texture, used)** | **#3C484D** | **4.87** | **6.35** | **6.70** |
+
+Text needs 4.5, the button needs 3. Blending is in sRGB, the way browsers draw it.
+
 ## Images
 Originals live in `design/originals/` on this computer only (git ignores them). Optimized copies go in `src/assets/`.
 

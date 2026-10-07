@@ -42,6 +42,7 @@
 
   /* ---------- Color: overlays ---------- */
   --overlay-card-on-texture:  rgba(11, 26, 33, 0.72);   /* gallery row over granite */
+  --overlay-screen-on-texture: rgba(11, 26, 33, 0.8);   /* full screen over granite: texture shows at 20% */
   --overlay-divider-on-light: rgba(23, 53, 59, 0.15);
   --overlay-divider-on-dark:  rgba(255, 255, 255, 0.12);
 
@@ -168,4 +169,5 @@
   --live:         var(--light-live);            /* capture and recording ONLY */
   --on-live:      var(--light-on-live);
   --focus:        var(--light-cold);            /* keyboard focus ring */
+  --scrim:        var(--overlay-screen-on-texture); /* dark layer between a texture and text */
 }
