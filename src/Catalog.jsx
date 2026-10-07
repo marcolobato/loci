@@ -8,14 +8,13 @@ import Label from './components/Label.jsx'
 import Note from './components/Note.jsx'
 import Caption from './components/Caption.jsx'
 import Icon from './components/Icon.jsx'
-import Button from './components/Button.jsx'
 import Shutter from './components/Shutter.jsx'
 import Backdrop from './components/Backdrop.jsx'
 import granite from './assets/granite-dusk.webp'
 
-// The four states, shared by Button and Shutter.
+// The four Shutter states.
 // previewState lets the catalog show focus and pressed without a keyboard or finger.
-const buttonStates = [
+const shutterStates = [
   { name: 'Default' },
   { name: 'Focus', previewState: 'focus' },
   { name: 'Pressed', previewState: 'pressed' },
@@ -27,28 +26,11 @@ function Catalog() {
     <main className="page stack-loose">
       <Label as="h1">Loci · Component catalog · Sample</Label>
 
-      {/* Button */}
-      <section className="stack-loose">
-        <Label as="h2">Button</Label>
-        {buttonStates.map((state) => (
-          <div key={state.name} className="stack-tight">
-            <Caption>live · {state.name}</Caption>
-            <Button
-              variant="live"
-              icon="record"
-              label={`Record (${state.name} sample)`}
-              disabled={state.disabled}
-              previewState={state.previewState}
-            />
-          </div>
-        ))}
-      </section>
-
       {/* Shutter: both sizes, each in all four states. */}
       <section className="stack-loose">
         <Label as="h2">Shutter</Label>
         {['large', 'inline'].map((size) =>
-          buttonStates.map((state) => (
+          shutterStates.map((state) => (
             <div key={`${size}-${state.name}`} className="stack-tight">
               <Caption>{size} · {state.name}</Caption>
               <Shutter

@@ -31,7 +31,6 @@
   --light-warm:          #EDB48F;  /* warm light, 7.16:1 on brand */
   --light-warm-on-paper: #A5562A;  /* warm for the light theme, 4.83:1 on paper */
   --light-live:          #A8E6CF;  /* mint: ONLY capture button and recording */
-  --light-on-live:       #0B1A21;  /* icon or text on mint, 12.57:1 */
 
   /* ---------- Color: afterglow (a capture's color = its age) ---------- */
   --afterglow-now:   #EDB48F;
@@ -142,7 +141,6 @@
   --space-inline:       var(--space-xs);  /*  8px: things side by side */
 
   /* ---------- Sizes (same 4px base unit) ---------- */
-  --size-record-button: 4rem;      /* 64px = 16 x 4; above the 44px touch minimum */
   --size-icon:          1.5rem;    /* 24px = 6 x 4 */
   --size-focus-ring:    0.125rem;  /*  2px: keyboard focus outline */
 
@@ -161,7 +159,6 @@
   --size-shutter-gap-inline:    0.1875rem;  /*  3px, exception */
 
   /* ---------- Opacity for states ---------- */
-  --opacity-pressed:  0.8;  /* finger is on it (not the Shutter: it scales) */
   --opacity-disabled: 0.4;  /* cannot be used right now */
 
   /* ---------- Opacity for motion (exact, from the spec) ---------- */
@@ -220,7 +217,6 @@
   --accent-warm:  var(--light-warm);            /* warm light, new moments */
   --accent-cold:  var(--light-cold);            /* cold light, the "o" */
   --live:         var(--light-live);            /* capture and recording ONLY */
-  --on-live:      var(--light-on-live);
   --focus:        var(--light-cold);            /* keyboard focus ring */
   --scrim:        var(--overlay-screen-on-texture); /* dark layer between a texture and text */
 }

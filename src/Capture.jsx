@@ -3,7 +3,7 @@
 // The button does nothing yet.
 import Label from './components/Label.jsx'
 import Note from './components/Note.jsx'
-import Button from './components/Button.jsx'
+import Shutter from './components/Shutter.jsx'
 import Backdrop from './components/Backdrop.jsx'
 import granite from './assets/granite-dusk.webp'
 
@@ -22,8 +22,9 @@ function Capture() {
       {/* Middle: the empty state. Tells people nothing is here yet, and where to start. */}
       <Note tone="soft">Nothing kept yet. Your first moment starts here.</Note>
 
-      {/* Bottom: the record button, where a thumb reaches. */}
-      <Button variant="live" icon="record" label="Record" />
+      {/* Bottom: the Shutter, where a thumb reaches. It pulses and breathes
+          while idle (spec); recording will need its own signal (see SHELF.md). */}
+      <Shutter size="large" label="Capture moment" />
     </main>
   )
 }
