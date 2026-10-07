@@ -46,6 +46,12 @@
   --overlay-divider-on-light: rgba(23, 53, 59, 0.15);
   --overlay-divider-on-dark:  rgba(255, 255, 255, 0.12);
 
+  /* ---------- Color: glows for motion (exact, from design/shutter-afterglow.md) ---------- */
+  --glow-live:        rgba(168,230,207,.45);  /* shutter pulse start: mint at 45% */
+  --glow-live-end:    rgba(168,230,207,0);    /* shutter pulse end: mint, clear */
+  --glow-warm-strong: rgba(237,180,143,.55);  /* afterglow shadow, 0%–12% */
+  --glow-warm-soft:   rgba(237,180,143,.25);  /* afterglow shadow, 45% */
+
   /* ---------- Font families ---------- */
   --font-serif: 'Source Serif 4', serif;        /* words */
   --font-mono:  'Source Code Pro', monospace;   /* data */
@@ -140,9 +146,56 @@
   --size-icon:          1.5rem;    /* 24px = 6 x 4 */
   --size-focus-ring:    0.125rem;  /*  2px: keyboard focus outline */
 
+  --size-hit-target:    3rem;      /* 48px = 12 x 4: smallest tappable area */
+
+  /*
+    ---------- Shutter sizes (exact, from design/shutter-afterglow.md) ----------
+    rem = px / 16, exact, not rounded.
+    Stroke and gap are named exceptions to the 4px base unit.
+  */
+  --size-shutter-ring:          4.75rem;    /* 76px = 19 x 4, large */
+  --size-shutter-ring-inline:   2.75rem;    /* 44px = 11 x 4, inline; tap area padded to 48 */
+  --size-shutter-stroke:        0.1875rem;  /*  3px, exception */
+  --size-shutter-stroke-inline: 0.125rem;   /*  2px, exception */
+  --size-shutter-gap:           0.3125rem;  /*  5px, exception */
+  --size-shutter-gap-inline:    0.1875rem;  /*  3px, exception */
+
   /* ---------- Opacity for states ---------- */
-  --opacity-pressed:  0.8;  /* finger is on it */
+  --opacity-pressed:  0.8;  /* finger is on it (not the Shutter: it scales) */
   --opacity-disabled: 0.4;  /* cannot be used right now */
+
+  /* ---------- Opacity for motion (exact, from the spec) ---------- */
+  --opacity-afterglow-cool:   .8;   /* afterglow at 80% */
+  --opacity-afterglow-dim:    .5;   /* afterglow at 100% */
+  --opacity-decay-end:        .1;   /* decay at 70%–100% */
+  --opacity-afterimage-start: .55;  /* ghost at 0% */
+
+  /*
+    ---------- Motion (exact, from design/shutter-afterglow.md) ----------
+    With prefers-reduced-motion: reduce, every animation stops and each
+    element shows its still look (afterglow shows --afterglow-now).
+  */
+  --duration-press:      120ms;  /* shutter disc shrinks on press */
+  --duration-pulse:      2.4s;   /* shutter pulse and breathe */
+  --duration-afterglow:  6s;     /* warm → cold → dim */
+  --duration-decay:      6s;     /* spec heading says <2s; values say 6s. Values used. */
+  --duration-afterimage: 3.2s;   /* cold ghost drifts off */
+  --delay-decay-step:    0.45s;  /* per letter, last letter first */
+
+  --ease-press:  cubic-bezier(.2,0,0,1);
+  --ease-out:    ease-out;       /* pulse, afterimage */
+  --ease-in-out: ease-in-out;    /* breathe, afterglow, decay */
+
+  --scale-pressed: .86;  /* shutter disc while pressed */
+  --scale-breathe: .94;  /* shutter disc mid-breath */
+
+  /* Effect distances, kept in px exactly as the spec gives them. */
+  --distance-pulse-spread:     12px;
+  --distance-glow-strong:      22px;
+  --distance-glow-soft:        10px;
+  --distance-decay-blur:       3px;
+  --distance-afterimage-blur:  7px;
+  --distance-afterimage-drift: 22px;
 }
 
 /*
