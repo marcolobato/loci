@@ -108,3 +108,28 @@
   --type-label-tracking:  0.12em;
   --type-label-transform: uppercase;
 }
+
+/*
+  ---------- Semantic layer ----------
+  Names that say what a color is FOR, not what it looks like.
+  Components use these, not the raw tokens above.
+  This is the dark theme. A light theme would point the same names
+  at paper and dark ink, and no component would need to change.
+*/
+:root {
+  --bg:           var(--stone-brand);           /* page background */
+  --bg-deep:      var(--stone-ground);          /* splash, darkest areas */
+  --surface:      var(--stone-raised);          /* cards, panels */
+  --border:       var(--stone-line);
+  --divider:      var(--overlay-divider-on-dark);
+
+  --text:         var(--text-on-dark-body);     /* default text */
+  --text-strong:  var(--text-on-dark-title);    /* titles */
+  --text-soft:    var(--text-on-dark-soft);     /* long reading */
+  --text-muted:   var(--text-on-dark-caption);  /* captions, time, data */
+
+  --accent-warm:  var(--light-warm);            /* warm light, new moments */
+  --accent-cold:  var(--light-cold);            /* cold light, the "o" */
+  --live:         var(--light-live);            /* capture and recording ONLY */
+  --on-live:      var(--light-on-live);
+}
