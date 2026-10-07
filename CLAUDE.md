@@ -29,7 +29,7 @@ Each screen must name the pattern it shows. Keep this table current.
 | Playback with scrubber | Replay | planned |
 | The five states (ideal, empty, error, partial, loading) | All | planned |
 | Offline first | App | planned |
-| Type scale in use | All | planned |
+| Type scale in use | All | done |
 
 One pattern per working session. New ideas go on the shelf (SHELF.md), not into the week.
 
