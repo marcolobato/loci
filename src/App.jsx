@@ -15,16 +15,21 @@ const styles = [
 
 function App() {
   return (
-    <main>
+    // page: inset from the screen edge. stack-loose: 32px between the label and the list.
+    <main className="page stack-loose">
       <p className="type-label">Type scale · Sample</p>
 
-      {/* For each style: its name (as a caption), then the sample line in that style. */}
-      {styles.map((style) => (
-        <section key={style.name}>
-          <p className="type-caption">{style.name}</p>
-          <p className={style.className}>{style.text}</p>
-        </section>
-      ))}
+      {/* stack-normal: 16px between styles. */}
+      <div className="stack-normal">
+        {/* For each style: its name (as a caption), then the sample line in that style.
+            stack-tight: 8px between the name and its sample, so they read as a pair. */}
+        {styles.map((style) => (
+          <section key={style.name} className="stack-tight">
+            <p className="type-caption">{style.name}</p>
+            <p className={style.className}>{style.text}</p>
+          </section>
+        ))}
+      </div>
     </main>
   )
 }

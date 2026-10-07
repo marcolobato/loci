@@ -107,6 +107,32 @@
   --type-label-leading:   1.4;
   --type-label-tracking:  0.12em;
   --type-label-transform: uppercase;
+
+  /*
+    ---------- Spacing ----------
+    Base unit: 4px = 0.25rem (because 1rem = 16px, and 16 / 4 = 4).
+    Each step = base unit x a whole number:
+       4px = 1 x 4  = 0.25rem
+       8px = 2 x 4  = 0.5rem
+      16px = 4 x 4  = 1rem
+      24px = 6 x 4  = 1.5rem
+      32px = 8 x 4  = 2rem
+      48px = 12 x 4 = 3rem
+    The scale below is the raw set. Components use the role names after it.
+  */
+  --space-2xs: 0.25rem;  /*  4px */
+  --space-xs:  0.5rem;   /*  8px */
+  --space-s:   1rem;     /* 16px */
+  --space-m:   1.5rem;   /* 24px */
+  --space-l:   2rem;     /* 32px */
+  --space-xl:  3rem;     /* 48px */
+
+  /* Spacing by role */
+  --space-page-inset:   var(--space-s);   /* 16px: screen edge to content */
+  --space-stack-tight:  var(--space-xs);  /*  8px: things that belong together */
+  --space-stack-normal: var(--space-s);   /* 16px: items in a list */
+  --space-stack-loose:  var(--space-l);   /* 32px: between sections */
+  --space-inline:       var(--space-xs);  /*  8px: things side by side */
 }
 
 /*

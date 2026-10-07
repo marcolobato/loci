@@ -10,7 +10,32 @@ body {
   font-size: var(--type-note-size);
   line-height: var(--type-note-leading);
   letter-spacing: var(--type-note-tracking);
+  margin: 0; /* remove the browser's default 8px; .page sets the edge instead */
 }
+
+/* Remove the browser's default paragraph margins, so only the stack tokens set space. */
+p {
+  margin: 0;
+}
+
+/* Space between the screen edge and the content. */
+.page {
+  padding: var(--space-page-inset);
+}
+
+/*
+  Stacks: put children in a column with an even gap between them.
+  "gap" only adds space BETWEEN children, never before the first or after the last.
+*/
+.stack-tight,
+.stack-normal,
+.stack-loose {
+  display: flex;
+  flex-direction: column;
+}
+.stack-tight  { gap: var(--space-stack-tight); }
+.stack-normal { gap: var(--space-stack-normal); }
+.stack-loose  { gap: var(--space-stack-loose); }
 
 /*
   Type styles. One class per style in design/tokens.json.
