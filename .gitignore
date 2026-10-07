@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Original full-size images. Kept on this computer only; optimized copies go in src/assets/.
+design/originals/
