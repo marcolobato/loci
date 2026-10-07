@@ -138,6 +138,10 @@
   --size-record-button: 4rem;      /* 64px = 16 x 4; above the 44px touch minimum */
   --size-icon:          1.5rem;    /* 24px = 6 x 4 */
   --size-focus-ring:    0.125rem;  /*  2px: keyboard focus outline */
+
+  /* ---------- Opacity for states ---------- */
+  --opacity-pressed:  0.8;  /* finger is on it */
+  --opacity-disabled: 0.4;  /* cannot be used right now */
 }
 
 /*
@@ -163,4 +167,5 @@
   --accent-cold:  var(--light-cold);            /* cold light, the "o" */
   --live:         var(--light-live);            /* capture and recording ONLY */
   --on-live:      var(--light-on-live);
+  --focus:        var(--light-cold);            /* keyboard focus ring */
 }
