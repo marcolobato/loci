@@ -30,6 +30,16 @@ Ser is the stone and never changes. Estar is the light on it, and it fades with 
 On `stone.brand` #17353B: every text color passes AA (4.5). Lowest is `afterglow.month` at 4.90.
 On `stone.paper` #F3F5F2: lowest is `warm-on-paper` at 4.83. Passes AA, not AAA.
 
+## Images
+Originals live in `design/originals/` on this computer only (git ignores them). Optimized copies go in `src/assets/`.
+
+| Copy | From original | Pixels | Size | Settings |
+|---|---|---|---|---|
+| `src/assets/granite-dusk.webp` | `lobato_A_photograph_of_a_rough_granite_textured_wall_at_dusk…_2.png` (816 × 1456, 2,296 KB) | 816 × 1456 | 188 KB | `cwebp -q 75 -m 6 -metadata none` |
+
+- Not enlarged: the original is under the 1170 px limit, and enlarging adds weight, not detail.
+- **Source: AI-generated.** This granite image was made with an image generator, not taken by me. It is a background texture only. It is not a capture and must never appear as one.
+
 ## Decided
 1. **Background color.** `#17353B` replaces the dusk placeholder `#1B1A2E`.
 2. **Off-scale sizes.** Core sizes 13, 16, 20, 25 follow the 1.25 ratio. Display 48, Moment 19 and Label 12 are named exceptions (reasons in CLAUDE.md).
