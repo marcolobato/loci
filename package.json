@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "oxlint",
+    "check:tokens": "node scripts/check-tokens.js",
     "preview": "vite preview"
   },
   "dependencies": {
