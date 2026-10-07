@@ -133,6 +133,11 @@
   --space-stack-normal: var(--space-s);   /* 16px: items in a list */
   --space-stack-loose:  var(--space-l);   /* 32px: between sections */
   --space-inline:       var(--space-xs);  /*  8px: things side by side */
+
+  /* ---------- Sizes (same 4px base unit) ---------- */
+  --size-record-button: 4rem;      /* 64px = 16 x 4; above the 44px touch minimum */
+  --size-icon:          1.5rem;    /* 24px = 6 x 4 */
+  --size-focus-ring:    0.125rem;  /*  2px: keyboard focus outline */
 }
 
 /*
