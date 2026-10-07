@@ -1,0 +1,41 @@
+/* ---------- Base: what every button shares ---------- */
+.button {
+  border: none;
+  padding: 0;
+  display: grid;
+  place-items: center;   /* centers the icon */
+  cursor: pointer;
+}
+
+/* ---------- Variant: live (mint capture button) ---------- */
+.button--live {
+  width: var(--size-record-button);
+  height: var(--size-record-button);
+  border-radius: 50%;    /* a circle */
+  background: var(--live);
+  color: var(--on-live); /* paints the icon, through currentColor */
+}
+
+/* ---------- States ----------
+   Each state has two triggers: the real one (a pseudo-class like :active)
+   and a class (like .is-pressed) the catalog uses to show it on demand. */
+
+/* Focus: a cold-light ring, only when focus came from a keyboard.
+   :focus-visible skips the ring on a tap, where it would only be noise. */
+.button:focus-visible,
+.button.is-focus {
+  outline: var(--size-focus-ring) solid var(--focus);
+  outline-offset: var(--size-focus-ring);
+}
+
+/* Pressed: a small dip while a finger is on it. */
+.button:active:not(:disabled),
+.button.is-pressed {
+  opacity: var(--opacity-pressed);
+}
+
+/* Disabled: faded, and the cursor says "not now". */
+.button:disabled {
+  opacity: var(--opacity-disabled);
+  cursor: not-allowed;
+}

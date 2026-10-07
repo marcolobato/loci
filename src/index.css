@@ -13,9 +13,22 @@ body {
   margin: 0; /* remove the browser's default 8px; .page sets the edge instead */
 }
 
-/* Remove the browser's default paragraph margins, so only the stack tokens set space. */
-p {
+/* Remove the browser's default paragraph and heading margins, so only the stack tokens set space. */
+p,
+h1,
+h2 {
   margin: 0;
+}
+
+/* Softer text color, for long reading and empty states. */
+.text-soft {
+  color: var(--text-soft);
+}
+
+/* Icons (components/Icon.jsx) take their size from the token and their color from the text around them. */
+.icon {
+  width: var(--size-icon);
+  height: var(--size-icon);
 }
 
 /* Space between the screen edge and the content. */
