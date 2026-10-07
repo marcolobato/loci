@@ -51,6 +51,43 @@ h2 {
 .stack-loose  { gap: var(--space-stack-loose); }
 
 /*
+  Screen frame: fills the whole screen with three rows.
+  Top (e.g. a label), middle (the content), bottom (e.g. the main button).
+  - Rows "auto 1fr auto": top and bottom take only the room they need;
+    the middle row takes all the space left over.
+  - 100dvh = the full screen height, even when a phone's address bar
+    slides in or out. 100vh is a fallback for older browsers.
+  - box-sizing: border-box keeps the page inset inside that height,
+    so the screen never scrolls just because of its own padding.
+*/
+.screen-frame {
+  min-height: 100vh;
+  min-height: 100dvh;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: var(--space-stack-loose);   /* keeps rows apart on short screens */
+  justify-items: center;           /* centers each row left to right */
+  align-items: center;             /* centers the middle row top to bottom
+                                      (top and bottom rows are only as tall as their content) */
+  text-align: center;
+  /* Safe area: on phones with a home bar, env(safe-area-inset-bottom) is the
+     height of that bar. Adding it to the page inset keeps the record button
+     clear of it. On screens without one, it is 0 and nothing changes. */
+  padding-bottom: calc(var(--space-page-inset) + env(safe-area-inset-bottom, 0rem));
+}
+
+/*
+  Has backdrop: a container that holds a Backdrop behind its content.
+  isolation: isolate keeps the Backdrop's z-index: -1 inside this container,
+  so it sits behind the content but never behind the page itself.
+*/
+.has-backdrop {
+  position: relative;
+  isolation: isolate;
+}
+
+/*
   Type styles. One class per style in design/tokens.json.
   Add a class to any element to give it that style,
   e.g. <p className="type-caption">.
