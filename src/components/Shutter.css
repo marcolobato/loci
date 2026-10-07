@@ -1,0 +1,101 @@
+/*
+  Shutter. Three layers:
+    .shutter        the <button>: the tap area, at least 48px, invisible
+    .shutter__ring  the outline ring; its padding is the gap
+    .shutter__disc  the mint disc that fills the space inside the gap
+  Values come from design/shutter-afterglow.md, through tokens.
+*/
+
+/* ---------- Tap area ---------- */
+.shutter {
+  width: max-content;                  /* as wide as the ring, never stretched by a column */
+  min-width: var(--size-hit-target);   /* never under 48px, even when the ring is 44 */
+  min-height: var(--size-hit-target);
+  border: none;
+  padding: 0;
+  background: none;
+  border-radius: 50%;                  /* so the focus ring is round too */
+  display: grid;
+  place-items: center;                 /* centers the ring in the tap area */
+  cursor: pointer;
+}
+
+/* ---------- Ring ---------- */
+.shutter__ring {
+  box-sizing: border-box;              /* size includes the stroke and gap */
+  border-radius: 50%;
+  border-style: solid;
+  border-color: var(--stone-mist);
+  background: transparent;             /* the gap shows the ground through */
+  display: grid;
+  animation: pulse var(--duration-pulse) var(--ease-out) infinite;
+}
+
+.shutter--large .shutter__ring {
+  width: var(--size-shutter-ring);
+  height: var(--size-shutter-ring);
+  border-width: var(--size-shutter-stroke);
+  padding: var(--size-shutter-gap);
+}
+
+.shutter--inline .shutter__ring {
+  width: var(--size-shutter-ring-inline);
+  height: var(--size-shutter-ring-inline);
+  border-width: var(--size-shutter-stroke-inline);
+  padding: var(--size-shutter-gap-inline);
+}
+
+/* ---------- Disc ---------- */
+.shutter__disc {
+  border-radius: 50%;
+  background: var(--live);
+  animation: breathe var(--duration-pulse) var(--ease-in-out) infinite;
+}
+
+/* ---------- States ----------
+   Each state has the real trigger and a catalog class (.is-focus, .is-pressed). */
+
+/* Focus: a cold-light ring (--focus). Only for keyboard focus. */
+.shutter:focus-visible,
+.shutter.is-focus {
+  outline: var(--size-focus-ring) solid var(--focus);
+  outline-offset: var(--size-focus-ring);
+}
+
+/*
+  Pressed: the disc shrinks to .86 in 120ms.
+  The spec writes this as transform: scale(.86). But the breathe animation
+  also sets transform, and a running animation always wins, so the press
+  would never show. The separate "scale" property stacks with transform
+  instead of replacing it, so the press works while the disc breathes.
+  Same value, same timing; only the property name differs.
+*/
+.shutter:active:not(:disabled) .shutter__disc,
+.shutter.is-pressed .shutter__disc {
+  scale: var(--scale-pressed);
+  transition: scale var(--duration-press) var(--ease-press);
+}
+
+/* Disabled: faded, still, and the cursor says "not now". */
+.shutter:disabled {
+  opacity: var(--opacity-disabled);
+  cursor: not-allowed;
+}
+.shutter:disabled .shutter__ring,
+.shutter:disabled .shutter__disc {
+  animation: none;
+}
+
+/* ---------- Keyframes (spec values, through tokens) ---------- */
+
+/* The ring sends out a fading mint glow. */
+@keyframes pulse {
+  0%        { box-shadow: 0 0 0 0 var(--glow-live); }
+  70%, 100% { box-shadow: 0 0 0 var(--distance-pulse-spread) var(--glow-live-end); }
+}
+
+/* The disc breathes: slightly smaller at the middle of each cycle. */
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(var(--scale-breathe)); }
+}

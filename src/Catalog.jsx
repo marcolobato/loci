@@ -9,10 +9,11 @@ import Note from './components/Note.jsx'
 import Caption from './components/Caption.jsx'
 import Icon from './components/Icon.jsx'
 import Button from './components/Button.jsx'
+import Shutter from './components/Shutter.jsx'
 import Backdrop from './components/Backdrop.jsx'
 import granite from './assets/granite-dusk.webp'
 
-// The four Button states for the "live" variant.
+// The four states, shared by Button and Shutter.
 // previewState lets the catalog show focus and pressed without a keyboard or finger.
 const buttonStates = [
   { name: 'Default' },
@@ -41,6 +42,24 @@ function Catalog() {
             />
           </div>
         ))}
+      </section>
+
+      {/* Shutter: both sizes, each in all four states. */}
+      <section className="stack-loose">
+        <Label as="h2">Shutter</Label>
+        {['large', 'inline'].map((size) =>
+          buttonStates.map((state) => (
+            <div key={`${size}-${state.name}`} className="stack-tight">
+              <Caption>{size} · {state.name}</Caption>
+              <Shutter
+                size={size}
+                label={`Shutter (${size}, ${state.name} sample)`}
+                disabled={state.disabled}
+                previewState={state.previewState}
+              />
+            </div>
+          ))
+        )}
       </section>
 
       {/* Label */}

@@ -156,3 +156,13 @@ h2 {
   text-transform: var(--type-label-transform);
   color: var(--text-muted);
 }
+
+/*
+  Reduced motion. When a person turns on "Reduce motion" on their device,
+  every animation stops and each element shows its still look:
+  the Shutter rests with no pulse and no breath; afterglow text rests at
+  its "now" color. Exact rule from design/shutter-afterglow.md.
+  It stops animations only, not transitions, so the short 120ms press on
+  the Shutter still answers a touch.
+*/
+@media (prefers-reduced-motion: reduce){*{animation:none!important}}
