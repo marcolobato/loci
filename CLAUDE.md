@@ -30,6 +30,7 @@ Each screen must name the pattern it shows. Keep this table current.
 | The five states (ideal, empty, error, partial, loading) | All | planned |
 | Offline first | App | planned |
 | Type scale in use | All | done |
+| Component catalog | Catalog (`?catalog`) | in progress |
 
 One pattern per working session. New ideas go on the shelf (SHELF.md), not into the week.
 
@@ -76,6 +77,7 @@ Color: stone `#17353B` is the constant (dark background). Dark ground `#0B1A21`,
 5. Say "people," not "users."
 6. Nothing ships without a two-sentence why.
 7. Cut on Thursday, never on Friday.
+8. Every visible element is a reusable component in `src/components/`. It takes props, uses only tokens, and has no raw colors or pixel sizes. No one-off components. Run `npm run check:tokens` before each commit.
 
 ## Public repo note
 Keep this repo free of private notes, interview names, and job-search details.
