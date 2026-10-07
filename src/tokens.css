@@ -1,0 +1,110 @@
+/*
+  Loci design tokens.
+  Source of truth: design/tokens.json. Change values there first, then here.
+  This is the only file in src/ allowed to hold raw colors and sizes.
+  Components use these variables, e.g. color: var(--text-on-dark-title).
+*/
+
+:root {
+  /* ---------- Color: stone (ser, the place; never changes) ---------- */
+  --stone-ground: #0B1A21;  /* darkest background */
+  --stone-brand:  #17353B;  /* the constant; dark app background */
+  --stone-raised: #24484F;  /* one step lighter than brand */
+  --stone-line:   #3A5F66;  /* borders on dark */
+  --stone-muted:  #9FB6B8;  /* muted stone, 6.13:1 on brand */
+  --stone-mist:   #E3EBE8;  /* light panels */
+  --stone-paper:  #F3F5F2;  /* light theme background */
+
+  /* ---------- Color: text on dark (ratios on --stone-brand) ---------- */
+  --text-on-dark-title:   #F1F4F6;  /* 11.82:1 */
+  --text-on-dark-body:    #EEF2F0;  /* 11.56:1 */
+  --text-on-dark-soft:    #C9D6D8;  /*  8.76:1 */
+  --text-on-dark-caption: #A9BEC0;  /*  6.72:1 */
+
+  /* ---------- Color: text on light (ratios on --stone-paper) ---------- */
+  --text-on-light-title:   #17353B;  /* 11.91:1 */
+  --text-on-light-body:    #3B5559;  /*  7.28:1 */
+  --text-on-light-caption: #4F6A6F;  /*  5.29:1 */
+
+  /* ---------- Color: light (estar, the moment) ---------- */
+  --light-cold:          #B9CCDD;  /* cold light, 7.92:1 on brand */
+  --light-warm:          #EDB48F;  /* warm light, 7.16:1 on brand */
+  --light-warm-on-paper: #A5562A;  /* warm for the light theme, 4.83:1 on paper */
+  --light-live:          #A8E6CF;  /* mint: ONLY capture button and recording */
+  --light-on-live:       #0B1A21;  /* icon or text on mint, 12.57:1 */
+
+  /* ---------- Color: afterglow (a capture's color = its age) ---------- */
+  --afterglow-now:   #EDB48F;
+  --afterglow-hour:  #DDB9A6;
+  --afterglow-day:   #C6C3BF;
+  --afterglow-week:  #B0C6D3;
+  --afterglow-month: #86A3B0;  /* lowest contrast in the app, 4.90:1 on brand */
+
+  /* ---------- Color: overlays ---------- */
+  --overlay-card-on-texture:  rgba(11, 26, 33, 0.72);   /* gallery row over granite */
+  --overlay-divider-on-light: rgba(23, 53, 59, 0.15);
+  --overlay-divider-on-dark:  rgba(255, 255, 255, 0.12);
+
+  /* ---------- Font families ---------- */
+  --font-serif: 'Source Serif 4', serif;        /* words */
+  --font-mono:  'Source Code Pro', monospace;   /* data */
+
+  /*
+    ---------- Type styles ----------
+    Sizes use rem so text grows if a person raises their browser text size.
+    1rem = 16px by default. The px value is in each comment.
+    Line height has no unit, so it scales with the size (1.3 = 130%).
+    Tracking uses em: -0.01em = -1%.
+  */
+
+  /* Display — exception: splash only. Light 300 is fine because it is over 32px. */
+  --type-display-family:   var(--font-serif);
+  --type-display-weight:   300;
+  --type-display-size:     3rem;       /* 48px */
+  --type-display-leading:  1.05;
+  --type-display-tracking: -0.02em;
+
+  /* Title — core size */
+  --type-title-family:   var(--font-serif);
+  --type-title-weight:   400;
+  --type-title-size:     1.5625rem;    /* 25px */
+  --type-title-leading:  1.3;
+  --type-title-tracking: -0.01em;
+
+  /* Heading — core size */
+  --type-heading-family:   var(--font-serif);
+  --type-heading-weight:   400;
+  --type-heading-size:     1.25rem;    /* 20px */
+  --type-heading-leading:  1.3;
+  --type-heading-tracking: 0;
+
+  /* Moment — exception: italic mood line, colored by afterglow age */
+  --type-moment-family:   var(--font-serif);
+  --type-moment-weight:   400;
+  --type-moment-style:    italic;
+  --type-moment-size:     1.1875rem;   /* 19px */
+  --type-moment-leading:  1.35;
+  --type-moment-tracking: 0;
+
+  /* Note — core size */
+  --type-note-family:   var(--font-serif);
+  --type-note-weight:   400;
+  --type-note-size:     1rem;          /* 16px */
+  --type-note-leading:  1.5;
+  --type-note-tracking: 0;
+
+  /* Caption — core size */
+  --type-caption-family:   var(--font-mono);
+  --type-caption-weight:   400;
+  --type-caption-size:     0.8125rem;  /* 13px */
+  --type-caption-leading:  1.4;
+  --type-caption-tracking: 0.02em;
+
+  /* Label — exception: uppercase, wide tracking */
+  --type-label-family:    var(--font-mono);
+  --type-label-weight:    500;
+  --type-label-size:      0.75rem;     /* 12px */
+  --type-label-leading:   1.4;
+  --type-label-tracking:  0.12em;
+  --type-label-transform: uppercase;
+}

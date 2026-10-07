@@ -43,19 +43,30 @@ One pattern per working session. New ideas go on the shelf (SHELF.md), not into 
 - Works offline. Opens on my phone through a link.
 - No backend for now. Store captures in the browser (IndexedDB).
 
-## Design tokens (source: Figma library "Seroestar System v1")
+## Design tokens (source: `design/tokens.json`)
+`design/tokens.json` is the source of truth for color and type. It was taken from the Claude Design project "Pairing Lab," direction 4a. Notes and contrast ratios are in `design/NOTES.md`.
+
 Fonts: Source Serif 4 for words, Source Code Pro for data.
 
 | Style | Font | Size | Line height | Tracking |
 |---|---|---|---|---|
+| Display | Source Serif 4 Light | 48 | 105% | -2% |
 | Title | Source Serif 4 | 25 | 130% | -1% |
 | Heading | Source Serif 4 | 20 | 130% | 0 |
+| Moment | Source Serif 4 Italic | 19 | 135% | 0 |
 | Note | Source Serif 4 | 16 | 150% | 0 |
 | Caption | Source Code Pro | 13 | 140% | +2% |
+| Label | Source Code Pro Medium, caps | 12 | 140% | +12% |
 
-- Sizes come from one ratio, 1.25, rounded to whole numbers.
-- Put all values in `src/tokens.css` as CSS variables. No raw sizes in components.
-- Color is a placeholder: dusk background `#1B1A2E`, light text. Measure contrast and record the ratio before shipping.
+- The four core sizes (13, 16, 20, 25) come from one ratio, 1.25, rounded to whole numbers.
+- Three named exceptions. No others without a reason here.
+  - **Display 48** vs Title 25: the splash needs a jump of about three steps, not one.
+  - **Moment 19** vs Heading 20: italic looks bigger than upright, so 1 px less keeps the mood line a voice, not a heading.
+  - **Label 12** vs Caption 13: caps with wide tracking look bigger, so 1 px less makes them match.
+- The Gallery screen title uses Title (25), not the 28 in the mockup.
+- Put all values in `src/tokens.css` as CSS variables. No raw sizes or colors in components.
+
+Color: stone `#17353B` is the constant (dark background). Dark ground `#0B1A21`, paper `#F3F5F2`. Warm `#EDB48F` and cold `#B9CCDD` are the light on the stone. Mint `#A8E6CF` means live and is used only for capture and recording. All text colors pass AA (4.5:1); ratios are in `design/NOTES.md`.
 
 ## How we work
 1. Plan first: list files, steps (smallest first), and what I will see after each step. Then stop and wait.
