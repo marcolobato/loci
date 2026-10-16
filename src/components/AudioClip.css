@@ -1,0 +1,8 @@
+/*
+  The phone draws the controls itself. color-scheme: dark asks it for its
+  dark version, so a bright white bar doesn't jump out of the stone.
+*/
+.audio-clip {
+  width: 100%;
+  color-scheme: dark;
+}

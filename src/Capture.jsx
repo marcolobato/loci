@@ -7,6 +7,7 @@ import Note from './components/Note.jsx'
 import Caption from './components/Caption.jsx'
 import Shutter from './components/Shutter.jsx'
 import Backdrop from './components/Backdrop.jsx'
+import AudioClip from './components/AudioClip.jsx'
 import granite from './assets/granite-dusk.webp'
 import { useRecorder } from './useRecorder.js'
 
@@ -20,7 +21,7 @@ function messageFor(status, recordedSeconds) {
 }
 
 function Capture() {
-  const { status, secondsLeft, recordedSeconds, start, stop } = useRecorder()
+  const { status, secondsLeft, recordedSeconds, audioUrl, start, stop } = useRecorder()
   const isRecording = status === 'recording'
 
   return (
@@ -34,8 +35,8 @@ function Capture() {
       {/* Top: the app name, as the page's main heading. */}
       <Label as="h1">Loci</Label>
 
-      {/* Middle: what is happening now. */}
-      <div className="stack-tight">
+      {/* Middle: what is happening now. full-width so the player can stretch. */}
+      <div className="stack-tight full-width">
         {/* role="status": screen readers read this line out when it changes. */}
         <div role="status">
           <Note tone="soft">{messageFor(status, recordedSeconds)}</Note>
@@ -47,6 +48,8 @@ function Capture() {
             <Caption>0:{String(secondsLeft).padStart(2, '0')}</Caption>
           </div>
         )}
+        {/* When done: play back what was just recorded. */}
+        {status === 'done' && audioUrl && <AudioClip src={audioUrl} label="Your recording" />}
       </div>
 
       {/* Bottom: the Shutter. Tap to record; tap again to stop early. */}
