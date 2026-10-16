@@ -25,7 +25,8 @@ Each screen must name the pattern it shows. Keep this table current.
 |---|---|---|
 | Record audio (10 s) with clear state | Capture | planned |
 | Take a photo | Capture | planned |
-| Short text note | Capture | planned |
+| Short text note (typed, or spoken with the keyboard's dictation) | Capture | planned |
+| Nine ingredients (Zumthor): suggested from the note by word matching, confirmed by me; collapsed summary, expanded detail | Capture detail | planned |
 | Playback with scrubber | Replay | planned |
 | The five states (ideal, empty, error, partial, loading) | All | planned |
 | Offline first | App | planned |
