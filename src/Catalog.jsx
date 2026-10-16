@@ -17,6 +17,18 @@ import { afterglow } from './afterglow.js'
 // Sample captures (placeholders), one per afterglow step.
 import sample from '../data/sample.json'
 
+// Recent samples store "minutesAgo". Older ones store "daysAgo" and a clock
+// "time", so each keeps a realistic hour of day. Turn those into minutesAgo
+// too, so every component below gets the same kind of number.
+const now = new Date()
+const captures = sample.captures.map((capture) => {
+  if (capture.minutesAgo !== undefined) return capture
+  const [hours, minutes] = capture.time.split(':').map(Number)
+  // new Date() handles going back across months, e.g. Oct 3 minus 5 days.
+  const capturedAt = new Date(now.getFullYear(), now.getMonth(), now.getDate() - capture.daysAgo, hours, minutes)
+  return { ...capture, minutesAgo: (now - capturedAt) / (60 * 1000) }
+})
+
 // The four Shutter states.
 // previewState lets the catalog show focus and pressed without a keyboard or finger.
 const shutterStates = [
@@ -37,7 +49,7 @@ function Catalog() {
         <div className="stack-tight">
           <Caption>sample captures · cooling with time</Caption>
           <ul className="list stack-tight">
-            {sample.captures.map((capture) => (
+            {captures.map((capture) => (
               <CaptureRow
                 key={capture.id}
                 place={capture.place}
@@ -52,7 +64,7 @@ function Catalog() {
       {/* Moment: one per afterglow step, from the sample captures. */}
       <section className="stack-loose">
         <Label as="h2">Moment</Label>
-        {sample.captures.map((capture) => {
+        {captures.map((capture) => {
           const { step, label } = afterglow(capture.minutesAgo)
           return (
             <div key={capture.id} className="stack-tight">

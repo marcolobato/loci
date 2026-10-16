@@ -5,7 +5,7 @@ import { afterglow } from '../afterglow.js'
 import './CaptureRow.css'
 
 // CaptureRow: one capture in a list. A thin strip on the left, then the
-// place, how long ago, and the mood line. The strip and the mood line share
+// place, when it was captured, and the mood line. The strip and the mood line share
 // the afterglow color, so the whole row cools as the moment ages.
 //
 // Props:
@@ -17,7 +17,7 @@ import './CaptureRow.css'
 //   <ul className="list"> <CaptureRow … /> </ul>
 // Screen readers then announce "list, 5 items".
 function CaptureRow({ place, mood, minutesAgo }) {
-  const { color, label } = afterglow(minutesAgo)
+  const { color, label, iso } = afterglow(minutesAgo)
 
   return (
     <li className="capture-row">
@@ -25,7 +25,9 @@ function CaptureRow({ place, mood, minutesAgo }) {
       <span className="capture-row__strip" style={{ background: color }} aria-hidden="true" />
       <div>
         <Note>{place}</Note>
-        <Caption>{label}</Caption>
+        {/* <time> carries the exact moment for screen readers and other tools,
+            even when the visible text says "3 hr ago". */}
+        <Caption><time dateTime={iso}>{label}</time></Caption>
         <Moment minutesAgo={minutesAgo}>{mood}</Moment>
       </div>
     </li>

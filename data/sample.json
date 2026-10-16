@@ -1,10 +1,10 @@
 {
-  "note": "Sample captures. Imagined visits to real places, not real captures. Label them 'Sample' wherever they appear. Ages are 'minutes ago', not dates, so the afterglow ramp always shows every color.",
+  "note": "Sample captures. Imagined visits to real places, not real captures. Label them 'Sample' wherever they appear. Recent ones store 'minutesAgo'. Older ones store 'daysAgo' plus a 24-hour clock 'time', so each keeps a realistic hour of day. Ages are relative to today, so the afterglow ramp always shows every color.",
   "captures": [
-    { "id": "vals",     "place": "Therme Vals, Switzerland",           "mood": "steam over dark stone",              "minutesAgo": 5 },
+    { "id": "vals",     "place": "Therme Vals, Switzerland",           "mood": "steam over dark stone",               "minutesAgo": 5 },
     { "id": "klaus",    "place": "Bruder Klaus Field Chapel, Germany", "mood": "one opening of light, tar and smoke", "minutesAgo": 90 },
-    { "id": "kolumba",  "place": "Kolumba Museum, Cologne",            "mood": "light through the brick lace",        "minutesAgo": 1440 },
-    { "id": "mairea",   "place": "Villa Mairea, Finland",              "mood": "birch poles, a cold morning",         "minutesAgo": 11520 },
-    { "id": "pantheon", "place": "Pantheon, Rome",                     "mood": "rain falling through the oculus",     "minutesAgo": 50400 }
+    { "id": "kolumba",  "place": "Kolumba Museum, Cologne",            "mood": "light through the brick lace",        "daysAgo": 2,  "time": "15:20" },
+    { "id": "mairea",   "place": "Villa Mairea, Finland",              "mood": "birch poles, a cold morning",         "daysAgo": 8,  "time": "08:10" },
+    { "id": "pantheon", "place": "Pantheon, Rome",                     "mood": "rain falling through the oculus",     "daysAgo": 35, "time": "18:40" }
   ]
 }
