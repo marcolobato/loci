@@ -15,3 +15,16 @@
   background-size: cover;
   background-position: center;
 }
+
+/*
+  cover="screen": pinned to the whole screen, not the container.
+  iPhone quirk: when a Home Screen app first opens, iOS reports the screen
+  without the home-bar strip, and only corrects it after the first scroll.
+  So the texture reaches past the bottom by the home bar's height
+  (safe-area-inset-bottom) and covers that strip either way.
+  On phones without a home bar the extra is 0.
+*/
+.backdrop--screen {
+  position: fixed;
+  bottom: calc(-1 * env(safe-area-inset-bottom, 0rem));
+}

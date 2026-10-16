@@ -89,7 +89,7 @@ function Capture() {
     // has-backdrop: holds the granite texture behind everything.
     <main className="page screen-frame has-backdrop">
       {/* Behind: granite texture (AI-generated, decoration only) under a dark scrim. */}
-      <Backdrop image={granite} />
+      <Backdrop image={granite} cover="screen" />
 
       {/* Top: the app name, as the page's main heading. */}
       <Label as="h1">Loci</Label>

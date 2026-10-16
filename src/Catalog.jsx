@@ -134,7 +134,7 @@ function Catalog() {
         <Label as="h2">Backdrop</Label>
         <div className="stack-tight">
           <Caption>granite · 80% scrim</Caption>
-          <div className="page has-backdrop">
+          <div className="card-inset has-backdrop">
             <Backdrop image={granite} />
             <Note tone="soft">Nothing kept yet. Your first moment starts here.</Note>
           </div>
