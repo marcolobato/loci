@@ -7,6 +7,7 @@
 //   uses one of them, Loci suggests that ingredient and shows the sentence
 //   as evidence. The person keeps it or dismisses it.
 // short is the one-word name used in the closed summary line.
+// about is a longer explanation, in our own words, for the About screen.
 // The word lists are a first draft: edit them freely. A word also matches
 // longer forms that start with it ("echo" matches "echoes").
 
@@ -16,6 +17,7 @@ export const ingredients = [
     short: 'Body',
     name: 'The Body of Architecture',
     description: 'What the body feels in this place: enclosure, exposure, posture.',
+    about: "A building is a body before it is a picture: mass, surfaces and joints we sense with our own body. Notice whether the place holds you close or leaves you exposed.",
     words: ['body', 'mass', 'heavy', 'solid', 'enclos', 'exposed', 'posture', 'weight', 'bulk', 'massive'],
   },
   {
@@ -23,6 +25,7 @@ export const ingredients = [
     short: 'Material',
     name: 'Material Compatibility',
     description: 'Materials present and how they sit together.',
+    about: "Materials change each other when they meet: stone beside wood is not the same stone. Notice what things are made of, and how they sit together.",
     words: ['stone', 'wood', 'timber', 'concrete', 'brick', 'glass', 'metal', 'steel', 'iron', 'plaster', 'granite', 'marble', 'tar', 'rough', 'smooth', 'texture', 'birch'],
   },
   {
@@ -30,6 +33,7 @@ export const ingredients = [
     short: 'Sound',
     name: 'The Sound of a Space',
     description: 'Acoustics, tone, quietness, and ambient resonance.',
+    about: "Every room plays the sounds made in it, like an instrument, and even a quiet room has a sound of its own. Loci’s ten seconds are for this one.",
     words: ['sound', 'echo', 'quiet', 'silen', 'hum', 'noise', 'voice', 'footstep', 'rain', 'wind', 'train', 'resonan', 'loud', 'bird', 'water', 'ring', 'hush'],
   },
   {
@@ -37,6 +41,7 @@ export const ingredients = [
     short: 'Temperature',
     name: 'The Temperature of a Space',
     description: 'Thermal atmosphere: warmth, draught, stone chill, sun heat.',
+    about: "Spaces have a temperature beyond the thermometer: the chill of stone, the warmth of wood, the heat stored in a sunny wall.",
     words: ['warm', 'cold', 'cool', 'chill', 'damp', 'heat', 'hot', 'draught', 'draft', 'humid', 'steam', 'breeze', 'frost'],
   },
   {
@@ -44,6 +49,7 @@ export const ingredients = [
     short: 'Objects',
     name: 'Surrounding Objects',
     description: 'Things and furnishings kept close to hand.',
+    about: "The things kept close, like furniture, books and tools, tell you who lives in a place and how.",
     words: ['chair', 'table', 'book', 'object', 'thing', 'bench', 'lamp', 'cup', 'furniture', 'shelf', 'candle', 'pole'],
   },
   {
@@ -51,6 +57,7 @@ export const ingredients = [
     short: 'Composure',
     name: 'Between Composure and Seduction',
     description: 'Whether the place holds you still or leads you onward.',
+    about: "Some places hold you still; others draw you along from one view to the next. Notice which this one does.",
     words: ['still', 'calm', 'linger', 'drawn', 'wander', 'lead', 'path', 'invit', 'rest', 'pause', 'stroll', 'corridor', 'follow'],
   },
   {
@@ -58,6 +65,7 @@ export const ingredients = [
     short: 'Thresholds',
     name: 'Tension Between Inside and Outside',
     description: 'Thresholds, portals, frames, and boundaries.',
+    about: "Architecture draws lines between inside and outside: doors, windows, edges. Notice what you can see out, and what can see in.",
     words: ['window', 'door', 'threshold', 'inside', 'outside', 'opening', 'frame', 'view', 'street', 'edge', 'entrance', 'gate', 'oculus'],
   },
   {
@@ -65,6 +73,7 @@ export const ingredients = [
     short: 'Intimacy',
     name: 'Levels of Intimacy',
     description: 'Scale and distance relative to the human body.',
+    about: "Size, distance and weight, measured against your own body: whether a place feels close, vast, or just right.",
     words: ['small', 'large', 'vast', 'tiny', 'close', 'distan', 'far', 'scale', 'high', 'low', 'ceiling', 'narrow', 'wide', 'huge', 'intimate'],
   },
   {
@@ -72,6 +81,7 @@ export const ingredients = [
     short: 'Light',
     name: 'The Light on Things',
     description: 'Shadows, illumination, luster, and reflections.',
+    about: "How light falls on things, and where shadow gathers. Notice which surfaces catch it and which hold the dark.",
     words: ['light', 'shadow', 'glow', 'dark', 'bright', 'shine', 'shini', 'reflect', 'sun', 'dusk', 'dawn', 'gleam', 'lace'],
   },
 ]

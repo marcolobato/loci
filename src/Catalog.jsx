@@ -11,6 +11,7 @@ import Field from './components/Field.jsx'
 import Ingredients from './components/Ingredients.jsx'
 import Photo from './components/Photo.jsx'
 import Sheet from './components/Sheet.jsx'
+import Heading from './components/Heading.jsx'
 import TextButton from './components/TextButton.jsx'
 import PhotoPicker from './components/PhotoPicker.jsx'
 import Caption from './components/Caption.jsx'
@@ -230,6 +231,19 @@ function Catalog() {
         <div className="stack-tight">
           <Caption>sample note · Pantheon, Rome</Caption>
           <SampleIngredients />
+        </div>
+      </section>
+
+      {/* Heading: titles for screens and sections. */}
+      <section className="stack-loose">
+        <Label as="h2">Heading</Label>
+        <div className="stack-tight">
+          <Caption>size · title</Caption>
+          <Heading size="title" as="p">Ambient field notes</Heading>
+        </div>
+        <div className="stack-tight">
+          <Caption>size · heading (default)</Caption>
+          <Heading as="p">The nine ingredients</Heading>
         </div>
       </section>
 

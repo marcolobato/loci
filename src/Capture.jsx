@@ -18,6 +18,7 @@ import Photo from './components/Photo.jsx'
 import PhotoPicker from './components/PhotoPicker.jsx'
 import Field from './components/Field.jsx'
 import TextButton from './components/TextButton.jsx'
+import TextLink from './components/TextLink.jsx'
 import Sheet from './components/Sheet.jsx'
 import MomentList from './components/MomentList.jsx'
 import granite from './assets/granite-dusk.webp'
@@ -159,6 +160,9 @@ function Capture() {
       <div className="stack-tight">
         <Label as="h1">Loci</Label>
         {kept.status === 'ready' && count > 0 && <Caption>{moments(count)} on this phone · newest first</Caption>}
+        <div>
+          <TextLink href="?about">About Loci</TextLink>
+        </div>
       </div>
 
       {/* Loading, failure, or nothing kept yet. */}
