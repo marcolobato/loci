@@ -20,9 +20,12 @@
     <!-- black-translucent: the page draws under the status bar; the safe-area
          padding in index.css keeps the content clear of it. -->
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <!-- Browser bar color. Raw hex here because HTML can't read CSS tokens;
-         it matches --stone-brand in src/tokens.css. -->
-    <meta name="theme-color" content="#17353B" />
+    <!-- Theme color: iPhone paints it around a Home Screen app, including the
+         bottom strip where Safari's toolbar would be. Dark stone ground, so
+         that strip blends into the granite instead of showing as a teal bar.
+         Raw hex here because HTML can't read CSS tokens; it matches
+         --stone-ground in src/tokens.css (and theme_color in the manifest). -->
+    <meta name="theme-color" content="#0B1A21" />
 
     <!-- Fonts: Source Serif 4 for words, Source Code Pro for data.
          The two "preconnect" lines open the connection to Google Fonts early,
