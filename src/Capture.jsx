@@ -1,7 +1,9 @@
-// Pattern: record audio (10 s) with clear state.
+// Pattern: record audio (10 s) with clear state, kept on the phone.
 // Tap the Shutter: it asks for the microphone, records 10 seconds and stops
-// by itself. Tap again to stop early. The middle line always says what is
-// happening. The recording isn't saved yet; a reload clears it.
+// by itself. Tap again to stop early. Each recording is kept automatically
+// (IndexedDB, see captureStore.js). The middle line always says what is
+// happening and how many moments are kept.
+import { useEffect, useState } from 'react'
 import Label from './components/Label.jsx'
 import Note from './components/Note.jsx'
 import Caption from './components/Caption.jsx'
@@ -11,13 +13,22 @@ import AudioClip from './components/AudioClip.jsx'
 import Notice from './components/Notice.jsx'
 import granite from './assets/granite-dusk.webp'
 import { useRecorder } from './useRecorder.js'
+import { saveCapture, countCaptures, askToKeepStorage } from './captureStore.js'
+
+// "1 moment" or "3 moments".
+const moments = (n) => (n === 1 ? '1 moment' : `${n} moments`)
 
 // What the middle line says in each state.
-function messageFor(status, recordedSeconds) {
+// kept is null while the count is still loading, so we say nothing yet
+// rather than flash "Nothing kept yet" at someone who has captures.
+function messageFor(status, recordedSeconds, kept, saveState) {
   if (status === 'asking') return 'Allow the microphone to listen.'
   if (status === 'recording') return 'Listening…'
-  if (status === 'done') return `Recorded ${recordedSeconds} s. Tap to record again.`
-  return 'Nothing kept yet. Your first moment starts here.'
+  if (status === 'done' && saveState === 'saving') return 'Keeping…'
+  if (status === 'done') return `Kept ${recordedSeconds} s of sound. ${moments(kept)} on this phone.`
+  if (kept === null) return ''
+  if (kept === 0) return 'Nothing kept yet. Your first moment starts here.'
+  return `${moments(kept)} kept on this phone. Tap to capture another.`
 }
 
 // When recording fails: what happened, what to do, and (if useful) where.
@@ -37,10 +48,39 @@ const errors = {
     text: 'Something stopped the recording. Tap to try again.',
   },
 }
+const saveFailed = 'Couldn’t keep this recording. Your phone may be out of space. You can still play it below.'
 
 function Capture() {
-  const { status, error, secondsLeft, recordedSeconds, audioUrl, start, stop } = useRecorder()
+  // How many captures are kept (null until we've checked), and how the
+  // latest save went: idle, saving, saved or failed.
+  const [kept, setKept] = useState(null)
+  const [saveState, setSaveState] = useState('idle')
+
+  // Called once each time a recording finishes: keep it on the phone.
+  async function keep(file, seconds) {
+    setSaveState('saving')
+    try {
+      await saveCapture({ audio: file, seconds })
+      setKept(await countCaptures())
+      setSaveState('saved')
+      askToKeepStorage().catch(() => {}) // a "no" here is fine; nothing to show
+    } catch {
+      setSaveState('failed')
+    }
+  }
+
+  const { status, error, secondsLeft, recordedSeconds, audioUrl, start, stop } = useRecorder({ onRecorded: keep })
   const isRecording = status === 'recording'
+
+  // On opening the screen: count what's already kept.
+  useEffect(() => {
+    countCaptures().then(setKept).catch(() => setKept(0))
+  }, [])
+
+  function record() {
+    setSaveState('idle')
+    start()
+  }
 
   return (
     // screen-frame: label on top, message in the middle, button at the
@@ -59,8 +99,10 @@ function Capture() {
         <div role="status">
           {status === 'error' ? (
             <Notice hint={errors[error]?.hint}>{(errors[error] ?? errors.failed).text}</Notice>
+          ) : saveState === 'failed' ? (
+            <Notice>{saveFailed}</Notice>
           ) : (
-            <Note tone="soft">{messageFor(status, recordedSeconds)}</Note>
+            <Note tone="soft">{messageFor(status, recordedSeconds, kept, saveState)}</Note>
           )}
         </div>
         {/* The countdown is hidden from screen readers, so they don't hear
@@ -78,7 +120,7 @@ function Capture() {
       <Shutter
         size="large"
         label={isRecording ? 'Stop recording' : 'Capture moment'}
-        onClick={isRecording ? stop : start}
+        onClick={isRecording ? stop : record}
       />
     </main>
   )

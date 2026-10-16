@@ -13,8 +13,9 @@
 //   start()     – ask for the microphone and start recording
 //   stop()      – stop early; otherwise it stops by itself at 10 s
 //
-// The recording lives only in memory for now. A reload clears it.
-// Saving it (IndexedDB) is the next pattern.
+// Option:
+//   onRecorded(file, seconds) – called once when a recording finishes, with
+//                               the sound file, so the screen can save it.
 import { useEffect, useRef, useState } from 'react'
 
 const RECORD_SECONDS = 10
@@ -33,7 +34,12 @@ function errorName(err) {
   return 'failed'
 }
 
-export function useRecorder() {
+export function useRecorder({ onRecorded } = {}) {
+  // Keep the latest onRecorded in a ref, so a recording that started before
+  // the screen re-drew still calls the current version.
+  const onRecordedRef = useRef(onRecorded)
+  onRecordedRef.current = onRecorded
+
   const [status, setStatus] = useState('idle')
   const [error, setError] = useState(null)
   const [secondsLeft, setSecondsLeft] = useState(RECORD_SECONDS)
@@ -98,10 +104,12 @@ export function useRecorder() {
       clearTimers()
       releaseMic()
       const blob = new Blob(chunks, { type: recorder.mimeType || format })
+      const seconds = Math.min(RECORD_SECONDS, Math.round((Date.now() - startedAt) / 1000))
       setAudioUrl(URL.createObjectURL(blob))
-      setRecordedSeconds(Math.min(RECORD_SECONDS, Math.round((Date.now() - startedAt) / 1000)))
+      setRecordedSeconds(seconds)
       setSecondsLeft(0)
       setStatus('done')
+      onRecordedRef.current?.(blob, seconds)
     }
 
     const startedAt = Date.now()
