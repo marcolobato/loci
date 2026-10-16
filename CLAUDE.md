@@ -24,17 +24,17 @@ Each screen must name the pattern it shows. Keep this table current.
 
 | Pattern | Screen | Status |
 |---|---|---|
-| Record audio (10 s) with clear state | Capture | planned |
-| Take a photo | Capture | planned |
-| Short text note (typed, or spoken with the keyboard's dictation) | Capture | planned |
-| Nine ingredients (Zumthor): suggested from the note by word matching, confirmed by me; collapsed summary, expanded detail | Capture detail | planned |
-| Playback with scrubber | Replay | planned |
-| The five states (ideal, empty, error, partial, loading) | All | planned |
-| Offline first | App | planned |
+| Record audio (10 s) with clear state: filling ring, disc follows the sound, hints to play the space | Capture sheet | done |
+| Take a photo (camera or library, shrunk to 1600px) | Capture sheet | done |
+| Short text note (typed, or spoken with the keyboard's dictation), plus a place | Capture sheet | done |
+| Nine ingredients (Zumthor): suggested from the note by word matching, confirmed by me; collapsed summary, expanded detail | Each moment | done |
+| Playback with scrubber (uses the phone's built-in player for now; custom scrubber still to design) | Each moment | in progress |
+| The five states (ideal, empty, error, partial, loading) | All | in progress |
+| Offline first: kept on the phone (IndexedDB), works offline as a Home Screen app, new-version notice | App | done |
 | Type scale in use | All | done |
-| Component catalog | Catalog (`?catalog`) | in progress |
-| One screen: moments list on Capture; recording opens as a bottom sheet over the list (after the current plan) | Capture | planned |
-| About: what Loci is (a sample app built on Zumthor's *Atmospheres*) and the nine ingredients, in my own words | About | planned |
+| Component catalog | Catalog (`?catalog`) | done |
+| One screen: moments list on Capture; capturing opens as a bottom sheet over the list | Capture | done |
+| About: what Loci is (a sample app built on Zumthor's *Atmospheres*) and the nine ingredients, in my own words. To check: where and to whom the talk was given | About (`?about`) | done |
 
 One pattern per working session. New ideas go on the shelf (SHELF.md), not into the week.
 
