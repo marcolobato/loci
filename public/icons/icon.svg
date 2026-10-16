@@ -1,0 +1,9 @@
+<!-- Loci app icon: the Shutter (light ring, gap, mint disc) on stone.
+     Same proportions as the Shutter component: ring 76, stroke 3, gap 5,
+     scaled up 3.79x and centered on a 512 canvas. The ring stays well inside
+     the central 80% "safe zone", so phones can crop it to any shape. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#17353B"/>
+  <circle cx="256" cy="256" r="138.3" fill="none" stroke="#E3EBE8" stroke-width="11.4"/>
+  <circle cx="256" cy="256" r="113.7" fill="#A8E6CF"/>
+</svg>

@@ -7,6 +7,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Loci</title>
 
+    <!-- Installable app: name, icon and colors live in the manifest.
+         Paths are relative (no leading /), so they also work when the app
+         is published in a sub-folder, e.g. on GitHub Pages. -->
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+    <!-- iPhone reads its Home Screen icon and full-screen mode from these tags. -->
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Loci" />
+    <!-- black-translucent: the page draws under the status bar; the safe-area
+         padding in index.css keeps the content clear of it. -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <!-- Browser bar color. Raw hex here because HTML can't read CSS tokens;
+         it matches --stone-brand in src/tokens.css. -->
+    <meta name="theme-color" content="#17353B" />
+
     <!-- Fonts: Source Serif 4 for words, Source Code Pro for data.
          The two "preconnect" lines open the connection to Google Fonts early,
          so the fonts arrive sooner. -->
