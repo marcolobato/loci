@@ -1,0 +1,10 @@
+{
+  "note": "Sample captures. Imagined visits to real places, not real captures. Label them 'Sample' wherever they appear. Ages are 'minutes ago', not dates, so the afterglow ramp always shows every color.",
+  "captures": [
+    { "id": "vals",     "place": "Therme Vals, Switzerland",           "mood": "steam over dark stone",              "minutesAgo": 5 },
+    { "id": "klaus",    "place": "Bruder Klaus Field Chapel, Germany", "mood": "one opening of light, tar and smoke", "minutesAgo": 90 },
+    { "id": "kolumba",  "place": "Kolumba Museum, Cologne",            "mood": "light through the brick lace",        "minutesAgo": 1440 },
+    { "id": "mairea",   "place": "Villa Mairea, Finland",              "mood": "birch poles, a cold morning",         "minutesAgo": 11520 },
+    { "id": "pantheon", "place": "Pantheon, Rome",                     "mood": "rain falling through the oculus",     "minutesAgo": 50400 }
+  ]
+}
