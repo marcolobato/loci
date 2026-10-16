@@ -70,7 +70,7 @@ function Capture() {
     }
   }
 
-  const { status, error, secondsLeft, recordedSeconds, audioUrl, start, stop } = useRecorder({ onRecorded: keep })
+  const { status, error, secondsLeft, recordedSeconds, audioUrl, level, start, stop } = useRecorder({ onRecorded: keep })
   const isRecording = status === 'recording'
 
   // On opening the screen: count what's already kept.
@@ -129,6 +129,8 @@ function Capture() {
         size="large"
         label={isRecording ? 'Stop recording' : 'Capture moment'}
         onClick={isRecording ? stop : record}
+        recording={isRecording}
+        level={level}
       />
     </main>
   )

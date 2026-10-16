@@ -93,6 +93,14 @@ function Catalog() {
             </div>
           ))
         )}
+        {/* Recording: the arc fills over 10 s (it plays once when the page
+            opens); the disc size shows quiet vs loud. */}
+        {[['quiet', 0.1], ['loud', 0.9]].map(([name, level]) => (
+          <div key={name} className="stack-tight">
+            <Caption>large · Recording · {name}</Caption>
+            <Shutter size="large" label={`Shutter (recording, ${name} sample)`} recording level={level} />
+          </div>
+        ))}
       </section>
 
       {/* Label */}

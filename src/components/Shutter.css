@@ -86,12 +86,63 @@
   animation: none;
 }
 
+/* ---------- Recording ----------
+   The idle pulse and breath stop, so "recording" looks different from "ready".
+   A mint arc fills the ring like a clock, and the disc follows the sound. */
+.shutter.is-recording .shutter__ring {
+  position: relative;               /* the arc is placed on top of the ring */
+  animation: none;
+}
+
+/* The disc: small in silence (the pressed size), full size when loud.
+   --level (0 to 1) comes from Shutter.jsx. */
+.shutter.is-recording .shutter__disc {
+  animation: none;
+  transform: scale(calc(var(--scale-pressed) + var(--level) * (1 - var(--scale-pressed))));
+  transition: transform var(--duration-press) var(--ease-out);
+}
+
+/* The arc sits exactly on the ring's line: it reaches out over the border. */
+.shutter__progress {
+  position: absolute;
+  inset: calc(-1 * var(--size-shutter-stroke));
+  rotate: -90deg;                   /* start at the top, like a clock */
+  overflow: visible;
+}
+.shutter--inline .shutter__progress {
+  inset: calc(-1 * var(--size-shutter-stroke-inline));
+}
+.shutter__progress circle {
+  fill: none;
+  stroke: var(--live);
+  stroke-dasharray: 100;            /* the circle's length, from pathLength */
+  stroke-dashoffset: 100;           /* start empty... */
+  animation: record-fill var(--duration-record) linear forwards; /* ...fill over 10 s */
+}
+
+/* Reduce Motion: no filling, no swelling. A full mint ring still says
+   "recording", and the countdown text says how long is left. */
+@media (prefers-reduced-motion: reduce) {
+  .shutter.is-recording .shutter__disc {
+    transform: none;
+    transition: none;
+  }
+  .shutter__progress circle {
+    stroke-dashoffset: 0;
+  }
+}
+
 /* ---------- Keyframes (spec values, through tokens) ---------- */
 
 /* The ring sends out a fading mint glow. */
 @keyframes pulse {
   0%        { box-shadow: 0 0 0 0 var(--glow-live); }
   70%, 100% { box-shadow: 0 0 0 var(--distance-pulse-spread) var(--glow-live-end); }
+}
+
+/* The recording arc: empty to full. */
+@keyframes record-fill {
+  to { stroke-dashoffset: 0; }
 }
 
 /* The disc breathes: slightly smaller at the middle of each cycle. */

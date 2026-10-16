@@ -11,11 +11,16 @@ import './Shutter.css'
 //                  the Shutter has no visible words.
 //   disabled     – true when it can't be used right now. Motion stops.
 //   onClick      – what happens on tap. Optional for now.
+//   recording    – true while recording. The idle pulse stops, a mint arc
+//                  fills the ring over the recording time, and the disc
+//                  follows the sound.
+//   level        – while recording: how loud the room is, 0 to 1.
 //   previewState – catalog only: "focus" or "pressed", shown without a real
 //                  keyboard or finger. Screens never pass this.
-function Shutter({ size = 'large', label, disabled = false, onClick, previewState }) {
-  // Build the class list, e.g. "shutter shutter--inline is-pressed".
+function Shutter({ size = 'large', label, disabled = false, onClick, recording = false, level = 0, previewState }) {
+  // Build the class list, e.g. "shutter shutter--inline is-recording".
   let className = `shutter shutter--${size}`
+  if (recording) className += ' is-recording'
   if (previewState) className += ` is-${previewState}`
 
   return (
@@ -26,9 +31,24 @@ function Shutter({ size = 'large', label, disabled = false, onClick, previewStat
       disabled={disabled}
       onClick={onClick}
     >
-      {/* The ring and disc are drawing only; the button itself is the tap area. */}
-      <span className="shutter__ring" aria-hidden="true">
+      {/* The ring and disc are drawing only; the button itself is the tap area.
+          --level hands the loudness to the CSS, which sizes the disc. */}
+      <span className="shutter__ring" aria-hidden="true" style={{ '--level': level }}>
         <span className="shutter__disc" />
+        {/* While recording: the arc that fills like a clock. pathLength="100"
+            lets the CSS treat the circle's length as 100, whatever its size.
+            Its stroke matches the ring's stroke (3 of 76, or 2 of 44). */}
+        {recording && (
+          <svg className="shutter__progress" viewBox="0 0 100 100">
+            <circle
+              cx="50"
+              cy="50"
+              r={size === 'large' ? 48.03 : 47.73}
+              pathLength="100"
+              strokeWidth={size === 'large' ? 3.95 : 4.55}
+            />
+          </svg>
+        )}
       </span>
     </button>
   )
