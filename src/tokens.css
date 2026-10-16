@@ -31,6 +31,8 @@
   --light-warm:          #EDB48F;  /* warm light, 7.16:1 on brand */
   --light-warm-on-paper: #A5562A;  /* warm for the light theme, 4.83:1 on paper */
   --light-live:          #A8E6CF;  /* mint: ONLY capture button and recording */
+  --light-ember:          #F0957A; /* errors only: 5.77:1 on brand, 7.26:1 on card; never straight on texture */
+  --light-ember-on-paper: #9E3A2C; /* errors in the light theme, 6.19:1 on paper */
 
   /* ---------- Color: afterglow (a capture's color = its age) ---------- */
   --afterglow-now:   #EDB48F;
@@ -220,6 +222,7 @@
   --accent-cold:  var(--light-cold);            /* cold light, the "o" */
   --live:         var(--light-live);            /* capture and recording ONLY */
   --focus:        var(--light-cold);            /* keyboard focus ring */
+  --error:        var(--light-ember);           /* errors only; always with the warning icon and words */
   --scrim:        var(--overlay-screen-on-texture); /* dark layer between a texture and text */
   --card:         var(--overlay-card-on-texture);   /* capture rows and other cards */
 }

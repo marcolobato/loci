@@ -39,6 +39,20 @@ Over the granite texture (Capture screen), measured at the image's lightest pixe
 
 Text needs 4.5, the button needs 3. Blending is in sRGB, the way browsers draw it.
 
+### Error color: ember
+Loci had no error color. Ember is warm light pushed toward coral, so it belongs to the same scene but never reads as "a new moment" (which warm already means).
+
+| Candidate | On brand | On card | Over brightest granite | Difference from warm (OKLab dE) |
+|---|---|---|---|---|
+| #F2A07E | 6.28 | 7.91 | 4.54 | 4.6, too close to warm |
+| **#F0957A (chosen)** | **5.77** | **7.26** | **4.17** | **7.2** |
+| #E98270 | 4.91 | 6.17 | 3.54 | 11.7, too dark on the texture |
+
+- Rule: errors sit on stone or a card, never straight on the granite (4.17 there).
+- Rule: never color alone. Always the warning icon and words.
+- Light theme: #9E3A2C, 6.19 on paper, dE 6.7 from warm-on-paper.
+- First drafted in the Paper sign-in exploration (not in Loci's scope); the Paper file was then updated by hand.
+
 ## Images
 Originals live in `design/originals/` on this computer only (git ignores them). Optimized copies go in `src/assets/`.
 
