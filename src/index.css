@@ -1,6 +1,16 @@
 /* Load the tokens first, so every rule below can use them. */
 @import './tokens.css';
 
+/*
+  The color behind everything, beyond the page itself.
+  In a Home Screen app, iOS reserves a strip at the bottom (where Safari's
+  toolbar would be) until the first scroll. That strip shows this color,
+  not the page. Dark stone ground blends into the granite, so it disappears.
+*/
+html {
+  background: var(--bg-deep);
+}
+
 /* Dark theme on the whole page. Note is the default text style. */
 body {
   background: var(--bg);

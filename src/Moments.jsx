@@ -11,6 +11,8 @@ import AudioClip from './components/AudioClip.jsx'
 import Notice from './components/Notice.jsx'
 import TextLink from './components/TextLink.jsx'
 import TextButton from './components/TextButton.jsx'
+import Backdrop from './components/Backdrop.jsx'
+import granite from './assets/granite-dusk.webp'
 import { listCaptures, audioUrl, deleteCapture } from './captureStore.js'
 
 // "1 moment" or "3 moments".
@@ -68,7 +70,11 @@ function Moments() {
   }, [])
 
   return (
-    <main className="page stack-loose">
+    // has-backdrop + Backdrop: the same granite as Capture, edge to edge, so
+    // both screens feel like one place (and the bottom strip blends in).
+    <main className="page stack-loose has-backdrop">
+      <Backdrop image={granite} cover="screen" />
+
       <div className="stack-tight">
         <Label as="h1">Moments</Label>
         {status === 'ready' && items.length > 0 && (
