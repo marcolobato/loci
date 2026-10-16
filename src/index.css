@@ -81,9 +81,12 @@ h2 {
   align-items: center;             /* centers the middle row top to bottom
                                       (top and bottom rows are only as tall as their content) */
   text-align: center;
-  /* Safe area: on phones with a home bar, env(safe-area-inset-bottom) is the
-     height of that bar. Adding it to the page inset keeps the record button
-     clear of it. On screens without one, it is 0 and nothing changes. */
+  /* Safe areas: viewport-fit=cover lets the page reach under the phone's
+     status bar and home bar. env(safe-area-inset-top / -bottom) are the
+     heights of those bars. Adding them to the page inset keeps the label
+     clear of the clock and notch, and the Shutter clear of the home bar.
+     On screens without them, they are 0 and nothing changes. */
+  padding-top: calc(var(--space-page-inset) + env(safe-area-inset-top, 0rem));
   padding-bottom: calc(var(--space-page-inset) + env(safe-area-inset-bottom, 0rem));
 }
 
