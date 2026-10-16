@@ -1,0 +1,20 @@
+/*
+  Floats at the top of any screen, clear of the status bar.
+  Solid --surface (not the see-through card color), so it stays readable
+  over the granite: text 8.79:1, the cold-light buttons 6.03:1.
+*/
+.update-banner {
+  position: fixed;
+  top: calc(var(--space-page-inset) + env(safe-area-inset-top, 0rem));
+  left: var(--space-page-inset);
+  right: var(--space-page-inset);
+  z-index: 1;                       /* above the screen's content */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-inline);
+  padding: 0 var(--space-card-inset);
+  background: var(--surface);
+  text-align: left;
+}

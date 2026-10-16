@@ -104,6 +104,18 @@ h2 {
   /* Safe-area padding comes from .page, which every screen uses. */
 }
 
+/*
+  Preview frame (catalog only): shows a floating component, like the
+  UpdateBanner, inside a box instead of over the whole screen.
+  Any transform makes the box the frame that "fixed" content attaches to.
+*/
+.preview-frame {
+  position: relative;
+  transform: translateZ(0);
+  min-height: calc(var(--size-hit-target) * 3);
+  overflow: hidden;
+}
+
 /* Padding inside a box that isn't a whole screen, e.g. a preview. */
 .card-inset {
   padding: var(--space-card-inset);

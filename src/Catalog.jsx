@@ -9,6 +9,7 @@ import Note from './components/Note.jsx'
 import Caption from './components/Caption.jsx'
 import Icon from './components/Icon.jsx'
 import Notice from './components/Notice.jsx'
+import UpdateBanner from './components/UpdateBanner.jsx'
 import Shutter from './components/Shutter.jsx'
 import Backdrop from './components/Backdrop.jsx'
 import Moment from './components/Moment.jsx'
@@ -137,6 +138,18 @@ function Catalog() {
           <div className="card-inset has-backdrop">
             <Backdrop image={granite} />
             <Note tone="soft">Nothing kept yet. Your first moment starts here.</Note>
+          </div>
+        </div>
+      </section>
+
+      {/* UpdateBanner: normally floats at the top of the screen; here it
+          floats inside a preview frame instead. Buttons do nothing in the catalog. */}
+      <section className="stack-loose">
+        <Label as="h2">UpdateBanner</Label>
+        <div className="stack-tight">
+          <Caption>new version ready</Caption>
+          <div className="preview-frame">
+            <UpdateBanner onReload={() => {}} onDismiss={() => {}} />
           </div>
         </div>
       </section>
