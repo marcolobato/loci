@@ -14,6 +14,7 @@ import Notice from './components/Notice.jsx'
 import TextLink from './components/TextLink.jsx'
 import granite from './assets/granite-dusk.webp'
 import { useRecorder } from './useRecorder.js'
+import { pickHint, quietHint } from './hints.js'
 import { saveCapture, countCaptures, askToKeepStorage } from './captureStore.js'
 
 // "1 moment" or "3 moments".
@@ -22,9 +23,9 @@ const moments = (n) => (n === 1 ? '1 moment' : `${n} moments`)
 // What the middle line says in each state.
 // kept is null while the count is still loading, so we say nothing yet
 // rather than flash "Nothing kept yet" at someone who has captures.
-function messageFor(status, recordedSeconds, kept, saveState) {
+function messageFor(status, recordedSeconds, kept, saveState, hint) {
   if (status === 'asking') return 'Allow the microphone to listen.'
-  if (status === 'recording') return 'Listening…'
+  if (status === 'recording') return hint || 'Listening…'
   if (status === 'done' && saveState === 'saving') return 'Keeping…'
   if (status === 'done') return `Kept ${recordedSeconds} s of sound. ${moments(kept)} on this phone.`
   if (kept === null) return ''
@@ -56,6 +57,8 @@ function Capture() {
   // latest save went: idle, saving, saved or failed.
   const [kept, setKept] = useState(null)
   const [saveState, setSaveState] = useState('idle')
+  // The hint shown while recording (picked fresh each time; see hints.js).
+  const [hint, setHint] = useState('')
 
   // Called once each time a recording finishes: keep it on the phone.
   async function keep(file, seconds) {
@@ -70,7 +73,7 @@ function Capture() {
     }
   }
 
-  const { status, error, secondsLeft, recordedSeconds, audioUrl, level, start, stop } = useRecorder({ onRecorded: keep })
+  const { status, error, secondsLeft, recordedSeconds, audioUrl, level, isQuiet, start, stop } = useRecorder({ onRecorded: keep })
   const isRecording = status === 'recording'
 
   // On opening the screen: count what's already kept.
@@ -80,6 +83,7 @@ function Capture() {
 
   function record() {
     setSaveState('idle')
+    setHint(pickHint()) // a fresh invitation for each recording
     start()
   }
 
@@ -103,7 +107,7 @@ function Capture() {
           ) : saveState === 'failed' ? (
             <Notice>{saveFailed}</Notice>
           ) : (
-            <Note tone="soft">{messageFor(status, recordedSeconds, kept, saveState)}</Note>
+            <Note tone="soft">{messageFor(status, recordedSeconds, kept, saveState, isQuiet ? quietHint : hint)}</Note>
           )}
         </div>
         {/* The countdown is hidden from screen readers, so they don't hear
