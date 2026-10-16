@@ -10,7 +10,11 @@ import Caption from './components/Caption.jsx'
 import Icon from './components/Icon.jsx'
 import Shutter from './components/Shutter.jsx'
 import Backdrop from './components/Backdrop.jsx'
+import Moment from './components/Moment.jsx'
 import granite from './assets/granite-dusk.webp'
+import { afterglow } from './afterglow.js'
+// Sample captures (placeholders), one per afterglow step.
+import sample from '../data/sample.json'
 
 // The four Shutter states.
 // previewState lets the catalog show focus and pressed without a keyboard or finger.
@@ -25,6 +29,20 @@ function Catalog() {
   return (
     <main className="page stack-loose">
       <Label as="h1">Loci · Component catalog · Sample</Label>
+
+      {/* Moment: one per afterglow step, from the sample captures. */}
+      <section className="stack-loose">
+        <Label as="h2">Moment</Label>
+        {sample.captures.map((capture) => {
+          const { step, label } = afterglow(capture.minutesAgo)
+          return (
+            <div key={capture.id} className="stack-tight">
+              <Caption>{step} · {label}</Caption>
+              <Moment minutesAgo={capture.minutesAgo}>{capture.mood}</Moment>
+            </div>
+          )
+        })}
+      </section>
 
       {/* Shutter: both sizes, each in all four states. */}
       <section className="stack-loose">
