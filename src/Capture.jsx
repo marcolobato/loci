@@ -1,8 +1,11 @@
-// Pattern: record audio (10 s) with clear state, kept on the phone.
-// Tap the Shutter: it asks for the microphone, records 10 seconds and stops
-// by itself. Tap again to stop early. Each recording is kept automatically
-// (IndexedDB, see captureStore.js). The middle line always says what is
-// happening and how many moments are kept.
+// Pattern: one screen. Your moments live here, newest first, and capturing
+// happens in a bottom sheet over them.
+//   - Tap the Shutter: the sheet slides up and recording starts
+//     (10 seconds, or tap the Shutter in the sheet to stop early).
+//   - Each recording is kept automatically. Then add a photo, where you
+//     are and how it feels.
+//   - Done: the note is kept, the sheet closes, and the new moment appears
+//     at the top of the list.
 import { useEffect, useState } from 'react'
 import Label from './components/Label.jsx'
 import Note from './components/Note.jsx'
@@ -11,31 +14,29 @@ import Shutter from './components/Shutter.jsx'
 import Backdrop from './components/Backdrop.jsx'
 import AudioClip from './components/AudioClip.jsx'
 import Notice from './components/Notice.jsx'
-import TextLink from './components/TextLink.jsx'
-import granite from './assets/granite-dusk.webp'
-import { useRecorder } from './useRecorder.js'
-import { pickHint, quietHint } from './hints.js'
-import { saveCapture, countCaptures, askToKeepStorage, updateCapture, photoForStore } from './captureStore.js'
-import { shrinkPhoto } from './photo.js'
 import Photo from './components/Photo.jsx'
 import PhotoPicker from './components/PhotoPicker.jsx'
 import Field from './components/Field.jsx'
 import TextButton from './components/TextButton.jsx'
+import Sheet from './components/Sheet.jsx'
+import MomentList from './components/MomentList.jsx'
+import granite from './assets/granite-dusk.webp'
+import { useRecorder } from './useRecorder.js'
+import { useMoments } from './useMoments.js'
+import { pickHint, quietHint } from './hints.js'
+import { saveCapture, askToKeepStorage, updateCapture, photoForStore } from './captureStore.js'
+import { shrinkPhoto } from './photo.js'
 
 // "1 moment" or "3 moments".
 const moments = (n) => (n === 1 ? '1 moment' : `${n} moments`)
 
-// What the middle line says in each state.
-// kept is null while the count is still loading, so we say nothing yet
-// rather than flash "Nothing kept yet" at someone who has captures.
-function messageFor(status, recordedSeconds, kept, saveState, hint) {
+// What the sheet's top line says while capturing.
+function messageFor(status, recordedSeconds, saveState, hint) {
   if (status === 'asking') return 'Allow the microphone to listen.'
   if (status === 'recording') return hint || 'Listening…'
   if (status === 'done' && saveState === 'saving') return 'Keeping…'
-  if (status === 'done') return `Kept ${recordedSeconds} s of sound. ${moments(kept)} on this phone.`
-  if (kept === null) return ''
-  if (kept === 0) return 'Nothing kept yet. Your first moment starts here.'
-  return `${moments(kept)} kept on this phone. Tap to capture another.`
+  if (status === 'done') return `Kept ${recordedSeconds} s of sound. Add what you see and feel, then tap Done.`
+  return ''
 }
 
 // When recording fails: what happened, what to do, and (if useful) where.
@@ -58,22 +59,22 @@ const errors = {
 const saveFailed = 'Couldn’t keep this recording. Your phone may be out of space. You can still play it below.'
 
 function Capture() {
-  // How many captures are kept (null until we've checked), and how the
-  // latest save went: idle, saving, saved or failed.
-  const [kept, setKept] = useState(null)
+  // Your kept moments, for the list.
+  const kept = useMoments()
+
+  // The sheet, and how keeping the latest recording went: idle, saving,
+  // saved or failed.
+  const [sheetOpen, setSheetOpen] = useState(false)
   const [saveState, setSaveState] = useState('idle')
   // The hint shown while recording (picked fresh each time; see hints.js).
   const [hint, setHint] = useState('')
-  // The note for the capture just kept: its id, the two fields, and how
-  // saving the note went (idle, saving, saved or failed).
+  // What gets added to the capture just kept: its id, place, note, photo.
   const [currentId, setCurrentId] = useState(null)
   const [place, setPlace] = useState('')
   const [note, setNote] = useState('')
-  const [noteState, setNoteState] = useState('idle')
-  // The photo for the capture just kept: a link to show it, and how saving
-  // went (idle, saving, saved or failed).
   const [photoLink, setPhotoLink] = useState(null)
   const [photoState, setPhotoState] = useState('idle')
+  const [finishState, setFinishState] = useState('idle')
 
   // When the photo is replaced or the screen goes away, free its memory.
   useEffect(() => {
@@ -88,7 +89,6 @@ function Capture() {
     try {
       const capture = await saveCapture({ audio: file, seconds })
       setCurrentId(capture.id)
-      setKept(await countCaptures())
       setSaveState('saved')
       askToKeepStorage().catch(() => {}) // a "no" here is fine; nothing to show
     } catch {
@@ -98,21 +98,21 @@ function Capture() {
 
   const { status, error, secondsLeft, recordedSeconds, audioUrl, level, isQuiet, start, stop } = useRecorder({ onRecorded: keep })
   const isRecording = status === 'recording'
+  const isBusy = isRecording || status === 'asking'
 
-  // On opening the screen: count what's already kept.
-  useEffect(() => {
-    countCaptures().then(setKept).catch(() => setKept(0))
-  }, [])
-
+  // Start a fresh capture: clear the last one's extras, pick a hint, record.
+  // Called straight from the tap, because iPhone only allows recording
+  // that starts during a tap.
   function record() {
     setSaveState('idle')
-    setHint(pickHint()) // a fresh invitation for each recording
+    setHint(pickHint())
     setCurrentId(null)
     setPlace('')
     setNote('')
-    setNoteState('idle')
     setPhotoLink(null)
     setPhotoState('idle')
+    setFinishState('idle')
+    setSheetOpen(true)
     start()
   }
 
@@ -129,102 +129,123 @@ function Capture() {
     }
   }
 
-  // Add the place and note to the capture that was just kept.
-  async function keepNote() {
-    setNoteState('saving')
-    try {
-      await updateCapture(currentId, { place: place.trim(), note: note.trim() })
-      setNoteState('saved')
-    } catch {
-      setNoteState('failed')
+  // Done: keep the place and note (if any), close the sheet, and show the
+  // new moment in the list.
+  async function finish() {
+    if (isBusy) return
+    if (currentId && (place.trim() || note.trim())) {
+      setFinishState('saving')
+      try {
+        await updateCapture(currentId, { place: place.trim(), note: note.trim() })
+      } catch {
+        setFinishState('failed')
+        return
+      }
     }
+    setSheetOpen(false)
+    setFinishState('idle')
+    kept.reload()
   }
 
+  const count = kept.items.length
+
   return (
-    // screen-frame: label on top, message in the middle, button at the
-    // bottom center. page: keeps all three inside the 16px inset.
-    // has-backdrop: holds the granite texture behind everything.
-    <main className="page screen-frame has-backdrop">
-      {/* Behind: granite texture (AI-generated, decoration only) under a dark scrim. */}
+    // has-backdrop: the granite, edge to edge, behind everything.
+    // capture: leaves room at the bottom for the Shutter.
+    <main className="page stack-loose has-backdrop capture">
       <Backdrop image={granite} cover="screen" />
 
-      {/* Top: the app name, as the page's main heading. */}
-      <Label as="h1">Loci</Label>
+      {/* Top: the app name, and how many moments are kept. */}
+      <div className="stack-tight">
+        <Label as="h1">Loci</Label>
+        {kept.status === 'ready' && count > 0 && <Caption>{moments(count)} on this phone · newest first</Caption>}
+      </div>
 
-      {/* Middle: what is happening now. full-width so the player can stretch. */}
-      <div className="stack-tight full-width">
-        {/* role="status": screen readers read this line out when it changes. */}
-        <div role="status">
-          {status === 'error' ? (
-            <Notice hint={errors[error]?.hint}>{(errors[error] ?? errors.failed).text}</Notice>
-          ) : saveState === 'failed' ? (
-            <Notice>{saveFailed}</Notice>
-          ) : (
-            <Note tone="soft">{messageFor(status, recordedSeconds, kept, saveState, isQuiet ? quietHint : hint)}</Note>
-          )}
-        </div>
-        {/* The countdown is hidden from screen readers, so they don't hear
-            a number every second. The line above already says "Listening". */}
-        {isRecording && (
-          <div aria-hidden="true">
-            <Caption>0:{String(secondsLeft).padStart(2, '0')}</Caption>
-          </div>
-        )}
-        {/* When done: play back what was just recorded. */}
-        {status === 'done' && audioUrl && <AudioClip src={audioUrl} label="Your recording" />}
-        {/* Once kept: add a photo, where you are and how it feels. All optional. */}
-        {status === 'done' && saveState === 'saved' && (
-          <div className="stack-normal">
-            {photoLink && <Photo src={photoLink} alt={place ? `Photo of ${place}` : 'Photo of this moment'} />}
-            <div role="status">
-              {photoState === 'saving' ? (
-                <Caption>Keeping the photo…</Caption>
-              ) : (
-                <PhotoPicker label={photoLink ? 'Change the photo' : 'Add a photo'} onPick={addPhoto} />
-              )}
-            </div>
-            {photoState === 'failed' && <Notice>Couldn’t keep the photo. Try another one.</Notice>}
-            <Field
-              label="Where are you?"
-              value={place}
-              onChange={(text) => { setPlace(text); setNoteState('idle') }}
-              placeholder="A street, a room, a ruin"
-            />
-            <Field
-              label="What does it feel like?"
-              multiline
-              value={note}
-              onChange={(text) => { setNote(text); setNoteState('idle') }}
-              placeholder="Light, sound, temperature, what's close to you"
-              hint="Tip: tap the microphone on the keyboard to say it instead."
-            />
-            <div role="status" className="inline-group">
-              {noteState === 'saved' ? (
-                <Caption>Note kept.</Caption>
-              ) : (
-                <TextButton onClick={keepNote}>{noteState === 'saving' ? 'Keeping…' : 'Keep the note'}</TextButton>
-              )}
-            </div>
-            {noteState === 'failed' && <Notice>Couldn’t keep the note. Try again.</Notice>}
-          </div>
-        )}
-        {/* Once something is kept, offer the way to find it again.
-            Hidden while recording, so nothing pulls attention from listening. */}
-        {kept > 0 && !isRecording && status !== 'asking' && (
-          <div>
-            <TextLink href="?moments">Your moments</TextLink>
-          </div>
+      {/* Loading, failure, or nothing kept yet. */}
+      <div role="status">
+        {kept.status === 'loading' && <Note tone="soft">Opening your moments…</Note>}
+        {kept.status === 'error' && <Notice>Couldn’t open your moments. Reload the page to try again.</Notice>}
+        {kept.status === 'ready' && count === 0 && (
+          <Note tone="soft">Nothing kept yet. Your first moment starts here: tap the Shutter.</Note>
         )}
       </div>
 
-      {/* Bottom: the Shutter. Tap to record; tap again to stop early. */}
-      <Shutter
-        size="large"
-        label={isRecording ? 'Stop recording' : 'Capture moment'}
-        onClick={isRecording ? stop : record}
-        recording={isRecording}
-        level={level}
-      />
+      {/* Your moments. */}
+      {kept.status === 'ready' && count > 0 && (
+        <MomentList items={kept.items} onDecide={kept.decide} onRemove={kept.remove} />
+      )}
+
+      {/* Bottom: the Shutter, always within reach. It opens the sheet. */}
+      <div className="capture__dock">
+        <Shutter size="large" label="Capture moment" onClick={record} />
+      </div>
+
+      {/* The sheet: everything about the capture in progress. */}
+      <Sheet open={sheetOpen} onClose={finish} closable={!isBusy} label="Capture a moment">
+        <div className="stack-normal">
+          {/* role="status": screen readers read this line out when it changes. */}
+          <div role="status">
+            {status === 'error' ? (
+              <Notice hint={errors[error]?.hint}>{(errors[error] ?? errors.failed).text}</Notice>
+            ) : saveState === 'failed' ? (
+              <Notice>{saveFailed}</Notice>
+            ) : (
+              <Note tone="soft">{messageFor(status, recordedSeconds, saveState, isQuiet ? quietHint : hint)}</Note>
+            )}
+          </div>
+
+          {/* The countdown is hidden from screen readers, so they don't hear
+              a number every second. The line above already says what's on. */}
+          {isRecording && (
+            <div aria-hidden="true">
+              <Caption>0:{String(secondsLeft).padStart(2, '0')}</Caption>
+            </div>
+          )}
+
+          {status === 'done' && audioUrl && <AudioClip src={audioUrl} label="Your recording" />}
+
+          {/* Once kept: a photo, where you are and how it feels. All optional. */}
+          {status === 'done' && saveState === 'saved' && (
+            <>
+              {photoLink && <Photo src={photoLink} alt={place ? `Photo of ${place}` : 'Photo of this moment'} />}
+              <div role="status">
+                {photoState === 'saving' ? (
+                  <Caption>Keeping the photo…</Caption>
+                ) : (
+                  <PhotoPicker label={photoLink ? 'Change the photo' : 'Add a photo'} onPick={addPhoto} />
+                )}
+              </div>
+              {photoState === 'failed' && <Notice>Couldn’t keep the photo. Try another one.</Notice>}
+              <Field label="Where are you?" value={place} onChange={setPlace} placeholder="A street, a room, a ruin" />
+              <Field
+                label="What does it feel like?"
+                multiline
+                value={note}
+                onChange={setNote}
+                placeholder="Light, sound, temperature, what's close to you"
+                hint="Tip: tap the microphone on the keyboard to say it instead."
+              />
+            </>
+          )}
+          {finishState === 'failed' && <Notice>Couldn’t keep the note. Try Done again.</Notice>}
+
+          {/* The sheet's own Shutter (the one behind can't be tapped while
+              the sheet is open): stop early, or record again. And Done. */}
+          <div className="sheet__actions">
+            <Shutter
+              size="large"
+              label={isRecording ? 'Stop recording' : 'Record again'}
+              onClick={isRecording ? stop : record}
+              disabled={status === 'asking'}
+              recording={isRecording}
+              level={level}
+            />
+            {!isBusy && (
+              <TextButton onClick={finish}>{finishState === 'saving' ? 'Keeping…' : 'Done'}</TextButton>
+            )}
+          </div>
+        </div>
+      </Sheet>
     </main>
   )
 }

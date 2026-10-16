@@ -1,8 +1,7 @@
 // The screen Loci shows. Each screen lives in its own file;
 // App picks which one to show from the address:
-//   ?moments – your kept captures
 //   ?catalog – the component catalog
-//   (nothing) – Capture
+//   (nothing) – Capture: your moments, and capturing new ones
 // Typing or tapping a new address reloads the page, so no router is needed.
 // TypeSample.jsx is kept for reference but not shown.
 //
@@ -11,13 +10,11 @@
 import { useRegisterSW } from 'virtual:pwa-register/react'
 import Capture from './Capture.jsx'
 import Catalog from './Catalog.jsx'
-import Moments from './Moments.jsx'
 import UpdateBanner from './components/UpdateBanner.jsx'
 
 const query = new URLSearchParams(window.location.search)
 
 function Screen() {
-  if (query.has('moments')) return <Moments />
   if (query.has('catalog')) return <Catalog />
   return <Capture />
 }

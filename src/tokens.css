@@ -182,6 +182,7 @@
   --duration-afterglow:  6s;     /* warm → cold → dim */
   --duration-decay:      6s;     /* spec heading says <2s; values say 6s. Values used. */
   --duration-afterimage: 3.2s;   /* cold ghost drifts off */
+  --duration-sheet:      240ms;  /* a bottom sheet sliding up */
   --duration-record:     10s;    /* one recording; must match RECORD_SECONDS in useRecorder.js */
   --delay-decay-step:    0.45s;  /* per letter, last letter first */
 

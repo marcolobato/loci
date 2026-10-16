@@ -10,6 +10,8 @@ import Note from './components/Note.jsx'
 import Field from './components/Field.jsx'
 import Ingredients from './components/Ingredients.jsx'
 import Photo from './components/Photo.jsx'
+import Sheet from './components/Sheet.jsx'
+import TextButton from './components/TextButton.jsx'
 import PhotoPicker from './components/PhotoPicker.jsx'
 import Caption from './components/Caption.jsx'
 import Icon from './components/Icon.jsx'
@@ -63,6 +65,26 @@ function SampleIngredients() {
         })
       }
     />
+  )
+}
+
+// A sample sheet: opens from a button, closes with Done (or Escape).
+function SampleSheet() {
+  const [open, setOpen] = useState(false)
+  return (
+    <>
+      <div>
+        <TextButton onClick={() => setOpen(true)}>Open a sample sheet</TextButton>
+      </div>
+      <Sheet open={open} onClose={() => setOpen(false)} label="Sample sheet">
+        <div className="stack-normal">
+          <Note tone="soft">A sheet slides up over the screen. The screen behind can’t be tapped until it closes.</Note>
+          <div className="sheet__actions">
+            <TextButton onClick={() => setOpen(false)}>Done</TextButton>
+          </div>
+        </div>
+      </Sheet>
+    </>
   )
 }
 
@@ -209,6 +231,12 @@ function Catalog() {
           <Caption>sample note · Pantheon, Rome</Caption>
           <SampleIngredients />
         </div>
+      </section>
+
+      {/* Sheet: the bottom sheet Capture uses while capturing. */}
+      <section className="stack-loose">
+        <Label as="h2">Sheet</Label>
+        <SampleSheet />
       </section>
 
       {/* Photo and PhotoPicker. The sample photo is the granite texture

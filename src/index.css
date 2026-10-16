@@ -148,6 +148,36 @@ h2 {
 }
 
 /*
+  Capture (one screen): the list scrolls; the Shutter stays fixed at the
+  bottom center. The page leaves room at the bottom so the last moment
+  never hides behind the Shutter.
+*/
+.capture {
+  padding-bottom: calc(var(--size-shutter-ring) + var(--space-stack-loose) * 2 + env(safe-area-inset-bottom, 0rem));
+}
+.capture__dock {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--space-page-inset) + env(safe-area-inset-bottom, 0rem));
+  display: flex;
+  justify-content: center;
+  pointer-events: none;             /* only the Shutter itself takes taps... */
+}
+.capture__dock > * {
+  pointer-events: auto;             /* ...so the list beside it stays tappable */
+}
+
+/* The sheet's Shutter and Done, centered at the bottom of the sheet. */
+.sheet__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-stack-tight);
+  padding-top: var(--space-stack-tight);
+}
+
+/*
   Has backdrop: a container that holds a Backdrop behind its content.
   isolation: isolate keeps the Backdrop's z-index: -1 inside this container,
   so it sits behind the content but never behind the page itself.
