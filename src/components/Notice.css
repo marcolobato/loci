@@ -1,0 +1,15 @@
+/* Icon on the left, words on the right, read left to right even on a centered screen. */
+.notice {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--space-inline);
+  text-align: left;
+}
+
+/* The icon takes the error color; the Icon draws with currentColor. */
+.notice__icon {
+  flex: none;
+  display: flex;
+  color: var(--error);
+}

@@ -8,6 +8,7 @@ import Caption from './components/Caption.jsx'
 import Shutter from './components/Shutter.jsx'
 import Backdrop from './components/Backdrop.jsx'
 import AudioClip from './components/AudioClip.jsx'
+import Notice from './components/Notice.jsx'
 import granite from './assets/granite-dusk.webp'
 import { useRecorder } from './useRecorder.js'
 
@@ -16,12 +17,29 @@ function messageFor(status, recordedSeconds) {
   if (status === 'asking') return 'Allow the microphone to listen.'
   if (status === 'recording') return 'Listening…'
   if (status === 'done') return `Recorded ${recordedSeconds} s. Tap to record again.`
-  if (status === 'error') return "Couldn't record. Try again."   // clearer messages come in step 5
   return 'Nothing kept yet. Your first moment starts here.'
 }
 
+// When recording fails: what happened, what to do, and (if useful) where.
+// Each one names a fix. None of them blame the person.
+const errors = {
+  blocked: {
+    text: 'Loci can’t hear the room. Allow the microphone, then tap to try again.',
+    hint: 'On iPhone: tap the page menu in the address bar, then Website Settings, then Microphone.',
+  },
+  'no-mic': {
+    text: 'No microphone found. Connect one, or open Loci on your phone.',
+  },
+  unsupported: {
+    text: 'This browser can’t record sound. Open Loci in an up-to-date Safari or Chrome.',
+  },
+  failed: {
+    text: 'Something stopped the recording. Tap to try again.',
+  },
+}
+
 function Capture() {
-  const { status, secondsLeft, recordedSeconds, audioUrl, start, stop } = useRecorder()
+  const { status, error, secondsLeft, recordedSeconds, audioUrl, start, stop } = useRecorder()
   const isRecording = status === 'recording'
 
   return (
@@ -39,7 +57,11 @@ function Capture() {
       <div className="stack-tight full-width">
         {/* role="status": screen readers read this line out when it changes. */}
         <div role="status">
-          <Note tone="soft">{messageFor(status, recordedSeconds)}</Note>
+          {status === 'error' ? (
+            <Notice hint={errors[error]?.hint}>{(errors[error] ?? errors.failed).text}</Notice>
+          ) : (
+            <Note tone="soft">{messageFor(status, recordedSeconds)}</Note>
+          )}
         </div>
         {/* The countdown is hidden from screen readers, so they don't hear
             a number every second. The line above already says "Listening". */}

@@ -8,6 +8,7 @@ import Label from './components/Label.jsx'
 import Note from './components/Note.jsx'
 import Caption from './components/Caption.jsx'
 import Icon from './components/Icon.jsx'
+import Notice from './components/Notice.jsx'
 import Shutter from './components/Shutter.jsx'
 import Backdrop from './components/Backdrop.jsx'
 import Moment from './components/Moment.jsx'
@@ -140,12 +141,31 @@ function Catalog() {
         </div>
       </section>
 
+      {/* Notice: error messages. Words in text color, icon in ember. */}
+      <section className="stack-loose">
+        <Label as="h2">Notice</Label>
+        <div className="stack-tight">
+          <Caption>with a hint</Caption>
+          <Notice hint="On iPhone: tap the page menu in the address bar, then Website Settings, then Microphone.">
+            Loci can’t hear the room. Allow the microphone, then tap to try again.
+          </Notice>
+        </div>
+        <div className="stack-tight">
+          <Caption>without a hint</Caption>
+          <Notice>Something stopped the recording. Tap to try again.</Notice>
+        </div>
+      </section>
+
       {/* Icon */}
       <section className="stack-loose">
         <Label as="h2">Icon</Label>
         <div className="stack-tight">
           <Caption>record</Caption>
           <Icon name="record" />
+        </div>
+        <div className="stack-tight">
+          <Caption>warning</Caption>
+          <Icon name="warning" />
         </div>
       </section>
     </main>

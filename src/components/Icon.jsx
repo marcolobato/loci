@@ -10,6 +10,14 @@
 // Each icon is the inside of a 24 x 24 drawing box.
 const icons = {
   record: <circle cx="12" cy="12" r="10" fill="currentColor" />,
+  // A circle with "!": something needs attention.
+  warning: (
+    <>
+      <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2" />
+      <path d="M12 7v6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <circle cx="12" cy="17" r="1.25" fill="currentColor" />
+    </>
+  ),
 }
 
 function Icon({ name }) {
