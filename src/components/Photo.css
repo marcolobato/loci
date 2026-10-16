@@ -1,0 +1,8 @@
+/* Full width, 4:3, cropped to fill (no stretching), square corners like the cards. */
+.photo {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--surface);   /* shows while the photo loads */
+}

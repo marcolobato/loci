@@ -116,6 +116,19 @@ h2 {
   overflow: hidden;
 }
 
+/*
+  Visually hidden: invisible on screen, but still there for screen readers
+  and keyboards. Used for the file picker inside "Add a photo".
+*/
+.visually-hidden {
+  position: absolute;
+  width: var(--size-hairline);
+  height: var(--size-hairline);
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 /* Padding inside a box that isn't a whole screen, e.g. a preview. */
 .card-inset {
   padding: var(--space-card-inset);

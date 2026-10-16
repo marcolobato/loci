@@ -4,8 +4,7 @@
 //
 // A saved capture looks like:
 //   { id, capturedAt, seconds, audio: { bytes, type }, place, note, photo }
-// place and note are added after recording (empty until then);
-// photo stays empty until that pattern is built.
+// place, note and photo are added after recording (empty until then).
 //
 // Functions (all return Promises, so use them with await):
 //   saveCapture({ audio, seconds })  – keep a new capture; returns it
@@ -15,6 +14,8 @@
 //   deleteCapture(id)                – remove one for good
 //   askToKeepStorage()               – ask the browser not to erase our data
 //   audioUrl(capture)                – a playable link for a capture's sound
+//   photoForStore(file)              – a photo file, ready to save with updateCapture
+//   photoUrl(capture)                – a link to show a capture's photo (or null)
 
 const DB_NAME = 'loci'
 const DB_VERSION = 1
@@ -103,4 +104,17 @@ export async function askToKeepStorage() {
 // URL.revokeObjectURL when done, like useRecorder does.
 export function audioUrl(capture) {
   return URL.createObjectURL(new Blob([capture.audio.bytes], { type: capture.audio.type }))
+}
+
+// Turn a photo file into the shape we keep: raw bytes plus format,
+// for the same reason as the sound (older iPhones can't store files).
+export async function photoForStore(file) {
+  return { bytes: await file.arrayBuffer(), type: file.type }
+}
+
+// A link to show a capture's photo, or null if it has none.
+// Free it with URL.revokeObjectURL when done.
+export function photoUrl(capture) {
+  if (!capture.photo) return null
+  return URL.createObjectURL(new Blob([capture.photo.bytes], { type: capture.photo.type }))
 }

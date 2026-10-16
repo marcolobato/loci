@@ -1,0 +1,5 @@
+/* The hidden file input can't show focus itself, so the words do. */
+.photo-picker:focus-within {
+  outline: var(--size-focus-ring) solid var(--focus);
+  outline-offset: var(--size-focus-ring);
+}

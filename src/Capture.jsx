@@ -15,7 +15,10 @@ import TextLink from './components/TextLink.jsx'
 import granite from './assets/granite-dusk.webp'
 import { useRecorder } from './useRecorder.js'
 import { pickHint, quietHint } from './hints.js'
-import { saveCapture, countCaptures, askToKeepStorage, updateCapture } from './captureStore.js'
+import { saveCapture, countCaptures, askToKeepStorage, updateCapture, photoForStore } from './captureStore.js'
+import { shrinkPhoto } from './photo.js'
+import Photo from './components/Photo.jsx'
+import PhotoPicker from './components/PhotoPicker.jsx'
 import Field from './components/Field.jsx'
 import TextButton from './components/TextButton.jsx'
 
@@ -67,6 +70,17 @@ function Capture() {
   const [place, setPlace] = useState('')
   const [note, setNote] = useState('')
   const [noteState, setNoteState] = useState('idle')
+  // The photo for the capture just kept: a link to show it, and how saving
+  // went (idle, saving, saved or failed).
+  const [photoLink, setPhotoLink] = useState(null)
+  const [photoState, setPhotoState] = useState('idle')
+
+  // When the photo is replaced or the screen goes away, free its memory.
+  useEffect(() => {
+    return () => {
+      if (photoLink) URL.revokeObjectURL(photoLink)
+    }
+  }, [photoLink])
 
   // Called once each time a recording finishes: keep it on the phone.
   async function keep(file, seconds) {
@@ -97,7 +111,22 @@ function Capture() {
     setPlace('')
     setNote('')
     setNoteState('idle')
+    setPhotoLink(null)
+    setPhotoState('idle')
     start()
+  }
+
+  // Shrink the chosen photo, keep it with the capture, and show it.
+  async function addPhoto(file) {
+    setPhotoState('saving')
+    try {
+      const small = await shrinkPhoto(file)
+      await updateCapture(currentId, { photo: await photoForStore(small) })
+      setPhotoLink(URL.createObjectURL(small))
+      setPhotoState('saved')
+    } catch {
+      setPhotoState('failed')
+    }
   }
 
   // Add the place and note to the capture that was just kept.
@@ -143,9 +172,18 @@ function Capture() {
         )}
         {/* When done: play back what was just recorded. */}
         {status === 'done' && audioUrl && <AudioClip src={audioUrl} label="Your recording" />}
-        {/* Once kept: add where you are and how it feels. Both optional. */}
+        {/* Once kept: add a photo, where you are and how it feels. All optional. */}
         {status === 'done' && saveState === 'saved' && (
           <div className="stack-normal">
+            {photoLink && <Photo src={photoLink} alt={place ? `Photo of ${place}` : 'Photo of this moment'} />}
+            <div role="status">
+              {photoState === 'saving' ? (
+                <Caption>Keeping the photo…</Caption>
+              ) : (
+                <PhotoPicker label={photoLink ? 'Change the photo' : 'Add a photo'} onPick={addPhoto} />
+              )}
+            </div>
+            {photoState === 'failed' && <Notice>Couldn’t keep the photo. Try another one.</Notice>}
             <Field
               label="Where are you?"
               value={place}

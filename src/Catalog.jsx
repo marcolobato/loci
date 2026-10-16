@@ -9,6 +9,8 @@ import Label from './components/Label.jsx'
 import Note from './components/Note.jsx'
 import Field from './components/Field.jsx'
 import Ingredients from './components/Ingredients.jsx'
+import Photo from './components/Photo.jsx'
+import PhotoPicker from './components/PhotoPicker.jsx'
 import Caption from './components/Caption.jsx'
 import Icon from './components/Icon.jsx'
 import Notice from './components/Notice.jsx'
@@ -206,6 +208,22 @@ function Catalog() {
         <div className="stack-tight">
           <Caption>sample note · Pantheon, Rome</Caption>
           <SampleIngredients />
+        </div>
+      </section>
+
+      {/* Photo and PhotoPicker. The sample photo is the granite texture
+          (AI-generated), not a real capture. The picker opens but saves nothing. */}
+      <section className="stack-loose">
+        <Label as="h2">Photo</Label>
+        <div className="stack-tight">
+          <Caption>4:3 · sample image</Caption>
+          <Photo src={granite} alt="Sample: granite texture" />
+        </div>
+        <div className="stack-tight">
+          <Caption>PhotoPicker</Caption>
+          <div>
+            <PhotoPicker label="Add a photo" onPick={() => {}} />
+          </div>
         </div>
       </section>
 

@@ -1,6 +1,7 @@
 import Note from './Note.jsx'
 import Caption from './Caption.jsx'
 import Moment from './Moment.jsx'
+import Photo from './Photo.jsx'
 import { afterglow } from '../afterglow.js'
 import './CaptureRow.css'
 
@@ -14,12 +15,13 @@ import './CaptureRow.css'
 //                "10 s of sound".
 //   mood       – optional mood line, e.g. "rain falling through the oculus"
 //   minutesAgo – how long ago it was captured
+//   photo      – optional { src, alt }: shown at the top of the card
 //   children   – optional extra content under the text, e.g. a player
 //
 // It is a list item (<li>), so put it inside a list:
 //   <ul className="list"> <CaptureRow … /> </ul>
 // Screen readers then announce "list, 5 items".
-function CaptureRow({ place, mood, minutesAgo, children }) {
+function CaptureRow({ place, mood, minutesAgo, photo, children }) {
   const { color, label, iso } = afterglow(minutesAgo)
 
   return (
@@ -27,6 +29,7 @@ function CaptureRow({ place, mood, minutesAgo, children }) {
       {/* The strip: decoration only, since the words carry the same meaning. */}
       <span className="capture-row__strip" style={{ background: color }} aria-hidden="true" />
       <div className="capture-row__body stack-tight">
+        {photo && <Photo src={photo.src} alt={photo.alt} />}
         <div>
           <Note>{place}</Note>
           {/* <time> carries the exact moment for screen readers and other tools,

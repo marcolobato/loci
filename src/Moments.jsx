@@ -13,7 +13,7 @@ import TextLink from './components/TextLink.jsx'
 import TextButton from './components/TextButton.jsx'
 import Backdrop from './components/Backdrop.jsx'
 import granite from './assets/granite-dusk.webp'
-import { listCaptures, audioUrl, deleteCapture, updateCapture } from './captureStore.js'
+import { listCaptures, audioUrl, photoUrl, deleteCapture, updateCapture } from './captureStore.js'
 import Ingredients from './components/Ingredients.jsx'
 
 // "1 moment" or "3 moments".
@@ -47,6 +47,7 @@ function Moments() {
     try {
       await deleteCapture(item.id)
       URL.revokeObjectURL(item.url) // free its player's memory
+      if (item.photoLink) URL.revokeObjectURL(item.photoLink) // and its photo's
       setItems((current) => current.filter((other) => other.id !== item.id))
       setConfirmingId(null)
       setFailedId(null)
@@ -68,9 +69,10 @@ function Moments() {
         const withLinks = captures.map((capture) => ({
           ...capture,
           url: audioUrl(capture),
+          photoLink: photoUrl(capture),
           minutesAgo: (now - Date.parse(capture.capturedAt)) / 60000,
         }))
-        links = withLinks.map((item) => item.url)
+        links = withLinks.flatMap((item) => [item.url, item.photoLink].filter(Boolean))
         setItems(withLinks)
         setStatus('ready')
       })
@@ -116,6 +118,7 @@ function Moments() {
             <CaptureRow
               key={item.id}
               place={item.place || `${item.seconds} s of sound`}
+              photo={item.photoLink && { src: item.photoLink, alt: item.place ? `Photo of ${item.place}` : 'Photo of this moment' }}
               mood={item.note}
               minutesAgo={item.minutesAgo}
             >
