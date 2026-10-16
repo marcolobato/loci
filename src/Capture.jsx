@@ -11,6 +11,7 @@ import Shutter from './components/Shutter.jsx'
 import Backdrop from './components/Backdrop.jsx'
 import AudioClip from './components/AudioClip.jsx'
 import Notice from './components/Notice.jsx'
+import TextLink from './components/TextLink.jsx'
 import granite from './assets/granite-dusk.webp'
 import { useRecorder } from './useRecorder.js'
 import { saveCapture, countCaptures, askToKeepStorage } from './captureStore.js'
@@ -114,6 +115,13 @@ function Capture() {
         )}
         {/* When done: play back what was just recorded. */}
         {status === 'done' && audioUrl && <AudioClip src={audioUrl} label="Your recording" />}
+        {/* Once something is kept, offer the way to find it again.
+            Hidden while recording, so nothing pulls attention from listening. */}
+        {kept > 0 && !isRecording && status !== 'asking' && (
+          <div>
+            <TextLink href="?moments">Your moments</TextLink>
+          </div>
+        )}
       </div>
 
       {/* Bottom: the Shutter. Tap to record; tap again to stop early. */}

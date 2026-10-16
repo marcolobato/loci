@@ -10,6 +10,12 @@
   background: var(--card);
 }
 
+/* The text side takes the rest of the width, so a player inside can stretch. */
+.capture-row__body {
+  flex: 1;
+  min-width: 0;                   /* lets long text wrap instead of overflowing */
+}
+
 /* The strip stretches to the row's full height (flex rows stretch by default). */
 .capture-row__strip {
   flex: none;                     /* never squeezed narrower */

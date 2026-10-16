@@ -1,0 +1,16 @@
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--size-hit-target);   /* easy to tap */
+  font-family: var(--type-note-family);
+  font-size: var(--type-note-size);
+  color: var(--accent-cold);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;         /* keeps the line off the letters */
+}
+
+/* Keyboard focus: the same cold ring as the Shutter. */
+.text-link:focus-visible {
+  outline: var(--size-focus-ring) solid var(--focus);
+  outline-offset: var(--size-focus-ring);
+}
