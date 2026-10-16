@@ -4,8 +4,10 @@
 //
 // Spacing: each group (a variant name + its sample) is a tight stack (8px).
 // Groups, and the sections that hold them, are loose stacks (32px).
+import { useState } from 'react'
 import Label from './components/Label.jsx'
 import Note from './components/Note.jsx'
+import Field from './components/Field.jsx'
 import Caption from './components/Caption.jsx'
 import Icon from './components/Icon.jsx'
 import Notice from './components/Notice.jsx'
@@ -39,6 +41,31 @@ const shutterStates = [
   { name: 'Pressed', previewState: 'pressed' },
   { name: 'Disabled', disabled: true },
 ]
+
+// The two Field samples keep their own text, so typing in the catalog works.
+function SampleFields() {
+  const [place, setPlace] = useState('')
+  const [note, setNote] = useState('')
+  return (
+    <>
+      <div className="stack-tight">
+        <Caption>one line</Caption>
+        <Field label="Where are you?" value={place} onChange={setPlace} placeholder="A street, a room, a ruin" />
+      </div>
+      <div className="stack-tight">
+        <Caption>multiline, with a hint</Caption>
+        <Field
+          label="What does it feel like?"
+          multiline
+          value={note}
+          onChange={setNote}
+          placeholder="Light, sound, temperature, what's close to you"
+          hint="Tip: tap the microphone on the keyboard to say it instead."
+        />
+      </div>
+    </>
+  )
+}
 
 function Catalog() {
   return (
@@ -148,6 +175,12 @@ function Catalog() {
             <Note tone="soft">Nothing kept yet. Your first moment starts here.</Note>
           </div>
         </div>
+      </section>
+
+      {/* Field: one line (place) and several lines (note). Typing works here. */}
+      <section className="stack-loose">
+        <Label as="h2">Field</Label>
+        <SampleFields />
       </section>
 
       {/* UpdateBanner: normally floats at the top of the screen; here it

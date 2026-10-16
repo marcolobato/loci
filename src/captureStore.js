@@ -3,13 +3,15 @@
 // Pattern: offline first.
 //
 // A saved capture looks like:
-//   { id, capturedAt, seconds, audio: { bytes, type }, photo: null, note: null }
-// photo and note stay empty until those patterns are built.
+//   { id, capturedAt, seconds, audio: { bytes, type }, place, note, photo }
+// place and note are added after recording (empty until then);
+// photo stays empty until that pattern is built.
 //
 // Functions (all return Promises, so use them with await):
 //   saveCapture({ audio, seconds })  – keep a new capture; returns it
 //   listCaptures()                   – every capture, newest first
 //   countCaptures()                  – how many are kept
+//   updateCapture(id, changes)       – change some fields, e.g. place and note
 //   deleteCapture(id)                – remove one for good
 //   askToKeepStorage()               – ask the browser not to erase our data
 //   audioUrl(capture)                – a playable link for a capture's sound
@@ -56,8 +58,9 @@ export async function saveCapture({ audio, seconds }) {
     capturedAt: new Date().toISOString(),
     seconds,
     audio: { bytes: await audio.arrayBuffer(), type: audio.type },
+    place: '',
+    note: '',
     photo: null,
-    note: null,
   }
   await done((await captures('readwrite')).add(capture))
   return capture
@@ -70,6 +73,17 @@ export async function listCaptures() {
 
 export async function countCaptures() {
   return done((await captures('readonly')).count())
+}
+
+// Change some fields of a kept capture, e.g. add its place and note.
+// changes: an object like { place: 'Pantheon, Rome', note: '…' }.
+export async function updateCapture(id, changes) {
+  const store = await captures('readwrite')
+  const current = await done(store.get(id))
+  if (!current) throw new Error('Capture not found')
+  const updated = { ...current, ...changes }
+  await done(store.put(updated))
+  return updated
 }
 
 export async function deleteCapture(id) {

@@ -100,7 +100,8 @@ function Moments() {
           {items.map((item) => (
             <CaptureRow
               key={item.id}
-              place={`${item.seconds} s of sound`}
+              place={item.place || `${item.seconds} s of sound`}
+              mood={item.note}
               minutesAgo={item.minutesAgo}
             >
               <AudioClip src={item.url} label={`Play ${item.seconds} seconds of sound`} />

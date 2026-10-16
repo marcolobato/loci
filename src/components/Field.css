@@ -1,0 +1,35 @@
+/* The field's words line up on the left, even on a centered screen. */
+.field {
+  text-align: left;
+}
+
+/*
+  The box you type in. 16px text (the Note size): smaller text makes
+  iPhone Safari zoom in when you tap the field.
+  Solid --surface, so it stays readable over the granite.
+*/
+.field__input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--size-hit-target);
+  padding: var(--space-xs) var(--space-card-inset);
+  font-family: var(--type-note-family);
+  font-size: var(--type-note-size);
+  line-height: var(--type-note-leading);
+  color: var(--text);
+  background: var(--surface);
+  border: var(--size-hairline) solid var(--border);
+  border-radius: 0;
+  resize: vertical;
+}
+
+.field__input::placeholder {
+  color: var(--text-muted);
+}
+
+/* Keyboard or tap focus: the cold ring, like every other control. */
+.field__input:focus-visible,
+.field__input:focus {
+  outline: var(--size-focus-ring) solid var(--focus);
+  outline-offset: 0;
+}

@@ -15,7 +15,9 @@ import TextLink from './components/TextLink.jsx'
 import granite from './assets/granite-dusk.webp'
 import { useRecorder } from './useRecorder.js'
 import { pickHint, quietHint } from './hints.js'
-import { saveCapture, countCaptures, askToKeepStorage } from './captureStore.js'
+import { saveCapture, countCaptures, askToKeepStorage, updateCapture } from './captureStore.js'
+import Field from './components/Field.jsx'
+import TextButton from './components/TextButton.jsx'
 
 // "1 moment" or "3 moments".
 const moments = (n) => (n === 1 ? '1 moment' : `${n} moments`)
@@ -59,12 +61,19 @@ function Capture() {
   const [saveState, setSaveState] = useState('idle')
   // The hint shown while recording (picked fresh each time; see hints.js).
   const [hint, setHint] = useState('')
+  // The note for the capture just kept: its id, the two fields, and how
+  // saving the note went (idle, saving, saved or failed).
+  const [currentId, setCurrentId] = useState(null)
+  const [place, setPlace] = useState('')
+  const [note, setNote] = useState('')
+  const [noteState, setNoteState] = useState('idle')
 
   // Called once each time a recording finishes: keep it on the phone.
   async function keep(file, seconds) {
     setSaveState('saving')
     try {
-      await saveCapture({ audio: file, seconds })
+      const capture = await saveCapture({ audio: file, seconds })
+      setCurrentId(capture.id)
       setKept(await countCaptures())
       setSaveState('saved')
       askToKeepStorage().catch(() => {}) // a "no" here is fine; nothing to show
@@ -84,7 +93,22 @@ function Capture() {
   function record() {
     setSaveState('idle')
     setHint(pickHint()) // a fresh invitation for each recording
+    setCurrentId(null)
+    setPlace('')
+    setNote('')
+    setNoteState('idle')
     start()
+  }
+
+  // Add the place and note to the capture that was just kept.
+  async function keepNote() {
+    setNoteState('saving')
+    try {
+      await updateCapture(currentId, { place: place.trim(), note: note.trim() })
+      setNoteState('saved')
+    } catch {
+      setNoteState('failed')
+    }
   }
 
   return (
@@ -119,6 +143,33 @@ function Capture() {
         )}
         {/* When done: play back what was just recorded. */}
         {status === 'done' && audioUrl && <AudioClip src={audioUrl} label="Your recording" />}
+        {/* Once kept: add where you are and how it feels. Both optional. */}
+        {status === 'done' && saveState === 'saved' && (
+          <div className="stack-normal">
+            <Field
+              label="Where are you?"
+              value={place}
+              onChange={(text) => { setPlace(text); setNoteState('idle') }}
+              placeholder="A street, a room, a ruin"
+            />
+            <Field
+              label="What does it feel like?"
+              multiline
+              value={note}
+              onChange={(text) => { setNote(text); setNoteState('idle') }}
+              placeholder="Light, sound, temperature, what's close to you"
+              hint="Tip: tap the microphone on the keyboard to say it instead."
+            />
+            <div role="status" className="inline-group">
+              {noteState === 'saved' ? (
+                <Caption>Note kept.</Caption>
+              ) : (
+                <TextButton onClick={keepNote}>{noteState === 'saving' ? 'Keeping…' : 'Keep the note'}</TextButton>
+              )}
+            </div>
+            {noteState === 'failed' && <Notice>Couldn’t keep the note. Try again.</Notice>}
+          </div>
+        )}
         {/* Once something is kept, offer the way to find it again.
             Hidden while recording, so nothing pulls attention from listening. */}
         {kept > 0 && !isRecording && status !== 'asking' && (

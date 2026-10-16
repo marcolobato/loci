@@ -146,6 +146,7 @@
   /* ---------- Sizes (same 4px base unit) ---------- */
   --size-icon:          1.5rem;    /* 24px = 6 x 4 */
   --size-focus-ring:    0.125rem;  /*  2px: keyboard focus outline */
+  --size-hairline:      0.0625rem; /*  1px: thin borders, e.g. around a text field */
 
   --size-hit-target:    3rem;      /* 48px = 12 x 4: smallest tappable area */
   --size-age-strip:     0.25rem;   /*  4px = 1 x 4: afterglow strip on a capture row */
