@@ -90,6 +90,14 @@ h2 {
   padding-bottom: calc(var(--space-page-inset) + env(safe-area-inset-bottom, 0rem));
 }
 
+/* Inline group: things side by side, e.g. two text buttons. Wraps if narrow. */
+.inline-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-inline);
+}
+
 /* A screen-frame row that uses the full width instead of shrinking to its content. */
 .screen-frame > .full-width {
   justify-self: stretch;

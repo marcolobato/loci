@@ -1,0 +1,13 @@
+/* Remove the browser's button look, so it matches TextLink (.text-link). */
+.text-button {
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Danger: ember, for actions that can't be undone. Used on cards, where
+   ember is 7.26:1; never straight on the granite. */
+.text-button--danger {
+  color: var(--error);
+}

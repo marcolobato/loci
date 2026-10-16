@@ -10,7 +10,8 @@ import CaptureRow from './components/CaptureRow.jsx'
 import AudioClip from './components/AudioClip.jsx'
 import Notice from './components/Notice.jsx'
 import TextLink from './components/TextLink.jsx'
-import { listCaptures, audioUrl } from './captureStore.js'
+import TextButton from './components/TextButton.jsx'
+import { listCaptures, audioUrl, deleteCapture } from './captureStore.js'
 
 // "1 moment" or "3 moments".
 const moments = (n) => (n === 1 ? '1 moment' : `${n} moments`)
@@ -19,6 +20,24 @@ function Moments() {
   // status: loading, ready or error. items: captures plus a playable link each.
   const [status, setStatus] = useState('loading')
   const [items, setItems] = useState([])
+  // Delete: which card is asking "are you sure?", and a short line that
+  // confirms what happened (screen readers read it out).
+  const [confirmingId, setConfirmingId] = useState(null)
+  const [announcement, setAnnouncement] = useState('')
+  const [failedId, setFailedId] = useState(null)
+
+  async function remove(item) {
+    try {
+      await deleteCapture(item.id)
+      URL.revokeObjectURL(item.url) // free its player's memory
+      setItems((current) => current.filter((other) => other.id !== item.id))
+      setConfirmingId(null)
+      setFailedId(null)
+      setAnnouncement('Moment deleted.')
+    } catch {
+      setFailedId(item.id)
+    }
+  }
 
   useEffect(() => {
     // If the screen goes away before loading finishes, don't update it.
@@ -67,6 +86,7 @@ function Moments() {
         {status === 'ready' && items.length === 0 && (
           <Note tone="soft">Nothing kept yet. Capture a moment and it will wait for you here.</Note>
         )}
+        {announcement && items.length > 0 && <Caption>{announcement}</Caption>}
       </div>
 
       {status === 'ready' && items.length > 0 && (
@@ -78,6 +98,22 @@ function Moments() {
               minutesAgo={item.minutesAgo}
             >
               <AudioClip src={item.url} label={`Play ${item.seconds} seconds of sound`} />
+
+              {/* Delete asks first, in place: no pop-up, nothing lost by accident. */}
+              {confirmingId === item.id ? (
+                <div className="stack-tight">
+                  <Note>Delete this moment? This can’t be undone.</Note>
+                  {failedId === item.id && <Notice>Couldn’t delete it. Try again.</Notice>}
+                  <div className="inline-group">
+                    <TextButton tone="danger" onClick={() => remove(item)}>Delete</TextButton>
+                    <TextButton onClick={() => { setConfirmingId(null); setFailedId(null) }}>Keep</TextButton>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <TextButton onClick={() => { setConfirmingId(item.id); setAnnouncement('') }}>Delete</TextButton>
+                </div>
+              )}
             </CaptureRow>
           ))}
         </ul>
