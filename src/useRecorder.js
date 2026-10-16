@@ -10,6 +10,8 @@
 //   secondsLeft – countdown while recording, 10 → 0
 //   audioUrl    – when done: a link to the recording, for a player
 //   recordedSeconds – when done: how long it really was (less if stopped early)
+//   level       – while recording: how loud the room is now, 0 (silent) to 1 (loud)
+//   isQuiet     – while recording: true once it has stayed very quiet for 3 s
 //   start()     – ask for the microphone and start recording
 //   stop()      – stop early; otherwise it stops by itself at 10 s
 //
@@ -19,6 +21,19 @@
 import { useEffect, useRef, useState } from 'react'
 
 const RECORD_SECONDS = 10
+const METER_EVERY_MS = 66        // check the loudness about 15 times a second
+const QUIET_LEVEL = 0.15         // below this counts as "very quiet"
+const QUIET_FOR_MS = 3000        // ...for this long before isQuiet turns on
+
+// How loud a slice of sound is, as 0..1. "RMS" is the average strength of
+// the sound wave. Its square root matches how loud things feel better than
+// the raw number does, so a quiet room reads low and a clap reads high.
+function loudness(samples) {
+  let sum = 0
+  for (const s of samples) sum += s * s
+  const rms = Math.sqrt(sum / samples.length)
+  return Math.min(1, Math.sqrt(rms) * 2)
+}
 
 // Phones save sound in different formats: iPhone uses mp4, Chrome uses webm.
 // Pick the first one this browser can record. "" lets the browser choose.
@@ -45,16 +60,24 @@ export function useRecorder({ onRecorded } = {}) {
   const [secondsLeft, setSecondsLeft] = useState(RECORD_SECONDS)
   const [audioUrl, setAudioUrl] = useState(null)
   const [recordedSeconds, setRecordedSeconds] = useState(0)
+  const [level, setLevel] = useState(0)
+  const [isQuiet, setIsQuiet] = useState(false)
 
   // Things that must survive between renders but don't change what's drawn.
   const recorderRef = useRef(null)
   const streamRef = useRef(null)
   const timersRef = useRef([])
+  const audioRef = useRef(null)   // the Web Audio context that measures loudness
 
-  // Switch the microphone off, so the phone's mic indicator goes away.
+  // Switch the microphone off, so the phone's mic indicator goes away,
+  // and stop measuring loudness.
   function releaseMic() {
     streamRef.current?.getTracks().forEach((track) => track.stop())
     streamRef.current = null
+    audioRef.current?.close().catch(() => {})
+    audioRef.current = null
+    setLevel(0)
+    setIsQuiet(false)
   }
 
   // clearTimeout clears intervals too: browsers keep both in one list.
@@ -79,10 +102,16 @@ export function useRecorder({ onRecorded } = {}) {
     setSecondsLeft(RECORD_SECONDS)
     setStatus('asking')
 
+    // iPhone only allows listening to sound if it starts during a tap, so
+    // create the loudness meter now, before waiting for the permission.
+    const AudioCtx = window.AudioContext || window.webkitAudioContext
+    audioRef.current = AudioCtx ? new AudioCtx() : null
+
     let stream
     try {
       stream = await navigator.mediaDevices.getUserMedia({ audio: true })
     } catch (err) {
+      releaseMic()
       setError(errorName(err))
       setStatus('error')
       return
@@ -124,6 +153,31 @@ export function useRecorder({ onRecorded } = {}) {
     // Stop by itself at 10 seconds.
     const limit = setTimeout(() => stop(), RECORD_SECONDS * 1000)
     timersRef.current = [tick, limit]
+
+    // Loudness: feed the microphone into an "analyser" that hands back the
+    // latest slice of the sound wave whenever we ask.
+    const ctx = audioRef.current
+    if (ctx) {
+      ctx.resume().catch(() => {})
+      const analyser = ctx.createAnalyser()
+      analyser.fftSize = 1024
+      ctx.createMediaStreamSource(stream).connect(analyser)
+      const samples = new Float32Array(analyser.fftSize)
+      let shown = 0
+      let quietMs = 0
+      const meter = setInterval(() => {
+        analyser.getFloatTimeDomainData(samples)
+        const now = loudness(samples)
+        // Only redraw when it changed enough to see.
+        if (Math.abs(now - shown) > 0.02) {
+          shown = now
+          setLevel(now)
+        }
+        quietMs = now < QUIET_LEVEL ? quietMs + METER_EVERY_MS : 0
+        setIsQuiet(quietMs >= QUIET_FOR_MS)
+      }, METER_EVERY_MS)
+      timersRef.current.push(meter)
+    }
   }
 
   function stop() {
@@ -146,5 +200,5 @@ export function useRecorder({ onRecorded } = {}) {
     }
   }, [audioUrl])
 
-  return { status, error, secondsLeft, audioUrl, recordedSeconds, start, stop }
+  return { status, error, secondsLeft, audioUrl, recordedSeconds, level, isQuiet, start, stop }
 }
