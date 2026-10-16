@@ -11,6 +11,7 @@ Material Design has a catalog app. Figma has demo apps. Each one exists to show 
 ## Studio and name
 - **Seroestar** is the studio brand (Turnform). The Figma library "Seroestar System" is the studio design system.
 - **The app** is a separate product name: Loci, with the subtitle "ambient field notes." Say it LOH-sigh.
+- **What the name means:** Latin for "places," as in *genius loci*, the spirit of a place (Norberg-Schulz, *Genius Loci: Towards a Phenomenology of Architecture*, 1979). Not the memory technique or the literary "commonplaces."
 - Do not use the studio name as the app name in code or UI.
 
 ## Who and what for
