@@ -8,6 +8,7 @@ import { useState } from 'react'
 import Label from './components/Label.jsx'
 import Note from './components/Note.jsx'
 import Field from './components/Field.jsx'
+import Ingredients from './components/Ingredients.jsx'
 import Caption from './components/Caption.jsx'
 import Icon from './components/Icon.jsx'
 import Notice from './components/Notice.jsx'
@@ -41,6 +42,27 @@ const shutterStates = [
   { name: 'Pressed', previewState: 'pressed' },
   { name: 'Disabled', disabled: true },
 ]
+
+// A sample capture with a note, for the Ingredients panel. Choices are kept
+// only while the catalog is open.
+const sampleNote = 'Rain falling through the oculus. The stone is cold under my hand. Light moves across the floor. The dome feels vast, and I want to linger.'
+function SampleIngredients() {
+  const [decisions, setDecisions] = useState({})
+  return (
+    <Ingredients
+      capture={{ note: sampleNote, seconds: 10 }}
+      decisions={decisions}
+      onDecide={(id, decision) =>
+        setDecisions((current) => {
+          const next = { ...current }
+          if (decision) next[id] = decision
+          else delete next[id]
+          return next
+        })
+      }
+    />
+  )
+}
 
 // The two Field samples keep their own text, so typing in the catalog works.
 function SampleFields() {
@@ -174,6 +196,16 @@ function Catalog() {
             <Backdrop image={granite} />
             <Note tone="soft">Nothing kept yet. Your first moment starts here.</Note>
           </div>
+        </div>
+      </section>
+
+      {/* Ingredients: suggested from a sample note. Keep / Not this work here
+          but aren't saved. Tap the line to open all nine. */}
+      <section className="stack-loose">
+        <Label as="h2">Ingredients</Label>
+        <div className="stack-tight">
+          <Caption>sample note · Pantheon, Rome</Caption>
+          <SampleIngredients />
         </div>
       </section>
 

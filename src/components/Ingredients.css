@@ -1,0 +1,27 @@
+/* The closed line: tap anywhere on it to open. At least 48px tall. */
+.ingredients__summary {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: var(--size-hit-target);
+  cursor: pointer;
+  list-style: none;               /* hide the browser's triangle... */
+}
+.ingredients__summary::-webkit-details-marker {
+  display: none;                  /* ...in Safari too */
+}
+
+/* Keyboard focus: the same cold ring as every other control. */
+.ingredients__summary:focus-visible {
+  outline: var(--size-focus-ring) solid var(--focus);
+  outline-offset: var(--size-focus-ring);
+}
+
+/* Open: the nine rows, separated by a hairline. */
+.ingredients__list {
+  padding-top: var(--space-stack-tight);
+}
+.ingredient-row + .ingredient-row {
+  border-top: var(--size-hairline) solid var(--divider);
+  padding-top: var(--space-stack-normal);
+}

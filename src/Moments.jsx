@@ -13,7 +13,8 @@ import TextLink from './components/TextLink.jsx'
 import TextButton from './components/TextButton.jsx'
 import Backdrop from './components/Backdrop.jsx'
 import granite from './assets/granite-dusk.webp'
-import { listCaptures, audioUrl, deleteCapture } from './captureStore.js'
+import { listCaptures, audioUrl, deleteCapture, updateCapture } from './captureStore.js'
+import Ingredients from './components/Ingredients.jsx'
 
 // "1 moment" or "3 moments".
 const moments = (n) => (n === 1 ? '1 moment' : `${n} moments`)
@@ -27,6 +28,20 @@ function Moments() {
   const [confirmingId, setConfirmingId] = useState(null)
   const [announcement, setAnnouncement] = useState('')
   const [failedId, setFailedId] = useState(null)
+
+  // Keep or dismiss a suggested ingredient (or undo), and save it with the capture.
+  async function decide(item, ingredientId, decision) {
+    const decisions = { ...(item.ingredients || {}) }
+    if (decision) decisions[ingredientId] = decision
+    else delete decisions[ingredientId]
+    // Show it straight away; saving happens in the background.
+    setItems((current) => current.map((other) => (other.id === item.id ? { ...other, ingredients: decisions } : other)))
+    try {
+      await updateCapture(item.id, { ingredients: decisions })
+    } catch {
+      setAnnouncement('Couldn’t save that choice. Try again.')
+    }
+  }
 
   async function remove(item) {
     try {
@@ -105,6 +120,13 @@ function Moments() {
               minutesAgo={item.minutesAgo}
             >
               <AudioClip src={item.url} label={`Play ${item.seconds} seconds of sound`} />
+
+              {/* Zumthor's nine ingredients, suggested from the note. */}
+              <Ingredients
+                capture={item}
+                decisions={item.ingredients}
+                onDecide={(ingredientId, decision) => decide(item, ingredientId, decision)}
+              />
 
               {/* Delete asks first, in place: no pop-up, nothing lost by accident. */}
               {confirmingId === item.id ? (
