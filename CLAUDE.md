@@ -34,6 +34,7 @@ Each screen must name the pattern it shows. Keep this table current.
 | Type scale in use | All | done |
 | Component catalog | Catalog (`?catalog`) | in progress |
 | One screen: moments list on Capture; recording opens as a bottom sheet over the list (after the current plan) | Capture | planned |
+| About: what Loci is (a sample app built on Zumthor's *Atmospheres*) and the nine ingredients, in my own words | About | planned |
 
 One pattern per working session. New ideas go on the shelf (SHELF.md), not into the week.
 
