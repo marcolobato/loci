@@ -33,6 +33,7 @@ Each screen must name the pattern it shows. Keep this table current.
 | Offline first | App | planned |
 | Type scale in use | All | done |
 | Component catalog | Catalog (`?catalog`) | in progress |
+| One screen: moments list on Capture; recording opens as a bottom sheet over the list (after the current plan) | Capture | planned |
 
 One pattern per working session. New ideas go on the shelf (SHELF.md), not into the week.
 
