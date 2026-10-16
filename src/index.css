@@ -20,6 +20,16 @@ h2 {
   margin: 0;
 }
 
+/*
+  List: a <ul> without the browser's bullets and indent.
+  Still a real list, so screen readers count its items.
+*/
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
 /* Softer text color, for long reading and empty states. */
 .text-soft {
   color: var(--text-soft);

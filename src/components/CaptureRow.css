@@ -1,0 +1,17 @@
+/*
+  Capture row: a dark card with the afterglow strip on the left.
+  The card color (--card, 72% dark) is the one the original Gallery used.
+  On a textured screen it sits on top of the 80% scrim, so text stays readable.
+*/
+.capture-row {
+  display: flex;
+  gap: var(--space-inline);       /* 8px between the strip and the text */
+  padding: var(--space-card-inset);
+  background: var(--card);
+}
+
+/* The strip stretches to the row's full height (flex rows stretch by default). */
+.capture-row__strip {
+  flex: none;                     /* never squeezed narrower */
+  width: var(--size-age-strip);
+}

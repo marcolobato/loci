@@ -11,6 +11,7 @@ import Icon from './components/Icon.jsx'
 import Shutter from './components/Shutter.jsx'
 import Backdrop from './components/Backdrop.jsx'
 import Moment from './components/Moment.jsx'
+import CaptureRow from './components/CaptureRow.jsx'
 import granite from './assets/granite-dusk.webp'
 import { afterglow } from './afterglow.js'
 // Sample captures (placeholders), one per afterglow step.
@@ -29,6 +30,24 @@ function Catalog() {
   return (
     <main className="page stack-loose">
       <Label as="h1">Loci · Component catalog · Sample</Label>
+
+      {/* CaptureRow: the five sample captures as a list, newest first. */}
+      <section className="stack-loose">
+        <Label as="h2">CaptureRow</Label>
+        <div className="stack-tight">
+          <Caption>sample captures · cooling with time</Caption>
+          <ul className="list stack-tight">
+            {sample.captures.map((capture) => (
+              <CaptureRow
+                key={capture.id}
+                place={capture.place}
+                mood={capture.mood}
+                minutesAgo={capture.minutesAgo}
+              />
+            ))}
+          </ul>
+        </div>
+      </section>
 
       {/* Moment: one per afterglow step, from the sample captures. */}
       <section className="stack-loose">

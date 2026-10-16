@@ -139,12 +139,14 @@
   --space-stack-normal: var(--space-s);   /* 16px: items in a list */
   --space-stack-loose:  var(--space-l);   /* 32px: between sections */
   --space-inline:       var(--space-xs);  /*  8px: things side by side */
+  --space-card-inset:   var(--space-s);   /* 16px: padding inside a card */
 
   /* ---------- Sizes (same 4px base unit) ---------- */
   --size-icon:          1.5rem;    /* 24px = 6 x 4 */
   --size-focus-ring:    0.125rem;  /*  2px: keyboard focus outline */
 
   --size-hit-target:    3rem;      /* 48px = 12 x 4: smallest tappable area */
+  --size-age-strip:     0.25rem;   /*  4px = 1 x 4: afterglow strip on a capture row */
 
   /*
     ---------- Shutter sizes (exact, from design/shutter-afterglow.md) ----------
@@ -219,4 +221,5 @@
   --live:         var(--light-live);            /* capture and recording ONLY */
   --focus:        var(--light-cold);            /* keyboard focus ring */
   --scrim:        var(--overlay-screen-on-texture); /* dark layer between a texture and text */
+  --card:         var(--overlay-card-on-texture);   /* capture rows and other cards */
 }
