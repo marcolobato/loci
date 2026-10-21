@@ -1,0 +1,71 @@
+// Loci type tokens. Copied from design/tokens.json and the type table in
+// CLAUDE.md. Source Serif 4 for words, Source Code Pro for data.
+// The four core sizes (13, 16, 20, 25) step by 1.25. Display, Moment and
+// Label are the three named exceptions; the reasons are in CLAUDE.md.
+// One group per property, each with the same seven styles, so a text
+// layer uses e.g. size.note, line-height.note, tracking.note together.
+file {}
+
+export family = tokens {
+  serif: "Source Serif 4",
+  mono: "Source Code Pro",
+  // Words: places, notes, moments.
+  display: serif,
+  title: serif,
+  heading: serif,
+  moment: serif,
+  note: serif,
+  // Data: time, captions, labels.
+  caption: mono,
+  label: mono
+}
+
+// Named weight and style within each family.
+export style = tokens {
+  // Light is allowed only at 32 and up.
+  display: "Light",
+  title: "Regular",
+  heading: "Regular",
+  // Italic keeps the mood line a voice, not a heading.
+  moment: "Italic",
+  note: "Regular",
+  caption: "Regular",
+  // Label is also set in capitals; write its text in uppercase.
+  label: "Medium"
+}
+
+// Font sizes in points.
+export size = tokens {
+  // Exception: the splash needs a jump of about three steps.
+  display: 48,
+  title: 25,
+  heading: 20,
+  // Exception: italic looks bigger, so 1 less than Heading.
+  moment: 19,
+  note: 16,
+  caption: 13,
+  // Exception: caps with wide tracking look bigger, so 1 less than Caption.
+  label: 12
+}
+
+// Line height as a multiple of the font size (1.05 = 105%).
+export line-height = tokens {
+  display: 1.05,
+  title: 1.3,
+  heading: 1.3,
+  moment: 1.35,
+  note: 1.5,
+  caption: 1.4,
+  label: 1.4
+}
+
+// Letter spacing as a fraction of the font size (0.12 = 12%).
+export tracking = tokens {
+  display: -0.02,
+  title: -0.01,
+  heading: 0,
+  moment: 0,
+  note: 0,
+  caption: 0.02,
+  label: 0.12
+}
