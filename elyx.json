@@ -1,4 +1,7 @@
 {
+  "color": {
+    "encoding": "hex"
+  },
   "files": {
     "exclude": [
       "node_modules",

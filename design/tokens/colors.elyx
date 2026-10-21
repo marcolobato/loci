@@ -1,0 +1,96 @@
+// Loci color tokens. Copied from design/tokens.json, the source of truth.
+// This is the only Elyx file with raw color values; everything else
+// refers to these tokens by name. Contrast ratios are in design/NOTES.md.
+file {}
+
+// ser: the place, the granite. These never change.
+export stone = tokens {
+  // Darkest ground. Splash, cards.
+  ground: #0b1a21,
+  // The constant. App background (dark).
+  brand: #17353b,
+  // One step up from brand.
+  raised: #24484f,
+  // Borders on dark.
+  line: #3a5f66,
+  // Muted stone. 6.13 on brand.
+  muted: #9fb6b8,
+  // Light surface, panels on paper.
+  mist: #e3ebe8,
+  // Light ground.
+  paper: #f3f5f2
+}
+
+export text-on-dark = tokens {
+  // Titles. 11.82 on brand.
+  title: #f1f4f6,
+  // Body and place names. 11.56 on brand.
+  body: #eef2f0,
+  // Long reading text. 8.76 on brand.
+  soft: #c9d6d8,
+  // Mono captions, time, data. 6.72 on brand.
+  caption: #a9bec0
+}
+
+export text-on-light = tokens {
+  // Same as stone.brand. 11.91 on paper.
+  title: stone.brand,
+  // Body text. 7.28 on paper.
+  body: #3b5559,
+  // Mono captions. 5.29 on paper.
+  caption: #4f6a6f
+}
+
+// The light on the stone.
+export light = tokens {
+  // Cold light. Outlines. 7.92 on brand.
+  cold: #b9ccdd,
+  // Warm light. 7.16 on brand.
+  warm: #edb48f,
+  // Warm light for the light theme. 4.83 on paper.
+  warm-on-paper: #a5562a,
+  // Errors only, always with the warning icon and words. 5.77 on brand.
+  ember: #f0957a,
+  // Errors in the light theme. 6.19 on paper.
+  ember-on-paper: #9e3a2c,
+  // Mint. Live and recording only. 9.25 on brand.
+  live: #a8e6cf
+}
+
+// How a moment's warmth fades with age, from now to a month.
+export afterglow = tokens {
+  // 7.16 on brand
+  now: #edb48f,
+  // 7.19 on brand
+  hour: #ddb9a6,
+  // 7.43 on brand
+  day: #c6c3bf,
+  // 7.37 on brand
+  week: #b0c6d3,
+  // 4.90 on brand
+  month: #86a3b0
+}
+
+// See-through layers, made from the colors above.
+export overlay = tokens {
+  // Gallery row over the granite (stone.ground at 72%).
+  card-on-texture: opacity(stone.ground, 72%),
+  // Full screen over the granite (stone.ground at 80%).
+  screen-on-texture: opacity(stone.ground, 80%),
+  // Hairline on paper (stone.brand at 15%).
+  divider-on-light: opacity(stone.brand, 15%),
+  // Hairline on dark (white at 12%).
+  divider-on-dark: #ffffff1f
+}
+
+// Glows for the Shutter pulse and the afterglow text.
+export glow = tokens {
+  // Shutter pulse start (mint at 45%).
+  live: opacity(light.live, 45%),
+  // Shutter pulse end (mint, fully clear).
+  live-end: opacity(light.live, 0%),
+  // Afterglow at 0% to 12% (warm at 55%).
+  warm-strong: opacity(light.warm, 55%),
+  // Afterglow at 45% (warm at 25%).
+  warm-soft: opacity(light.warm, 25%)
+}
