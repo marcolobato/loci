@@ -59,13 +59,14 @@ export line-height = tokens {
   label: 1.4
 }
 
-// Letter spacing as a fraction of the font size (0.12 = 12%).
+// Letter spacing in percent of the font size, as plain numbers (12 = 12%).
+// Don't write "12%": Elyx stores a % token as 0.12, which reads as 0.12%.
 export tracking = tokens {
-  display: -0.02,
-  title: -0.01,
+  display: -2,
+  title: -1,
   heading: 0,
   moment: 0,
   note: 0,
-  caption: 0.02,
-  label: 0.12
+  caption: 2,
+  label: 12
 }

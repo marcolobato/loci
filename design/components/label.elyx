@@ -1,0 +1,25 @@
+use "design/fonts/source-code-pro/SourceCodePro-Medium.ttf"
+
+import "../tokens/colors.elyx" as colorTokens
+import "../tokens/type.elyx" as typeTokens
+
+// Label: small mono caps text. Screen names, section names, tags.
+// Matches src/components/Label.jsx. Write the contents in capitals:
+// the app uppercases it with CSS, Elyx draws exactly what is written.
+file {}
+
+export label = text {
+  title: "Label",
+  caption: "Mono caps for screen and section names. Type: Label.",
+  left: 0px,
+  top: 0px,
+  width: .auto,
+  height: .auto,
+  fill: colorTokens.text-on-dark.body,
+  contents: "LOCI",
+  font-size: typeTokens.size.label,
+  font-family: typeTokens.family.label,
+  font-style: typeTokens.style.label,
+  line-height: typeTokens.line-height.label,
+  letter-spacing: typeTokens.tracking.label
+}
