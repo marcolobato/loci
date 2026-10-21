@@ -1,4 +1,8 @@
 {
+  "canvasColor": {
+    "file": "design/tokens/colors.elyx",
+    "token": "stone.brand"
+  },
   "color": {
     "encoding": "hex"
   },
