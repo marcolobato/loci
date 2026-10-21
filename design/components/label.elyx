@@ -4,8 +4,8 @@ import "../tokens/colors.elyx" as colorTokens
 import "../tokens/type.elyx" as typeTokens
 
 // Label: small mono caps text. Screen names, section names, tags.
-// Matches src/components/Label.jsx. Write the contents in capitals:
-// the app uppercases it with CSS, Elyx draws exactly what is written.
+// Matches src/components/Label.jsx. Write the contents in sentence case:
+// the app shows it in caps with CSS, Elyx draws exactly what is written.
 file {}
 
 export label = text {

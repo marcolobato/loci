@@ -68,6 +68,7 @@ Fonts: Source Serif 4 for words, Source Code Pro for data.
   - **Display 48** vs Title 25: the splash needs a jump of about three steps, not one.
   - **Moment 19** vs Heading 20: italic looks bigger than upright, so 1 px less keeps the mood line a voice, not a heading.
   - **Label 12** vs Caption 13: caps with wide tracking look bigger, so 1 px less makes them match.
+- Write all text in sentence case, in code and in Elyx files. Label is shown in caps by CSS (`text-transform`), so don't type the capitals. Elyx has no case setting, so Label looks like sentence case on the Elyx canvas.
 - The Gallery screen title uses Title (25), not the 28 in the mockup.
 - Put all values in `src/tokens.css` as CSS variables. No raw sizes or colors in components.
 

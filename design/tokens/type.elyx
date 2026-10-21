@@ -30,7 +30,7 @@ export style = tokens {
   moment: "Italic",
   note: "Regular",
   caption: "Regular",
-  // Label is also set in capitals; write its text in uppercase.
+  // Label is shown in caps by the app's CSS; write its text in sentence case.
   label: "Medium"
 }
 
