@@ -16,7 +16,7 @@ export label = text {
   width: .auto,
   height: .auto,
   fill: colorTokens.text-on-dark.body,
-  contents: "LOCI",
+  contents: "Loci",
   font-size: typeTokens.size.label,
   font-family: typeTokens.family.label,
   font-style: typeTokens.style.label,
