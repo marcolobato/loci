@@ -1,0 +1,24 @@
+use "design/fonts/source-code-pro/SourceCodePro-Regular.ttf"
+
+import "../tokens/colors.elyx" as colorTokens
+import "../tokens/type.elyx" as typeTokens
+
+// Caption: small mono text for data and names. Time, place, variant names.
+// Matches src/components/Caption.jsx. Write the contents in sentence case.
+file {}
+
+export caption = text {
+  title: "Caption",
+  caption: "Mono text for time, places and data. Type: Caption.",
+  left: 0px,
+  top: 0px,
+  width: .auto,
+  height: .auto,
+  fill: colorTokens.text-on-dark.caption,
+  contents: "14:32",
+  font-size: typeTokens.size.caption,
+  font-family: typeTokens.family.caption,
+  font-style: typeTokens.style.caption,
+  line-height: typeTokens.line-height.caption,
+  letter-spacing: typeTokens.tracking.caption
+}
