@@ -2,7 +2,8 @@
 //
 // Props:
 //   children – the words
-//   size     – "title" (25px) or "heading" (20px, default)
+//   size     – "title" (25px) or "heading" (20px, default).
+//              "display" (48px) is for the splash only.
 //   as       – which HTML tag: "h2" (default), "h3", "p"…
 //              Pick it for meaning (the outline screen readers use);
 //              size sets the look.

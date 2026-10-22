@@ -1,6 +1,7 @@
 // Pattern: Intro. The nine ingredients, one per screen, flipped through
-// by swiping or tapping Next. (Step 1: words only. Drawings and a splash come next.)
-// Open it with ?intro in the address.
+// by swiping or tapping Next. (Drawings come next.)
+// Open it with ?intro in the address. (The splash is not here: it sits on
+// top of Capture, see Splash.jsx and App.jsx.)
 import Backdrop from './components/Backdrop.jsx'
 import Pager from './components/Pager.jsx'
 import Caption from './components/Caption.jsx'
@@ -16,7 +17,7 @@ function Intro() {
       <Backdrop image={granite} cover="screen" />
 
       {/* One page per ingredient. The words come from ingredients.js, the same as About. */}
-      <Pager last={<TextLink href="?">Start</TextLink>}>
+      <Pager last={<TextLink href="?">Back to Loci</TextLink>}>
         {ingredients.map((ingredient, index) => (
           <div key={ingredient.id} className="stack-normal">
             <Caption>{String(index + 1).padStart(2, '0')}</Caption>
