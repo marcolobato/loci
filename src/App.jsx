@@ -1,7 +1,7 @@
 // The screen Loci shows. Each screen lives in its own file;
 // App picks which one to show from the address:
-//   ?intro   – the nine ingredients, one per screen, flipped through
-//   ?about   – what Loci is, and the nine ingredients
+//   ?ingredients – the nine ingredients, one per screen, flipped through
+//   ?about   – what Loci is
 //   ?catalog – the component catalog
 //   (nothing) – Capture: your moments, and capturing new ones, with the
 //               splash on top until it has faded away
@@ -15,7 +15,7 @@ import { useRegisterSW } from 'virtual:pwa-register/react'
 import Capture from './Capture.jsx'
 import Catalog from './Catalog.jsx'
 import About from './About.jsx'
-import Intro from './Intro.jsx'
+import Ingredients from './Ingredients.jsx'
 import Splash from './components/Splash.jsx'
 import UpdateBanner from './components/UpdateBanner.jsx'
 
@@ -39,7 +39,7 @@ function Home() {
 }
 
 function Screen() {
-  if (query.has('intro')) return <Intro />
+  if (query.has('ingredients')) return <Ingredients />
   if (query.has('about')) return <About />
   if (query.has('catalog')) return <Catalog />
   return <Home />

@@ -1,4 +1,5 @@
-// Pattern: About. What Loci is, and the nine ingredients it's built on.
+// Pattern: About. What Loci is. The nine ingredients it's built on have their
+// own screens (see Ingredients.jsx), linked from here.
 // Open it with ?about in the address, or the "About Loci" link on Capture.
 // Everything here is in our own words; nothing is quoted from the book.
 import Label from './components/Label.jsx'
@@ -8,7 +9,6 @@ import Caption from './components/Caption.jsx'
 import TextLink from './components/TextLink.jsx'
 import Backdrop from './components/Backdrop.jsx'
 import granite from './assets/granite-dusk.webp'
-import { ingredients } from './ingredients.js'
 
 function About() {
   return (
@@ -18,8 +18,9 @@ function About() {
       <div className="stack-tight">
         <Label as="h1">About Loci</Label>
         <Heading size="title" as="p">Ambient field notes</Heading>
-        <div>
+        <div className="inline-group">
           <TextLink href="?">Back to Loci</TextLink>
+          <TextLink href="?ingredients">The nine ingredients</TextLink>
         </div>
       </div>
 
@@ -44,27 +45,11 @@ function About() {
         </Note>
       </section>
 
-      {/* The nine ingredients. */}
-      <section className="stack-normal">
-        <Heading>The nine ingredients</Heading>
-        <ol className="list stack-normal">
-          {ingredients.map((ingredient, index) => (
-            <li key={ingredient.id} className="stack-tight">
-              <Caption>{String(index + 1).padStart(2, '0')}</Caption>
-              <Note>{ingredient.name}</Note>
-              <Caption>{ingredient.description}</Caption>
-              <Note tone="soft">{ingredient.about}</Note>
-            </li>
-          ))}
-        </ol>
-        <Caption>The book adds three more thoughts after the nine. Loci keeps to the nine.</Caption>
-      </section>
-
       {/* Credit, and what this is not. */}
       <section className="stack-tight">
         <Caption>
           Loci is an independent design study. It isn’t affiliated with Peter Zumthor or his publisher. The
-          descriptions above are written in our own words.
+          descriptions of the nine ingredients are written in our own words.
         </Caption>
         <Caption>The granite texture is AI-generated. Sample captures are labelled Sample.</Caption>
       </section>
