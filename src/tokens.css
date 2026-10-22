@@ -52,6 +52,7 @@
   --glow-live-end:    rgba(168,230,207,0);    /* shutter pulse end: mint, clear */
   --glow-warm-strong: rgba(237,180,143,.55);  /* afterglow shadow, 0%–12% */
   --glow-warm-soft:   rgba(237,180,143,.25);  /* afterglow shadow, 45% */
+  --glow-warm-end:    rgba(237,180,143,0);    /* warm shutter pulse end: coral, clear */
 
   /* ---------- Font families ---------- */
   --font-serif: 'Source Serif 4', serif;        /* words */
@@ -151,6 +152,7 @@
   --size-hit-target:    3rem;      /* 48px = 12 x 4: smallest tappable area */
   --size-age-strip:     0.25rem;   /*  4px = 1 x 4: afterglow strip on a capture row */
   --size-pager-dot:     0.5rem;    /*  8px = 2 x 4: one dot in the Pager's "where am I" row */
+  --size-splash-glow:   160vw;     /* the warm glow behind the splash shutter: wider than the screen, so it fades out before the edges */
 
   /*
     ---------- Shutter sizes (exact, from design/shutter-afterglow.md) ----------
@@ -184,6 +186,8 @@
   --duration-decay:      6s;     /* spec heading says <2s; values say 6s. Values used. */
   --duration-afterimage: 3.2s;   /* cold ghost drifts off */
   --duration-sheet:      240ms;  /* a bottom sheet sliding up */
+  --duration-fade-in:    1.2s;   /* splash words arriving, slow and calm */
+  --duration-glide:      700ms;  /* the splash Shutter gliding down to its resting place */
   --duration-record:     10s;    /* one recording; must match RECORD_SECONDS in useRecorder.js */
   --delay-decay-step:    0.45s;  /* per letter, last letter first */
 
@@ -195,6 +199,8 @@
   --scale-breathe: .94;  /* shutter disc mid-breath */
 
   /* Effect distances, kept in px exactly as the spec gives them. */
+  --distance-fade-rise:        0.75rem;  /* 12px: how far splash words rise while fading in */
+  --distance-glide:            26dvh;    /* how far above its capture spot the splash shutter starts, and glides down from */
   --distance-pulse-spread:     12px;
   --distance-glow-strong:      22px;
   --distance-glow-soft:        10px;
