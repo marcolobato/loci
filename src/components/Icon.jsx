@@ -10,6 +10,8 @@
 // Each icon is the inside of a 24 x 24 drawing box.
 const icons = {
   record: <circle cx="12" cy="12" r="10" fill="currentColor" />,
+  // Two crossing strokes: close, leave.
+  close: <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />,
   // A circle with "!": something needs attention.
   warning: (
     <>

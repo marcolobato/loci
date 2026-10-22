@@ -1,0 +1,15 @@
+/* The tap area: a 48px square with the X centered inside. */
+.close-button {
+  display: grid;
+  place-items: center;
+  width: var(--size-hit-target);
+  height: var(--size-hit-target);
+  color: var(--text-strong);        /* the Icon takes its color from the text color */
+  border-radius: 50%;               /* so the focus ring is round */
+}
+
+/* Keyboard focus: the same cold ring as the Shutter and TextLink. */
+.close-button:focus-visible {
+  outline: var(--size-focus-ring) solid var(--focus);
+  outline-offset: calc(-1 * var(--size-focus-ring));  /* inside the tap area, so it never gets clipped */
+}

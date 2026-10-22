@@ -14,7 +14,10 @@ import TextButton from './TextButton.jsx'
 //   children – one element per page
 //   last     – what to show in place of "Next" on the final page,
 //              e.g. a TextLink back to the app
-function Pager({ children, last }) {
+//   top      – optional: something that stays at the top-right while the
+//              pages swipe, e.g. a CloseButton. It sits in its own row, so
+//              it never scrolls away with a page.
+function Pager({ children, last, top }) {
   const track = useRef(null)           // the scrolling row, so we can read and move it
   const [index, setIndex] = useState(0) // which page is showing (0 = first)
   const pages = Array.isArray(children) ? children : [children]
@@ -36,7 +39,9 @@ function Pager({ children, last }) {
   }
 
   return (
-    <div className="pager">
+    <div className={top ? 'pager pager--has-top' : 'pager'}>
+      {top && <div className="pager__top">{top}</div>}
+
       <div className="pager__track" ref={track} onScroll={handleScroll}>
         {pages.map((page, i) => (
           <section
