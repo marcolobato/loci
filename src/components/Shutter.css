@@ -52,6 +52,17 @@
   animation: breathe var(--duration-pulse) var(--ease-in-out) infinite;
 }
 
+/* ---------- Warm tone (splash only) ----------
+   Coral instead of pale ring + mint disc. Same size, same breathing.
+   The pulse glows coral too, so no mint shows before anything is live. */
+.shutter--warm .shutter__ring {
+  border-color: var(--accent-warm);
+  animation-name: pulse-warm;
+}
+.shutter--warm .shutter__disc {
+  background: var(--accent-warm);
+}
+
 /* ---------- States ----------
    Each state has the real trigger and a catalog class (.is-focus, .is-pressed). */
 
@@ -92,6 +103,10 @@
 .shutter.is-recording .shutter__ring {
   position: relative;               /* the arc is placed on top of the ring */
   animation: none;
+  /* The pale ring and the mint arc are nearly the same lightness, so the
+     arc was hard to see. While recording, the ring dims to a quiet track,
+     and the mint arc fills it. */
+  border-color: var(--border);
 }
 
 /* The disc: small in silence (the pressed size), full size when loud.
@@ -138,6 +153,12 @@
 @keyframes pulse {
   0%        { box-shadow: 0 0 0 0 var(--glow-live); }
   70%, 100% { box-shadow: 0 0 0 var(--distance-pulse-spread) var(--glow-live-end); }
+}
+
+/* The same pulse, in coral, for the warm tone. */
+@keyframes pulse-warm {
+  0%        { box-shadow: 0 0 0 0 var(--glow-warm-strong); }
+  70%, 100% { box-shadow: 0 0 0 var(--distance-pulse-spread) var(--glow-warm-end); }
 }
 
 /* The recording arc: empty to full. */

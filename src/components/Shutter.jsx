@@ -7,6 +7,9 @@ import './Shutter.css'
 // Props:
 //   size         – "large" (76px ring, Capture screen) or "inline" (44px ring).
 //                  The tap area is never smaller than 48px, even for inline.
+//   tone         – "live" (mint, default) or "warm" (coral). Warm is only for
+//                  the splash: an invitation before anything is live. Once the
+//                  person taps, the Shutter becomes "live" (mint).
 //   label        – the button's name, read by screen readers. Required:
 //                  the Shutter has no visible words.
 //   disabled     – true when it can't be used right now. Motion stops.
@@ -17,9 +20,10 @@ import './Shutter.css'
 //   level        – while recording: how loud the room is, 0 to 1.
 //   previewState – catalog only: "focus" or "pressed", shown without a real
 //                  keyboard or finger. Screens never pass this.
-function Shutter({ size = 'large', label, disabled = false, onClick, recording = false, level = 0, previewState }) {
+function Shutter({ size = 'large', tone = 'live', label, disabled = false, onClick, recording = false, level = 0, previewState }) {
   // Build the class list, e.g. "shutter shutter--inline is-recording".
   let className = `shutter shutter--${size}`
+  if (tone === 'warm') className += ' shutter--warm'
   if (recording) className += ' is-recording'
   if (previewState) className += ` is-${previewState}`
 
