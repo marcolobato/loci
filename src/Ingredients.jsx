@@ -4,6 +4,7 @@
 // link on Capture and About. The words are our own, not quotes.
 import Backdrop from './components/Backdrop.jsx'
 import Pager from './components/Pager.jsx'
+import CloseButton from './components/CloseButton.jsx'
 import Caption from './components/Caption.jsx'
 import Heading from './components/Heading.jsx'
 import Note from './components/Note.jsx'
@@ -17,7 +18,8 @@ function Ingredients() {
       <Backdrop image={granite} cover="screen" />
 
       {/* One page per ingredient. The words come from ingredients.js, the same as the suggestions on each moment. */}
-      <Pager last={<TextLink href="?">Back to Loci</TextLink>}>
+      {/* top: the close button stays put while the pages swipe, so there's a way out on every page. */}
+      <Pager top={<CloseButton />} last={<TextLink href="?">Back to Loci</TextLink>}>
         {ingredients.map((ingredient, index) => (
           <div key={ingredient.id} className="stack-normal">
             <Caption>{String(index + 1).padStart(2, '0')}</Caption>

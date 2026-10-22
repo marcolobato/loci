@@ -11,6 +11,34 @@
 }
 
 /*
+  With a "top" slot there are three rows: the top (e.g. a close button), the
+  track, and the bar. The safe-area gap at the top moves from each page to
+  the top row, so the pages don't add it twice.
+*/
+.pager--has-top {
+  grid-template-rows: auto 1fr auto;
+}
+.pager--has-top .pager__page {
+  padding-top: var(--space-s);
+}
+
+/*
+  The top row: its content sits at the right.
+  The tap area is 48px but the X inside is only 24px, so the X would look 12px
+  further in than the page's edge. Pulling the row's right padding in by
+  that 12px lines the X's visible edge up with the text margin.
+*/
+.pager__top {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: calc(env(safe-area-inset-top, 0rem) + var(--space-xs));
+  padding-right: calc(
+    var(--space-page-inset) - (var(--size-hit-target) - var(--size-icon)) / 2
+    + env(safe-area-inset-right, 0rem)
+  );
+}
+
+/*
   The track: pages in one row that scrolls sideways.
   scroll-snap-type: x mandatory = always come to rest exactly on a page.
   min-height: 0 lets the grid row shrink, so a long page scrolls inside itself
