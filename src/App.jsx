@@ -4,7 +4,8 @@
 //   ?about   – what Loci is
 //   ?catalog – the component catalog
 //   (nothing) – Capture: your moments, and capturing new ones, with the
-//               splash on top until it has faded away
+//               splash on top the first time only
+//   ?splash   – Capture with the splash, even if it was seen before
 // Typing or tapping a new address reloads the page, so no router is needed.
 // TypeSample.jsx is kept for reference but not shown.
 //
@@ -21,11 +22,40 @@ import UpdateBanner from './components/UpdateBanner.jsx'
 
 const query = new URLSearchParams(window.location.search)
 
-// Home: Capture, with the splash on top until the splash has faded away.
-// (For now the splash shows every time Loci opens. A "first time only" rule
-// comes in a later step.)
+// The splash shows once. After the first tap, Loci keeps a small note in the
+// browser ("seen"), so coming back to Capture (e.g. from the X on The nine
+// ingredients) goes straight to Capture. Add ?splash to the address to see
+// the splash again.
+// try/catch: some browsers (e.g. private windows) refuse to keep notes. Then
+// the splash simply shows each time, and nothing breaks.
+const SPLASH_KEY = 'loci-splash-seen'
+
+function splashSeen() {
+  try {
+    return localStorage.getItem(SPLASH_KEY) === 'yes'
+  } catch {
+    return false
+  }
+}
+
+function rememberSplash() {
+  try {
+    localStorage.setItem(SPLASH_KEY, 'yes')
+  } catch {
+    // Nothing to do: the splash will show again next time.
+  }
+}
+
+// Home: Capture, with the splash on top (first time only) until the splash
+// has faded away.
 function Home() {
-  const [splash, setSplash] = useState(true)
+  const [splash, setSplash] = useState(query.has('splash') || !splashSeen())
+
+  function splashDone() {
+    rememberSplash()
+    setSplash(false)
+  }
+
   return (
     <>
       {/* inert: while the splash covers Capture, the keyboard and screen
@@ -33,7 +63,7 @@ function Home() {
       <div inert={splash}>
         <Capture />
       </div>
-      {splash && <Splash onDone={() => setSplash(false)} />}
+      {splash && <Splash onDone={splashDone} />}
     </>
   )
 }
