@@ -8,6 +8,7 @@
 //     at the top of the list.
 import { useEffect, useState } from 'react'
 import Label from './components/Label.jsx'
+import Heading from './components/Heading.jsx'
 import Note from './components/Note.jsx'
 import Caption from './components/Caption.jsx'
 import Shutter from './components/Shutter.jsx'
@@ -170,8 +171,17 @@ function Capture() {
       <div role="status">
         {kept.status === 'loading' && <Note tone="soft">Opening your moments…</Note>}
         {kept.status === 'error' && <Notice>Couldn’t open your moments. Reload the page to try again.</Notice>}
+        {/* Nothing kept yet. Picks up from the splash ("Tap to begin"): the
+            first tap brought you here, the second one records. The second line
+            warns about the microphone question before it appears. */}
         {kept.status === 'ready' && count === 0 && (
-          <Note tone="soft">Nothing kept yet. Your first moment starts here: tap the Shutter.</Note>
+          <div className="stack-normal">
+            <Heading size="title" as="p">Tap again to record.</Heading>
+            <Note tone="soft">
+              Ten seconds of how this place sounds. Loci will ask to use your microphone. Everything stays on this
+              phone.
+            </Note>
+          </div>
         )}
       </div>
 
