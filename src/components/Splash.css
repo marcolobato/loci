@@ -1,0 +1,147 @@
+/*
+  The splash is a layer over the Capture screen: pinned to the whole screen
+  (position: fixed; inset: 0), with the same granite behind it as Capture.
+  Because the two look the same, the splash can fade away and Capture shows
+  through with no jump.
+  overflow: hidden because the glow is wider than the screen.
+*/
+.splash {
+  position: fixed;
+  inset: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  /* Extra room above the words, so they start below the status bar with air. */
+  padding-top: calc(var(--space-page-inset) + var(--space-xl) + env(safe-area-inset-top, 0rem));
+}
+
+/* The words sit above the glow, because they come later in the page. */
+.splash__words {
+  position: relative;
+}
+
+/*
+  The dock: the same spot as Capture's dock (bottom center, above the home
+  bar). "translate" lifts it by the glide distance, so the Shutter starts
+  higher up and has room to travel down to where it will rest.
+*/
+.splash__dock {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--space-page-inset) + env(safe-area-inset-bottom, 0rem));
+  display: flex;
+  justify-content: center;
+  translate: 0 calc(-1 * var(--distance-glide));
+}
+
+/* The Shutter's own box: the hint hangs below it without moving it. */
+.splash__shutter {
+  position: relative;
+}
+.splash__hint {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  translate: -50% var(--space-s);
+  white-space: nowrap;            /* one line, never wrapped */
+  pointer-events: none;           /* only the Shutter takes taps */
+}
+
+/*
+  The glow: a round warm light, centered on the Shutter. Its bottom edge is
+  worked out so its middle lines up with the Shutter's middle:
+  the dock's bottom gap + half the ring - half the glow.
+  It is lifted by the same glide distance, so it stays behind the Shutter.
+*/
+.splash__glow {
+  position: absolute;
+  left: 50%;
+  width: var(--size-splash-glow);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  bottom: calc(
+    var(--space-page-inset) + env(safe-area-inset-bottom, 0rem)
+    + var(--size-shutter-ring) / 2 - var(--size-splash-glow) / 2
+  );
+  translate: -50% calc(-1 * var(--distance-glide));
+  background-image: radial-gradient(
+    circle,
+    var(--glow-warm-strong) 0%,
+    var(--glow-warm-soft) 35%,
+    var(--glow-warm-end) 70%
+  );
+  pointer-events: none;
+}
+
+/*
+  Fade in: start invisible and a little lower, end fully visible in place.
+  "backwards" shows the first frame (invisible) while waiting to start, and
+  then lets go at the end. Letting go matters: an animation that holds its
+  last frame would block the fade-out below.
+*/
+@keyframes splash-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--distance-fade-rise));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.splash__words {
+  animation: splash-in var(--duration-fade-in) var(--ease-out) backwards;
+}
+
+/* The glow and Shutter arrive a beat later, after the words, so the eye reads first. */
+.splash__glow,
+.splash__dock {
+  animation: splash-in var(--duration-fade-in) var(--ease-out) var(--duration-fade-in) backwards;
+}
+
+/* The words and hint can fade (used when landing, below). */
+.splash__words,
+.splash__hint {
+  transition: opacity var(--duration-sheet) var(--ease-out);
+}
+
+/*
+  Landing: what happens after the tap, in order.
+    1. The words and hint fade out (240ms).
+    2. At the same time the Shutter and glow glide down to their resting
+       place (700ms).
+    3. When the glide is over, the whole splash fades away (240ms, delayed
+       by the glide), and Capture shows through.
+  Splash.jsx listens for step 3 to finish, then removes the splash.
+*/
+.splash.is-landing {
+  opacity: 0;
+  transition: opacity var(--duration-sheet) var(--ease-out) var(--duration-glide);
+}
+.splash.is-landing .splash__words,
+.splash.is-landing .splash__hint {
+  opacity: 0;
+}
+.splash.is-landing .splash__dock,
+.splash.is-landing .splash__glow {
+  transition: translate var(--duration-glide) var(--ease-in-out);
+}
+.splash.is-landing .splash__dock {
+  translate: 0 0;
+}
+/* The glow keeps its -50% sideways shift (that is what centers it), and only
+   its up-and-down shift goes to zero. Setting both to 0 slid it to the right. */
+.splash.is-landing .splash__glow {
+  translate: -50% 0;
+}
+
+/* Reduced motion: no fade, no rise. Everything simply shows. (The glide is
+   skipped in Splash.jsx, so landing never runs.) */
+@media (prefers-reduced-motion: reduce) {
+  .splash__words,
+  .splash__glow,
+  .splash__dock {
+    animation: none;
+  }
+}
