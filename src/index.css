@@ -23,6 +23,46 @@ body {
   margin: 0; /* remove the browser's default 8px; .page sets the edge instead */
 }
 
+/*
+  Moving between screens (About, The nine ingredients, back to Capture).
+  Each of these is a link to a whole new page, so the browser normally just
+  swaps one for the other with no animation. A "view transition" lets the
+  browser keep a picture of the old page and the new one and animate between
+  them. Both pages need this rule, and they share this file, so they do.
+    - The old page fades out fast (120ms), so two half-faded screens are
+      never on show together.
+    - The new page fades in and rises a little (240ms), like it is arriving.
+    - Only for people who haven't asked their phone for less motion.
+  Browsers that don't know view transitions ignore all of this and swap
+  instantly, as before.
+*/
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+
+  ::view-transition-old(root) {
+    animation: screen-out var(--duration-press) var(--ease-out) both;
+  }
+
+  ::view-transition-new(root) {
+    animation: screen-in var(--duration-sheet) var(--ease-out) both;
+  }
+}
+
+@keyframes screen-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes screen-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--distance-fade-rise));
+  }
+}
+
 /* Remove the browser's default paragraph and heading margins, so only the stack tokens set space. */
 p,
 h1,
