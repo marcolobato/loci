@@ -34,7 +34,9 @@ Each screen must name the pattern it shows. Keep this table current.
 | Type scale in use | All | done |
 | Component catalog | Catalog (`?catalog`) | done |
 | One screen: moments list on Capture; capturing opens as a bottom sheet over the list | Capture | done |
-| About: what Loci is (a sample app built on Zumthor's *Atmospheres*) and the nine ingredients, in my own words. To check: where and to whom the talk was given | About (`?about`) | done |
+| About: what Loci is (a sample app built on Zumthor's *Atmospheres*), in my own words. To check: where and to whom the talk was given | About (`?about`) | done |
+| The nine ingredients as paged screens: one per screen, swipe or Next, dots show where you are. Drawings still to come | Ingredients (`?ingredients`) | in progress |
+| Splash: a dictionary-style opening. The first tap glides the coral Shutter down onto Capture, so starting is already capturing. First-open-only rule still to build | Splash, over Capture | in progress |
 
 One pattern per working session. New ideas go on the shelf (SHELF.md), not into the week.
 
