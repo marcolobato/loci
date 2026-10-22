@@ -150,6 +150,7 @@
 
   --size-hit-target:    3rem;      /* 48px = 12 x 4: smallest tappable area */
   --size-age-strip:     0.25rem;   /*  4px = 1 x 4: afterglow strip on a capture row */
+  --size-pager-dot:     0.5rem;    /*  8px = 2 x 4: one dot in the Pager's "where am I" row */
 
   /*
     ---------- Shutter sizes (exact, from design/shutter-afterglow.md) ----------
