@@ -32,6 +32,35 @@ body {
 }
 
 /*
+  Lock the page, like a real app.
+  Normally a web page scrolls and bounces as a whole, and on iPhone Safari's
+  toolbar slides in and out while it does. That changes the screen's height
+  mid-scroll, so anything pinned to the screen (the granite, the Shutter, the
+  splash) appears to move. Here it can't happen:
+    - #root is a frame pinned to the screen (position: fixed; inset: 0). With
+      nothing left in the page to scroll, the page itself never scrolls or
+      bounces, and the toolbar stays put.
+    - Content inside the frame scrolls only when it is taller than the screen
+      (overflow-y: auto). A screen that fits stays completely still.
+    - overscroll-behavior: none stops the bounce at the ends of that scroll,
+      and stops a swipe from reaching the page behind.
+  Things pinned to the screen (position: fixed) don't scroll with the content.
+*/
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+#root {
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+  overscroll-behavior: none;
+}
+
+/*
   Moving between screens (About, The nine ingredients, back to Capture).
   Each of these is a link to a whole new page, so the browser normally just
   swaps one for the other with no animation. A "view transition" lets the
