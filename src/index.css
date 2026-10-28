@@ -11,9 +11,17 @@ html {
   background: var(--bg-deep);
 }
 
-/* Dark theme on the whole page. Note is the default text style. */
+/*
+  Dark theme on the whole page. Note is the default text style.
+  The background is the same dark ground as html above, not the teal --bg.
+  Every screen has the granite on top, so this color is only ever seen where
+  the granite doesn't reach, e.g. at the bottom edge when the phone's toolbar
+  slides while scrolling. Teal showed there as a stripe; dark ground blends
+  into the granite. (A body background paints over html's, so changing html
+  alone never fixed it.)
+*/
 body {
-  background: var(--bg);
+  background: var(--bg-deep);
   color: var(--text);
   font-family: var(--type-note-family);
   font-weight: var(--type-note-weight);
