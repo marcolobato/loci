@@ -30,6 +30,11 @@ function Sheet({ open, onClose, closable = true, label, children }) {
       className="sheet"
       aria-label={label}
       onCancel={(event) => {
+        // A photo picker inside the sheet also sends "cancel" when it is closed
+        // without choosing (e.g. backing out of the camera roll), and that
+        // signal travels up to here. Only the sheet's own cancel (Escape)
+        // should close it, so ignore any that started somewhere inside.
+        if (event.target !== event.currentTarget) return
         // Escape: we decide, not the browser.
         event.preventDefault()
         if (closable) onClose()
