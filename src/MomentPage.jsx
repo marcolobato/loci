@@ -4,7 +4,7 @@
 // The top bar (title and X) stays put; the moment scrolls under it.
 // You can add a photo here, or change it, any time after capturing.
 // Its nine ingredients are here too: Loci suggests them from the note, and you
-// keep or dismiss each one.
+// keep or dismiss each one. Delete is at the very bottom and asks first.
 import { useState } from 'react'
 import TopBar from './components/TopBar.jsx'
 import Heading from './components/Heading.jsx'
@@ -16,6 +16,7 @@ import AudioClip from './components/AudioClip.jsx'
 import PhotoPicker from './components/PhotoPicker.jsx'
 import Ingredients from './components/Ingredients.jsx'
 import Notice from './components/Notice.jsx'
+import TextButton from './components/TextButton.jsx'
 import TextLink from './components/TextLink.jsx'
 import Backdrop from './components/Backdrop.jsx'
 import granite from './assets/granite-dusk.webp'
@@ -62,6 +63,20 @@ function MomentPage({ id }) {
       setChoiceFailed(false)
     } catch {
       setChoiceFailed(true)
+    }
+  }
+
+  // Delete asks first, in place: no pop-up, nothing lost by accident.
+  const [confirming, setConfirming] = useState(false)
+  const [deleteFailed, setDeleteFailed] = useState(false)
+
+  async function remove() {
+    try {
+      await kept.remove(item)
+      // Gone for good: back to your moments.
+      window.location.assign('?')
+    } catch {
+      setDeleteFailed(true)
     }
   }
 
@@ -128,6 +143,21 @@ function MomentPage({ id }) {
                 {choiceFailed && <Notice>Couldn’t save that choice. Try again.</Notice>}
               </div>
             </div>
+
+            {confirming ? (
+              <div className="stack-tight">
+                <Note>Delete this moment? This can’t be undone.</Note>
+                {deleteFailed && <Notice>Couldn’t delete it. Try again.</Notice>}
+                <div className="inline-group">
+                  <TextButton tone="danger" onClick={remove}>Delete</TextButton>
+                  <TextButton onClick={() => { setConfirming(false); setDeleteFailed(false) }}>Keep</TextButton>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <TextButton onClick={() => setConfirming(true)}>Delete</TextButton>
+              </div>
+            )}
           </div>
         )}
       </div>
