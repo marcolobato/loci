@@ -1,0 +1,19 @@
+/*
+  The title on the left, the X on the right, centered on one line.
+  Top gap: below the phone's status bar and the soft fade iOS draws under it
+  (the same depth as the Pager's close button), so the title stays sharp.
+  Right gap: the X's tap area is 48px but the X itself is 24px, so pull the
+  padding in by the 12px difference. The X's visible edge then lines up with
+  the text margin.
+*/
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: calc(env(safe-area-inset-top, 0rem) + var(--space-m));
+  padding-left: calc(var(--space-page-inset) + env(safe-area-inset-left, 0rem));
+  padding-right: calc(
+    var(--space-page-inset) - (var(--size-hit-target) - var(--size-icon)) / 2
+    + env(safe-area-inset-right, 0rem)
+  );
+}

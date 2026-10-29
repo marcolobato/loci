@@ -161,9 +161,8 @@ function Capture() {
       <div className="stack-tight">
         <Label as="h1">Loci</Label>
         {kept.status === 'ready' && count > 0 && <Caption>{moments(count)} on this phone · newest first</Caption>}
-        <div className="inline-group">
+        <div>
           <TextLink href="?about">About Loci</TextLink>
-          <TextLink href="?ingredients">The nine ingredients</TextLink>
         </div>
       </div>
 
