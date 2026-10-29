@@ -135,9 +135,12 @@ h2 {
   sizes of those areas. Adding them to the page inset keeps every screen's
   content clear of the clock, the notch and the home bar.
   On screens without them, they are 0 and nothing changes.
+  The top is deeper than the other sides (--space-status-clear): iOS fades
+  the page softly under the status bar, and the first line of text sat inside
+  that fade and looked blurred.
 */
 .page {
-  padding-top: calc(var(--space-page-inset) + env(safe-area-inset-top, 0rem));
+  padding-top: calc(var(--space-status-clear) + env(safe-area-inset-top, 0rem));
   padding-right: calc(var(--space-page-inset) + env(safe-area-inset-right, 0rem));
   padding-bottom: calc(var(--space-page-inset) + env(safe-area-inset-bottom, 0rem));
   padding-left: calc(var(--space-page-inset) + env(safe-area-inset-left, 0rem));

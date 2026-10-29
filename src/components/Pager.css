@@ -31,7 +31,9 @@
 .pager__top {
   display: flex;
   justify-content: flex-end;
-  padding-top: calc(env(safe-area-inset-top, 0rem) + var(--space-xs));
+  /* A little deeper than before (24px, was 8px), so the X clears the
+     soft fade iOS draws under the status bar. */
+  padding-top: calc(env(safe-area-inset-top, 0rem) + var(--space-m));
   padding-right: calc(
     var(--space-page-inset) - (var(--size-hit-target) - var(--size-icon)) / 2
     + env(safe-area-inset-right, 0rem)

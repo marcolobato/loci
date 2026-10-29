@@ -27,4 +27,21 @@
 .backdrop--screen {
   position: fixed;
   bottom: calc(-1 * env(safe-area-inset-bottom, 0rem));
+  /*
+    Bottom fade. On a Home Screen app, iOS can make the page shorter than the
+    screen and leave a plain dark band at the bottom that the page can't paint
+    on. The band is the app's dark ground (--bg-deep). So the granite fades
+    into that same color over its last --size-edge-fade, and the join no
+    longer shows as a stripe. The fade is the first layer, so it sits on top;
+    it ends at the bottom of what the page can show (the box reaches past it
+    by the home-bar height, which is why that height is taken off both stops).
+  */
+  background-image:
+    linear-gradient(
+      to bottom,
+      transparent calc(100% - env(safe-area-inset-bottom, 0rem) - var(--size-edge-fade)),
+      var(--bg-deep) calc(100% - env(safe-area-inset-bottom, 0rem))
+    ),
+    linear-gradient(var(--scrim), var(--scrim)),
+    var(--backdrop-image);
 }

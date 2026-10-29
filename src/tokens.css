@@ -138,6 +138,7 @@
 
   /* Spacing by role */
   --space-page-inset:   var(--space-s);   /* 16px: screen edge to content */
+  --space-status-clear: var(--space-xl);  /* 48px: below the phone's status bar. iOS softly fades the page under it, which blurred the first line at 16px. */
   --space-stack-tight:  var(--space-xs);  /*  8px: things that belong together */
   --space-stack-normal: var(--space-s);   /* 16px: items in a list */
   --space-stack-loose:  var(--space-l);   /* 32px: between sections */
@@ -152,6 +153,7 @@
   --size-hit-target:    3rem;      /* 48px = 12 x 4: smallest tappable area */
   --size-age-strip:     0.25rem;   /*  4px = 1 x 4: afterglow strip on a capture row */
   --size-pager-dot:     0.5rem;    /*  8px = 2 x 4: one dot in the Pager's "where am I" row */
+  --size-edge-fade:     3rem;      /* 48px = 12 x 4: the granite fades into the dark ground over this height at the bottom, hiding the seam where iOS cuts the page short */
   --size-splash-glow:   160vw;     /* the warm glow behind the splash shutter: wider than the screen, so it fades out before the edges */
 
   /*
