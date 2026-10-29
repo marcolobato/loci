@@ -9,6 +9,17 @@
   text-underline-offset: 0.2em;         /* keeps the line off the letters */
 }
 
+/*
+  Inline: a link inside a sentence. It flows with the text: no box, no
+  minimum height, and the same font and size as the words around it.
+*/
+.text-link--inline {
+  display: inline;
+  min-height: 0;
+  font-family: inherit;
+  font-size: inherit;
+}
+
 /* Keyboard focus: the same cold ring as the Shutter. */
 .text-link:focus-visible {
   outline: var(--size-focus-ring) solid var(--focus);

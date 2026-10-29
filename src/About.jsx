@@ -37,7 +37,12 @@ function About() {
             </Note>
             <Note>
               {/* To check against the book: where the talk was given, and to whom. */}
-              The answer it borrows comes from Peter Zumthor’s short book Atmospheres, which grew out of a talk he gave
+              {/* The book's page at its publisher (De Gruyter Brill, who publish Birkhäuser). */}
+              The answer it borrows comes from Peter Zumthor’s short book{' '}
+              <TextLink inline external href="https://www.degruyterbrill.com/document/isbn/9783764374952/html">
+                Atmospheres
+              </TextLink>
+              , which grew out of a talk he gave
               about what he weighs when he makes a space. He names nine ingredients of atmosphere. When you write a
               note, Loci looks for words that touch each one and suggests it. You decide what to keep.
             </Note>

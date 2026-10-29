@@ -7,9 +7,22 @@ import './TextLink.css'
 // Props:
 //   href     – where it goes, e.g. "?moments"
 //   children – the words
-function TextLink({ href, children }) {
+//   inline   – true for a link inside a sentence. It then sits in the line
+//              like any other word, instead of standing in its own 48px box,
+//              which would push the lines of the paragraph apart. (Links
+//              inside a sentence are allowed a smaller tap area.)
+//   external – true for a link to another website. It opens in a new tab,
+//              so Loci stays where you left it. rel="noopener noreferrer"
+//              stops the other site from reaching back into Loci's tab.
+function TextLink({ href, children, inline = false, external = false }) {
+  const className = inline ? 'text-link text-link--inline' : 'text-link'
   return (
-    <a className="text-link" href={href}>
+    <a
+      className={className}
+      href={href}
+      target={external ? '_blank' : undefined}
+      rel={external ? 'noopener noreferrer' : undefined}
+    >
       {children}
     </a>
   )
