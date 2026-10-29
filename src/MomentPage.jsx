@@ -2,7 +2,9 @@
 // when, how it felt, and its sound. Opened by tapping a moment in the list
 // on Capture; the address is ?moment=<id>.
 // The top bar (title and X) stays put; the moment scrolls under it.
-// Coming next: add or change the photo here, then its ingredients and Delete.
+// You can add a photo here, or change it, any time after capturing.
+// Coming next: its ingredients and Delete.
+import { useState } from 'react'
 import TopBar from './components/TopBar.jsx'
 import Heading from './components/Heading.jsx'
 import Note from './components/Note.jsx'
@@ -10,11 +12,14 @@ import Caption from './components/Caption.jsx'
 import Moment from './components/Moment.jsx'
 import Photo from './components/Photo.jsx'
 import AudioClip from './components/AudioClip.jsx'
+import PhotoPicker from './components/PhotoPicker.jsx'
 import Notice from './components/Notice.jsx'
 import TextLink from './components/TextLink.jsx'
 import Backdrop from './components/Backdrop.jsx'
 import granite from './assets/granite-dusk.webp'
 import { useMoments } from './useMoments.js'
+import { updateCapture, photoForStore } from './captureStore.js'
+import { shrinkPhoto } from './photo.js'
 import { afterglow } from './afterglow.js'
 
 // Props:
@@ -27,6 +32,23 @@ function MomentPage({ id }) {
 
   // When it was captured, in words ("3 hr ago") and exactly (for <time>).
   const when = item ? afterglow(item.minutesAgo) : null
+
+  // The photo: 'idle', 'saving' or 'failed'.
+  const [photoState, setPhotoState] = useState('idle')
+
+  // Same steps as on the capture sheet: shrink the chosen photo, keep it with
+  // the moment, then read the moment again so the new photo shows up.
+  async function addPhoto(file) {
+    setPhotoState('saving')
+    try {
+      const small = await shrinkPhoto(file)
+      await updateCapture(id, { photo: await photoForStore(small) })
+      await kept.reload()
+      setPhotoState('idle')
+    } catch {
+      setPhotoState('failed')
+    }
+  }
 
   return (
     <main className="screen-with-bar has-backdrop">
@@ -65,6 +87,17 @@ function MomentPage({ id }) {
                 <Caption><time dateTime={when.iso}>{when.label}</time></Caption>
               </div>
               {item.note && <Moment minutesAgo={item.minutesAgo}>{item.note}</Moment>}
+
+              {/* Add a photo now, or swap the one you have. While it is being
+                  kept, a short line replaces the button. */}
+              <div role="status">
+                {photoState === 'saving' ? (
+                  <Caption>Keeping the photo…</Caption>
+                ) : (
+                  <PhotoPicker label={item.photoLink ? 'Change the photo' : 'Add a photo'} onPick={addPhoto} />
+                )}
+              </div>
+              {photoState === 'failed' && <Notice>Couldn’t keep the photo. Try another one.</Notice>}
             </div>
 
             <AudioClip src={item.url} label={`Play ${item.seconds} seconds of sound`} />
