@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import './Pager.css'
 import Caption from './Caption.jsx'
 import TextButton from './TextButton.jsx'
@@ -17,9 +17,16 @@ import TextButton from './TextButton.jsx'
 //   top      – optional: something that stays at the top-right while the
 //              pages swipe, e.g. a CloseButton. It sits in its own row, so
 //              it never scrolls away with a page.
-function Pager({ children, last, top }) {
+//   start    – optional: which page to open on (0 = first, the default)
+function Pager({ children, last, top, start = 0 }) {
   const track = useRef(null)           // the scrolling row, so we can read and move it
-  const [index, setIndex] = useState(0) // which page is showing (0 = first)
+  const [index, setIndex] = useState(start) // which page is showing (0 = first)
+
+  // Open on the chosen page. The row is moved before the screen is first
+  // drawn, so nobody sees it start on page 1 and slide over.
+  useLayoutEffect(() => {
+    track.current.scrollLeft = start * track.current.clientWidth
+  }, [start])
   const pages = Array.isArray(children) ? children : [children]
   const count = pages.length
 
