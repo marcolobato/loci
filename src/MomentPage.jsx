@@ -3,7 +3,8 @@
 // on Capture; the address is ?moment=<id>.
 // The top bar (title and X) stays put; the moment scrolls under it.
 // You can add a photo here, or change it, any time after capturing.
-// Coming next: its ingredients and Delete.
+// Its nine ingredients are here too: Loci suggests them from the note, and you
+// keep or dismiss each one.
 import { useState } from 'react'
 import TopBar from './components/TopBar.jsx'
 import Heading from './components/Heading.jsx'
@@ -13,6 +14,7 @@ import Moment from './components/Moment.jsx'
 import Photo from './components/Photo.jsx'
 import AudioClip from './components/AudioClip.jsx'
 import PhotoPicker from './components/PhotoPicker.jsx'
+import Ingredients from './components/Ingredients.jsx'
 import Notice from './components/Notice.jsx'
 import TextLink from './components/TextLink.jsx'
 import Backdrop from './components/Backdrop.jsx'
@@ -47,6 +49,19 @@ function MomentPage({ id }) {
       setPhotoState('idle')
     } catch {
       setPhotoState('failed')
+    }
+  }
+
+  // Keep or dismiss an ingredient. It shows straight away (useMoments); if
+  // saving fails, say so.
+  const [choiceFailed, setChoiceFailed] = useState(false)
+
+  async function decide(ingredientId, decision) {
+    try {
+      await kept.decide(item, ingredientId, decision)
+      setChoiceFailed(false)
+    } catch {
+      setChoiceFailed(true)
     }
   }
 
@@ -101,6 +116,18 @@ function MomentPage({ id }) {
             </div>
 
             <AudioClip src={item.url} label={`Play ${item.seconds} seconds of sound`} />
+
+            {/* Zumthor's nine ingredients, suggested from the note. */}
+            <div className="stack-tight">
+              <Ingredients
+                capture={item}
+                decisions={item.ingredients}
+                onDecide={decide}
+              />
+              <div role="status">
+                {choiceFailed && <Notice>Couldn’t save that choice. Try again.</Notice>}
+              </div>
+            </div>
           </div>
         )}
       </div>
