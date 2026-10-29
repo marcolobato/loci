@@ -11,7 +11,9 @@ import './Ingredients.css'
 // keyboards and screen readers without extra code.
 //
 // Props:
-//   capture   – the capture, with its note and seconds of sound
+//   capture   – the capture, with its note and seconds of sound. When it has
+//               an id, each row links to that ingredient's screen, and the
+//               way back leads to this moment.
 //   decisions – { [ingredientId]: "kept" | "dismissed" }, saved per capture
 //   onDecide  – called with (ingredientId, decision) to save a change
 function Ingredients({ capture, decisions = {}, onDecide }) {
@@ -40,6 +42,7 @@ function Ingredients({ capture, decisions = {}, onDecide }) {
             evidence={evidence[ingredient.id]}
             decision={decisions[ingredient.id]}
             onDecide={(decision) => onDecide(ingredient.id, decision)}
+            learnHref={capture.id ? `?ingredients=${ingredient.id}&from=${encodeURIComponent(capture.id)}` : undefined}
           />
         ))}
       </ul>
