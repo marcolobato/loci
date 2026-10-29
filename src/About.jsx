@@ -3,7 +3,6 @@
 // Open it with ?about in the address, or the "About Loci" link on Capture.
 // The top bar (title and X) stays put; only the text below it scrolls.
 // Everything here is in our own words; nothing is quoted from the book.
-import './About.css'
 import TopBar from './components/TopBar.jsx'
 import Heading from './components/Heading.jsx'
 import Note from './components/Note.jsx'
@@ -14,14 +13,14 @@ import granite from './assets/granite-dusk.webp'
 
 function About() {
   return (
-    <main className="about has-backdrop">
+    <main className="screen-with-bar has-backdrop">
       <Backdrop image={granite} cover="screen" />
 
       {/* Pinned: the screen's name and the way out. */}
       <TopBar title="About Loci" />
 
       {/* Scrolls: everything else. */}
-      <div className="about__body">
+      <div className="screen-with-bar__body">
         <div className="stack-loose">
           <Heading size="title" as="p">Ambient field notes</Heading>
 

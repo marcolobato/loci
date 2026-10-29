@@ -9,7 +9,8 @@ import Ingredients from './Ingredients.jsx'
 
 // MomentList: your kept moments as cards, newest first. Each card has its
 // photo, place, time, note, a player, the nine ingredients, and Delete
-// (which asks first, in place).
+// (which asks first, in place). Tapping a card's photo or words opens that
+// moment on its own page (?moment=<id>).
 //
 // Props:
 //   items    – from useMoments
@@ -52,6 +53,7 @@ function MomentList({ items, onDecide, onRemove }) {
             photo={item.photoLink && { src: item.photoLink, alt: item.place ? `Photo of ${item.place}` : 'Photo of this moment' }}
             mood={item.note}
             minutesAgo={item.minutesAgo}
+            href={`?moment=${encodeURIComponent(item.id)}`}
           >
             <AudioClip src={item.url} label={`Play ${item.seconds} seconds of sound`} />
 

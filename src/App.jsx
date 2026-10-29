@@ -1,5 +1,6 @@
 // The screen Loci shows. Each screen lives in its own file;
 // App picks which one to show from the address:
+//   ?moment=<id> – one moment on its own page
 //   ?ingredients – the nine ingredients, one per screen, flipped through
 //   ?about   – what Loci is
 //   ?catalog – the component catalog
@@ -17,6 +18,7 @@ import Capture from './Capture.jsx'
 import Catalog from './Catalog.jsx'
 import About from './About.jsx'
 import Ingredients from './Ingredients.jsx'
+import MomentPage from './MomentPage.jsx'
 import Splash from './components/Splash.jsx'
 import UpdateBanner from './components/UpdateBanner.jsx'
 
@@ -69,6 +71,7 @@ function Home() {
 }
 
 function Screen() {
+  if (query.has('moment')) return <MomentPage id={query.get('moment')} />
   if (query.has('ingredients')) return <Ingredients />
   if (query.has('about')) return <About />
   if (query.has('catalog')) return <Catalog />

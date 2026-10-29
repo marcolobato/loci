@@ -147,6 +147,33 @@ h2 {
 }
 
 /*
+  Screen with a bar: a TopBar pinned at the top, and a body that scrolls
+  under it (About, a moment). Two rows:
+    1. the TopBar, only as tall as it needs to be
+    2. the body, which takes all the room left
+  The frame (#root, above) is exactly the screen's height, so height: 100%
+  gives the screen that same height. minmax(0, 1fr) lets the body row be
+  shorter than its content, so the body scrolls inside itself and the bar
+  never moves.
+  The body's padding keeps text off the edges and, at the bottom, clear of
+  the home bar (the same safe-area sums as .page).
+*/
+.screen-with-bar {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.screen-with-bar__body {
+  overflow-y: auto;
+  overscroll-behavior: none;   /* no bounce at the ends */
+  padding-top: var(--space-s);
+  padding-right: calc(var(--space-page-inset) + env(safe-area-inset-right, 0rem));
+  padding-bottom: calc(var(--space-page-inset) + env(safe-area-inset-bottom, 0rem));
+  padding-left: calc(var(--space-page-inset) + env(safe-area-inset-left, 0rem));
+}
+
+/*
   Stacks: put children in a column with an even gap between them.
   "gap" only adds space BETWEEN children, never before the first or after the last.
 */

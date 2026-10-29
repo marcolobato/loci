@@ -6,7 +6,7 @@ import CloseButton from './CloseButton.jsx'
 // left, a way out (the X) on the right. It stays put while the screen's
 // content scrolls underneath, like the bar in a real app.
 //
-// The screen puts it above a scrolling area (see About.jsx and About.css).
+// The screen puts it above a scrolling area (.screen-with-bar in index.css).
 // This component only draws the row.
 //
 // Props:

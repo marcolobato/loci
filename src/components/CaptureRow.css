@@ -16,6 +16,20 @@
   min-width: 0;                   /* lets long text wrap instead of overflowing */
 }
 
+/*
+  The link to the moment's page: the photo and the words. It keeps their own
+  colors and has no underline, because the whole card reads as tappable.
+  Keyboard focus: the same cold ring as the other links.
+*/
+.capture-row__link {
+  color: inherit;
+  text-decoration: none;
+}
+.capture-row__link:focus-visible {
+  outline: var(--size-focus-ring) solid var(--focus);
+  outline-offset: var(--size-focus-ring);
+}
+
 /* The strip stretches to the row's full height (flex rows stretch by default). */
 .capture-row__strip {
   flex: none;                     /* never squeezed narrower */
