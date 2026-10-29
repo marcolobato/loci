@@ -1,7 +1,6 @@
 import Note from './Note.jsx'
 import Caption from './Caption.jsx'
 import TextButton from './TextButton.jsx'
-import TextLink from './TextLink.jsx'
 
 // IngredientRow: one of the nine ingredients for one capture.
 // Shows its name, what it means, and what Loci found in the note:
@@ -12,15 +11,27 @@ import TextLink from './TextLink.jsx'
 //   evidence   – the sentence that suggested it, or null if nothing was found
 //   decision   – "kept", "dismissed", or undefined (not decided yet)
 //   onDecide   – called with "kept", "dismissed" or undefined (undo)
-//   learnHref  – optional: where "What is this?" goes, e.g. the ingredient's
-//                own screen. Without it, the link is left out.
+//   learnHref  – optional: where the ingredient's title and description lead,
+//                e.g. its own screen. Without it, they are plain text.
 function IngredientRow({ ingredient, evidence, decision, onDecide, learnHref }) {
+  // The name and what it means. With learnHref, they are one link: the name
+  // is underlined in cold light (like every link), the description stays quiet.
+  const heading = (
+    <>
+      <Note><span className="ingredient-row__name">{ingredient.name}</span></Note>
+      <Caption>{ingredient.description}</Caption>
+    </>
+  )
+
   return (
     <li className="ingredient-row stack-tight">
-      <div>
-        <Note>{ingredient.name}</Note>
-        <Caption>{ingredient.description}</Caption>
-      </div>
+      {learnHref ? (
+        <a className="ingredient-row__link" href={learnHref}>
+          {heading}
+        </a>
+      ) : (
+        <div>{heading}</div>
+      )}
 
       {!evidence && <Note tone="soft">No evidence observed.</Note>}
 
@@ -42,13 +53,6 @@ function IngredientRow({ ingredient, evidence, decision, onDecide, learnHref }) 
         <div className="inline-group">
           <Caption>Dismissed.</Caption>
           <TextButton onClick={() => onDecide(undefined)}>Undo</TextButton>
-        </div>
-      )}
-
-      {/* The way into the ingredient's own screen: learn by doing, from the moment. */}
-      {learnHref && (
-        <div>
-          <TextLink href={learnHref}>What is this?</TextLink>
         </div>
       )}
     </li>

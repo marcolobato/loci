@@ -12,8 +12,8 @@ import './Ingredients.css'
 //
 // Props:
 //   capture   – the capture, with its note and seconds of sound. When it has
-//               an id, each row links to that ingredient's screen, and the
-//               way back leads to this moment.
+//               an id, each ingredient's title links to its own screen, and
+//               the way back leads to this moment.
 //   decisions – { [ingredientId]: "kept" | "dismissed" }, saved per capture
 //   onDecide  – called with (ingredientId, decision) to save a change
 function Ingredients({ capture, decisions = {}, onDecide }) {

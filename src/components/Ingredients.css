@@ -25,3 +25,24 @@
   border-top: var(--size-hairline) solid var(--divider);
   padding-top: var(--space-stack-normal);
 }
+
+/*
+  The name and description as one link to the ingredient's own screen.
+  The whole block is the tap area (at least 48px); only the name is underlined,
+  in cold light like every other link. Keyboard focus: the same cold ring.
+*/
+.ingredient-row__link {
+  display: block;
+  min-height: var(--size-hit-target);
+  color: inherit;
+  text-decoration: none;
+}
+.ingredient-row__link .ingredient-row__name {
+  color: var(--accent-cold);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;     /* keeps the line off the letters */
+}
+.ingredient-row__link:focus-visible {
+  outline: var(--size-focus-ring) solid var(--focus);
+  outline-offset: var(--size-focus-ring);
+}
