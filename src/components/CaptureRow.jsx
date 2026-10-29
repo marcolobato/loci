@@ -15,7 +15,8 @@ import './CaptureRow.css'
 //                "10 s of sound".
 //   mood       – optional mood line, e.g. "rain falling through the oculus"
 //   minutesAgo – how long ago it was captured
-//   photo      – optional { src, alt }: shown at the top of the card
+//   photo      – optional { src, alt }: a small square thumbnail beside the
+//                words. Without one, the words use the full width.
 //   href       – optional: where tapping the photo and text goes, e.g. the
 //                moment's own page. The children stay outside the link,
 //                because buttons and players can't sit inside a link.
@@ -30,8 +31,8 @@ function CaptureRow({ place, mood, minutesAgo, photo, href, children }) {
   // The photo and the words. With an href they become one link.
   const summary = (
     <>
-      {photo && <Photo src={photo.src} alt={photo.alt} />}
-      <div>
+      {photo && <Photo size="thumb" src={photo.src} alt={photo.alt} />}
+      <div className="capture-row__words">
         <Note>{place}</Note>
         {/* <time> carries the exact moment for screen readers and other tools,
             even when the visible text says "3 hr ago". */}
@@ -47,7 +48,7 @@ function CaptureRow({ place, mood, minutesAgo, photo, href, children }) {
       <span className="capture-row__strip" style={{ background: color }} aria-hidden="true" />
       <div className="capture-row__body stack-tight">
         {href ? (
-          <a className="capture-row__link stack-tight" href={href}>
+          <a className={photo ? 'capture-row__link capture-row__link--photo' : 'capture-row__link'} href={href}>
             {summary}
           </a>
         ) : (

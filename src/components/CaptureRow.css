@@ -22,8 +22,28 @@
   Keyboard focus: the same cold ring as the other links.
 */
 .capture-row__link {
+  display: block;
   color: inherit;
   text-decoration: none;
+}
+
+/* With a photo: the square thumbnail on the left, the words beside it. */
+.capture-row__link--photo {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-s);
+}
+.capture-row__words {
+  flex: 1;
+  min-width: 0;                   /* lets long words wrap instead of pushing the row wider */
+}
+
+/* The mood line is cut after two lines, so rows stay slim. The whole line is on the moment's page. */
+.capture-row__words .type-moment {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 .capture-row__link:focus-visible {
   outline: var(--size-focus-ring) solid var(--focus);

@@ -6,3 +6,11 @@
   object-fit: cover;
   background: var(--surface);   /* shows while the photo loads */
 }
+
+/* Thumbnail: a small square, for lists. Same crop-to-fill, so nothing is stretched. */
+.photo--thumb {
+  flex: none;                   /* never squeezed narrower, inside a row */
+  width: var(--size-thumb);
+  height: var(--size-thumb);
+  aspect-ratio: 1;
+}
