@@ -186,7 +186,7 @@ function Capture() {
 
       {/* Your moments. */}
       {kept.status === 'ready' && count > 0 && (
-        <MomentList items={kept.items} onDecide={kept.decide} onRemove={kept.remove} />
+        <MomentList items={kept.items} />
       )}
 
       {/* Bottom: the Shutter, always within reach. It opens the sheet. */}

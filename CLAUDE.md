@@ -35,7 +35,7 @@ Each screen must name the pattern it shows. Keep this table current.
 | Component catalog | Catalog (`?catalog`) | done |
 | One screen: moments list on Capture; capturing opens as a bottom sheet over the list | Capture | done |
 | About: what Loci is (a sample app built on Zumthor's *Atmospheres*), in my own words. To check: where and to whom the talk was given. The top bar (title and X) is pinned; only the text scrolls, and it links to the nine ingredients | About (`?about`) | done |
-| Moment detail: each moment on its own page (photo, place, time, mood, sound), opened from the list; add or change the photo any time; the nine ingredients, kept or dismissed here; Delete, asked first. Still to come: slim list rows | Moment (`?moment=<id>`) | in progress |
+| Moment detail: each moment on its own page (photo, place, time, mood, sound), opened from the list; add or change the photo any time; the nine ingredients, kept or dismissed here; Delete, asked first. The list rows stay slim: photo, words and the player. Still to come: a smaller photo thumbnail in the list | Moment (`?moment=<id>`) | in progress |
 | The nine ingredients as paged screens: one per screen, swipe or Next, dots show where you are. Drawings still to come | Ingredients (`?ingredients`) | in progress |
 | Splash: a dictionary-style opening. The first tap glides the coral Shutter down onto Capture, so starting is already capturing. Shows once, then Loci remembers (`?splash` shows it again) | Splash, over Capture | done |
 
