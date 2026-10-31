@@ -6,10 +6,9 @@
 //   items   – captures, each with a playable sound link (url), a photo link
 //             (photoLink, or null) and its age in minutes (minutesAgo)
 //   reload()                         – read the list again, e.g. after a new capture
-//   decide(item, ingredientId, d)    – keep / dismiss / undo an ingredient
 //   remove(item)                     – delete a capture (throws if it fails)
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { listCaptures, audioUrl, photoUrl, deleteCapture, updateCapture } from './captureStore.js'
+import { listCaptures, audioUrl, photoUrl, deleteCapture } from './captureStore.js'
 
 export function useMoments() {
   const [status, setStatus] = useState('loading')
@@ -60,16 +59,6 @@ export function useMoments() {
     }
   }, [reload])
 
-  // Keep or dismiss a suggested ingredient (or undo with no decision).
-  // Shows straight away; saving happens in the background.
-  async function decide(item, ingredientId, decision) {
-    const decisions = { ...(item.ingredients || {}) }
-    if (decision) decisions[ingredientId] = decision
-    else delete decisions[ingredientId]
-    setItems((current) => current.map((other) => (other.id === item.id ? { ...other, ingredients: decisions } : other)))
-    await updateCapture(item.id, { ingredients: decisions })
-  }
-
   // Delete for good, and free its links.
   async function remove(item) {
     await deleteCapture(item.id)
@@ -79,5 +68,5 @@ export function useMoments() {
     setItems((current) => current.filter((other) => other.id !== item.id))
   }
 
-  return { status, items, reload, decide, remove }
+  return { status, items, reload, remove }
 }

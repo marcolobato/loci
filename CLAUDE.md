@@ -27,7 +27,8 @@ Each screen must name the pattern it shows. Keep this table current.
 | Record audio (10 s) with clear state: filling ring, disc follows the sound, hints to play the space | Capture sheet | done |
 | Take a photo (camera or library, shrunk to 1600px) | Capture sheet | done |
 | Short text note (typed, or spoken with the keyboard's dictation), plus a place | Capture sheet | done |
-| Nine ingredients (Zumthor): suggested from the note by word matching, confirmed by me; collapsed summary, expanded detail | Each moment | done |
+| Nine ingredients (Zumthor): suggested from the note by word matching. Reading shows only this moment's ingredients, each saying where it came from ("Suggested from your note.", "Kept.", "Added by you."). Editing is a checklist of all nine; Save changes only the rows I changed, so "Kept" always means I chose it. Notes: `design/provenance.md` | Each moment | done |
+| Edit by section: each section of a moment (the moment, its ingredients) has its own Edit, with Save and Cancel in the same place. One section at a time; nothing is kept until Save | Moment (`?moment=<id>`) | done |
 | Playback with scrubber (uses the phone's built-in player for now; custom scrubber still to design) | Each moment | in progress |
 | The five states (ideal, empty, error, partial, loading) | All | in progress |
 | Offline first: kept on the phone (IndexedDB), works offline as a Home Screen app, new-version notice | App | done |
@@ -35,7 +36,7 @@ Each screen must name the pattern it shows. Keep this table current.
 | Component catalog | Catalog (`?catalog`) | done |
 | One screen: moments list on Capture; capturing opens as a bottom sheet over the list | Capture | done |
 | About: what Loci is (a sample app built on Zumthor's *Atmospheres*), in my own words. To check: where and to whom the talk was given. The top bar (title and X) is pinned; only the text scrolls, and it links to the nine ingredients | About (`?about`) | done |
-| Moment detail: each moment on its own page (photo, place, time, mood, sound), opened from the list; add or change the photo any time; the nine ingredients, kept or dismissed here; Delete, asked first. The list rows stay slim: a square photo thumbnail, the words (mood cut at two lines) and the player. Tapping an ingredient's title opens its own screen, and the X returns to the moment | Moment (`?moment=<id>`) | done |
+| Moment detail: each moment on its own page (photo, place, time, mood, sound), opened from the list; edit the photo, place and note; the nine ingredients; Delete, asked first. The list rows stay slim: a square photo thumbnail, the words (mood cut at two lines) and the player. Tapping an ingredient's title opens its own screen, and the X returns to the moment | Moment (`?moment=<id>`) | done |
 | The nine ingredients as paged screens: one per screen, swipe or Next, dots show where you are. Opens on one ingredient from a moment (`?ingredients=<id>&from=<momentId>`). Drawings still to come | Ingredients (`?ingredients`) | in progress |
 | Splash: a dictionary-style opening. The first tap glides the coral Shutter down onto Capture, so starting is already capturing. Shows once, then Loci remembers (`?splash` shows it again) | Splash, over Capture | done |
 
