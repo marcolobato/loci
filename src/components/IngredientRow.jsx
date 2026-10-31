@@ -1,19 +1,18 @@
 import Note from './Note.jsx'
 import Caption from './Caption.jsx'
-import TextButton from './TextButton.jsx'
 
-// IngredientRow: one of the nine ingredients for one capture.
-// Shows its name, what it means, and what Loci found in the note:
-// a suggestion to keep or dismiss, a kept one, or nothing found.
+// IngredientRow: one ingredient that's part of a capture, for reading.
+// Shows its name, what it means, the sentence that suggested it (if any),
+// and how it got here: kept, added by you, or suggested.
+// Changing the set happens in the checklist (Edit ingredients), not here.
 //
 // Props:
 //   ingredient – { name, description } from src/ingredients.js
 //   evidence   – the sentence that suggested it, or null if nothing was found
-//   decision   – "kept", "dismissed", or undefined (not decided yet)
-//   onDecide   – called with "kept", "dismissed" or undefined (undo)
+//   decision   – "kept", or undefined (suggested, not decided yet)
 //   learnHref  – optional: where the ingredient's title and description lead,
 //                e.g. its own screen. Without it, they are plain text.
-function IngredientRow({ ingredient, evidence, decision, onDecide, learnHref }) {
+function IngredientRow({ ingredient, evidence, decision, learnHref }) {
   // The name and what it means. With learnHref, they are one link: the name
   // is underlined in cold light (like every link), the description stays quiet.
   const heading = (
@@ -22,6 +21,9 @@ function IngredientRow({ ingredient, evidence, decision, onDecide, learnHref }) 
       <Caption>{ingredient.description}</Caption>
     </>
   )
+
+  // How it got here. Kept with no sentence behind it means you added it.
+  const status = decision === 'kept' ? (evidence ? 'Kept.' : 'Added by you.') : 'Suggested from your note.'
 
   return (
     <li className="ingredient-row stack-tight">
@@ -32,29 +34,8 @@ function IngredientRow({ ingredient, evidence, decision, onDecide, learnHref }) 
       ) : (
         <div>{heading}</div>
       )}
-
-      {!evidence && <Note tone="soft">No evidence observed.</Note>}
-
-      {evidence && decision !== 'dismissed' && <Note tone="soft">“{evidence}”</Note>}
-
-      {evidence && decision === undefined && (
-        <div className="inline-group">
-          <TextButton onClick={() => onDecide('kept')}>Keep</TextButton>
-          <TextButton onClick={() => onDecide('dismissed')}>Not this</TextButton>
-        </div>
-      )}
-      {evidence && decision === 'kept' && (
-        <div className="inline-group">
-          <Caption>Kept.</Caption>
-          <TextButton onClick={() => onDecide(undefined)}>Undo</TextButton>
-        </div>
-      )}
-      {evidence && decision === 'dismissed' && (
-        <div className="inline-group">
-          <Caption>Dismissed.</Caption>
-          <TextButton onClick={() => onDecide(undefined)}>Undo</TextButton>
-        </div>
-      )}
+      {evidence && <Note tone="soft">“{evidence}”</Note>}
+      <Caption>{status}</Caption>
     </li>
   )
 }

@@ -113,3 +113,30 @@ export function suggest(capture) {
   if (capture.seconds && !found.sound) found.sound = `${capture.seconds} seconds of sound, recorded here.`
   return found
 }
+
+// Is this ingredient part of the moment? Yes if you kept it, or if Loci
+// suggested it and you haven't said "not this".
+export function isPresent(evidence, decision) {
+  return decision === 'kept' || (Boolean(evidence) && decision !== 'dismissed')
+}
+
+// Edit ingredients: the checklist starts with every present ingredient ticked.
+// Returns { [ingredientId]: true or false }.
+export function startChecklist(capture, decisions = {}) {
+  const evidence = suggest(capture)
+  return Object.fromEntries(ingredients.map((i) => [i.id, isPresent(evidence[i.id], decisions[i.id])]))
+}
+
+// Save: turn the ticks into choices to keep with the capture.
+//   ticked                 → "kept"
+//   unticked, but suggested → "dismissed", so Loci stops suggesting it
+//   unticked, never suggested → nothing to keep
+export function decisionsFrom(capture, checked) {
+  const evidence = suggest(capture)
+  const decisions = {}
+  for (const i of ingredients) {
+    if (checked[i.id]) decisions[i.id] = 'kept'
+    else if (evidence[i.id]) decisions[i.id] = 'dismissed'
+  }
+  return decisions
+}

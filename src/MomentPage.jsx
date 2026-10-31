@@ -5,8 +5,9 @@
 // Pattern: edit by section. "Edit moment" opens the photo, place and note in
 // place, with Save and Cancel where Edit was. Nothing is kept until Save, so
 // Cancel puts everything back, the photo too.
-// Its nine ingredients are here too: Loci suggests them from the note, and you
-// keep or dismiss each one. Delete is at the very bottom and asks first.
+// Its nine ingredients edit the same way: "Edit ingredients" opens a checklist
+// of all nine, and Save keeps the whole set at once. Delete is at the very
+// bottom and asks first.
 import { useEffect, useState } from 'react'
 import TopBar from './components/TopBar.jsx'
 import Heading from './components/Heading.jsx'
@@ -27,6 +28,7 @@ import { useMoments } from './useMoments.js'
 import { updateCapture, photoForStore } from './captureStore.js'
 import { shrinkPhoto } from './photo.js'
 import { afterglow } from './afterglow.js'
+import { startChecklist, decisionsFrom } from './ingredients.js'
 
 // Props:
 //   id – the moment's id, from the address (?moment=<id>)
@@ -106,16 +108,36 @@ function MomentPage({ id }) {
     setEditing(false)
   }
 
-  // Keep or dismiss an ingredient. It shows straight away (useMoments); if
-  // saving fails, say so.
-  const [choiceFailed, setChoiceFailed] = useState(false)
+  // Editing the ingredients section. The ticks are drafts: only Save keeps them.
+  const [editingIngredients, setEditingIngredients] = useState(false)
+  const [checked, setChecked] = useState({}) // { [ingredientId]: true or false }
+  // Saving the ingredients: 'idle', 'saving' or 'failed'.
+  const [ingredientsSave, setIngredientsSave] = useState('idle')
 
-  async function decide(ingredientId, decision) {
+  // Edit ingredients: tick what's part of the moment now.
+  function startEditingIngredients() {
+    setChecked(startChecklist(item, item.ingredients))
+    setIngredientsSave('idle')
+    setConfirming(false)
+    setEditingIngredients(true)
+  }
+
+  // Tick or untick one ingredient (a draft, not kept yet).
+  function check(ingredientId, value) {
+    setChecked((current) => ({ ...current, [ingredientId]: value }))
+  }
+
+  // Save: keep the whole set in one go, read the moment again, and leave the
+  // checklist. If it fails, stay in the checklist so no tick is lost.
+  async function saveIngredients() {
+    setIngredientsSave('saving')
     try {
-      await kept.decide(item, ingredientId, decision)
-      setChoiceFailed(false)
+      await updateCapture(id, { ingredients: decisionsFrom(item, checked) })
+      await kept.reload()
+      setIngredientsSave('idle')
+      setEditingIngredients(false)
     } catch {
-      setChoiceFailed(true)
+      setIngredientsSave('failed')
     }
   }
 
@@ -222,20 +244,36 @@ function MomentPage({ id }) {
 
             <AudioClip src={item.url} label={`Play ${item.seconds} seconds of sound`} />
 
-            {/* Zumthor's nine ingredients, suggested from the note. */}
-            <div className="stack-tight">
-              <Ingredients
-                capture={item}
-                decisions={item.ingredients}
-                onDecide={decide}
-              />
-              <div role="status">
-                {choiceFailed && <Notice>Couldn’t save that choice. Try again.</Notice>}
-              </div>
-            </div>
+            {/* Zumthor's nine ingredients. Their buttons sit in the section's
+                header: Edit ingredients, or Save and Cancel in its place, with
+                the (usually empty) message slot after them, as above. */}
+            <Ingredients
+              capture={item}
+              decisions={item.ingredients}
+              editing={editingIngredients}
+              checked={checked}
+              onCheck={check}
+              actions={
+                editingIngredients ? (
+                  <div className="stack-tight">
+                    <div className="inline-group">
+                      <TextButton onClick={saveIngredients}>{ingredientsSave === 'saving' ? 'Saving…' : 'Save'}</TextButton>
+                      <TextButton onClick={() => setEditingIngredients(false)}>Cancel</TextButton>
+                    </div>
+                    <div role="status">
+                      {ingredientsSave === 'failed' && <Notice>Couldn’t save. Your ticks are still here. Try Save again.</Notice>}
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <TextButton onClick={startEditingIngredients}>Edit ingredients</TextButton>
+                  </div>
+                )
+              }
+            />
 
             {/* Delete hides while editing, so it can't be tapped by mistake. */}
-            {editing ? null : confirming ? (
+            {editing || editingIngredients ? null : confirming ? (
               <div className="stack-tight">
                 <Note>Delete this moment? This can’t be undone.</Note>
                 {deleteFailed && <Notice>Couldn’t delete it. Try again.</Notice>}

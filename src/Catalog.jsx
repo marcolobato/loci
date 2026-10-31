@@ -25,6 +25,7 @@ import Moment from './components/Moment.jsx'
 import CaptureRow from './components/CaptureRow.jsx'
 import granite from './assets/granite-dusk.webp'
 import { afterglow } from './afterglow.js'
+import { startChecklist, decisionsFrom } from './ingredients.js'
 // Sample captures (placeholders), one per afterglow step.
 import sample from '../data/sample.json'
 
@@ -49,22 +50,35 @@ const shutterStates = [
   { name: 'Disabled', disabled: true },
 ]
 
-// A sample capture with a note, for the Ingredients panel. Choices are kept
-// only while the catalog is open.
+// A sample capture with a note, for the Ingredients section. Edit, Save and
+// Cancel work as on a moment, but choices are kept only while the catalog
+// is open.
 const sampleNote = 'Rain falling through the oculus. The stone is cold under my hand. Light moves across the floor. The dome feels vast, and I want to linger.'
+const sampleCapture = { note: sampleNote, seconds: 10 }
 function SampleIngredients() {
   const [decisions, setDecisions] = useState({})
+  const [editing, setEditing] = useState(false)
+  const [checked, setChecked] = useState({})
   return (
     <Ingredients
-      capture={{ note: sampleNote, seconds: 10 }}
+      capture={sampleCapture}
       decisions={decisions}
-      onDecide={(id, decision) =>
-        setDecisions((current) => {
-          const next = { ...current }
-          if (decision) next[id] = decision
-          else delete next[id]
-          return next
-        })
+      editing={editing}
+      checked={checked}
+      onCheck={(id, value) => setChecked((current) => ({ ...current, [id]: value }))}
+      actions={
+        editing ? (
+          <div className="inline-group">
+            <TextButton onClick={() => { setDecisions(decisionsFrom(sampleCapture, checked)); setEditing(false) }}>Save</TextButton>
+            <TextButton onClick={() => setEditing(false)}>Cancel</TextButton>
+          </div>
+        ) : (
+          <div>
+            <TextButton onClick={() => { setChecked(startChecklist(sampleCapture, decisions)); setEditing(true) }}>
+              Edit ingredients
+            </TextButton>
+          </div>
+        )
       }
     />
   )
@@ -246,8 +260,8 @@ function Catalog() {
         </div>
       </section>
 
-      {/* Ingredients: suggested from a sample note. Keep / Not this work here
-          but aren't saved. Tap the line to open all nine. */}
+      {/* Ingredients: suggested from a sample note. Edit ingredients opens the
+          checklist; Save and Cancel work here but nothing is kept. */}
       <section className="stack-loose">
         <Label as="h2">Ingredients</Label>
         <div className="stack-tight">
