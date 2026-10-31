@@ -236,9 +236,12 @@ function MomentPage({ id }) {
                   <Caption><time dateTime={when.iso}>{when.label}</time></Caption>
                 </div>
                 {item.note && <Moment minutesAgo={item.minutesAgo}>{item.note}</Moment>}
-                <div>
-                  <TextButton onClick={startEditing}>Edit moment</TextButton>
-                </div>
+                {/* One section edits at a time: hidden while the ingredients are open. */}
+                {!editingIngredients && (
+                  <div>
+                    <TextButton onClick={startEditing}>Edit moment</TextButton>
+                  </div>
+                )}
               </div>
             )}
 
@@ -264,7 +267,8 @@ function MomentPage({ id }) {
                       {ingredientsSave === 'failed' && <Notice>Couldn’t save. Your ticks are still here. Try Save again.</Notice>}
                     </div>
                   </div>
-                ) : (
+                ) : editing ? null : (
+                  // One section edits at a time: hidden while the moment is open.
                   <div>
                     <TextButton onClick={startEditingIngredients}>Edit ingredients</TextButton>
                   </div>
