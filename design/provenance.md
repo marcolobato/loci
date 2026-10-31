@@ -48,8 +48,11 @@ Loci keeps all three labels on screen. The difference between "Kept" and "Added 
 
 On pre-selected answers: Johnson and Goldstein, "Do Defaults Save Lives?" (Science, 2003); Goddard and others on automation bias ([JAMIA, 2012](https://pmc.ncbi.nlm.nih.gov/articles/PMC3240751)); Buçinca and others on making people think before accepting ([CSCW 2021](https://arxiv.org/pdf/2102.09692)).
 
+## Decision 3: say which source, and quote only my words
+
+Sound can be suggested by the recording itself, when nothing in my note matches. Its label used to say "Suggested from your note.", which was untrue. Now it says "Suggested from your recording.", and its evidence ("10 seconds of sound, recorded here.") has no quotation marks. Quotation marks mean "you said this". Loci's own words don't get them.
+
 ## Still open
 
-- Sound is suggested from the recording, not the note, but its label still says "Suggested from your note."
 - Should Loci say plainly that it matches words, so I don't trust it more than it deserves? (Microsoft G2)
 - Later, a photo or a recording might suggest an ingredient (brightness for Light, loudness for Sound). Each source may need its own label.

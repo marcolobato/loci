@@ -110,8 +110,17 @@ export function suggest(capture) {
   for (const ingredient of ingredients) {
     found[ingredient.id] = parts.find((s) => uses(s, ingredient.words)) ?? null
   }
-  if (capture.seconds && !found.sound) found.sound = `${capture.seconds} seconds of sound, recorded here.`
+  if (capture.seconds && !found.sound) found.sound = recorded(capture)
   return found
+}
+
+// The evidence for Sound when nothing in the note matched: the recording itself.
+const recorded = (capture) => `${capture.seconds} seconds of sound, recorded here.`
+
+// Did this suggestion come from the recording, not the note? Then it isn't
+// your words, so it isn't shown as a quote or called "from your note".
+export function fromRecording(capture, evidence) {
+  return Boolean(capture.seconds) && evidence === recorded(capture)
 }
 
 // Is this ingredient part of the moment? Yes if you kept it, or if Loci

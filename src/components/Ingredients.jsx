@@ -3,13 +3,14 @@ import Note from './Note.jsx'
 import Caption from './Caption.jsx'
 import Checkbox from './Checkbox.jsx'
 import IngredientRow from './IngredientRow.jsx'
-import { ingredients, suggest, isPresent } from '../ingredients.js'
+import { ingredients, suggest, isPresent, fromRecording } from '../ingredients.js'
 import './Ingredients.css'
 
 // Ingredients: Zumthor's nine ingredients for one capture. A section that
 // edits in place (pattern: edit by section).
 //   Reading: only the ingredients that are part of this moment, each saying
-//   how it got here (kept, added by you, suggested from your note).
+//   how it got here (kept, added by you, suggested from your note or, for
+//   Sound, from your recording).
 //   Editing: all nine as a checklist, with the present ones ticked.
 // The header holds the section's buttons (actions), so Save and Cancel
 // appear exactly where Edit ingredients was.
@@ -48,7 +49,12 @@ function Ingredients({ capture, decisions = {}, editing = false, checked = {}, o
                 onChange={(value) => onCheck(ingredient.id, value)}
               >
                 <Caption>{ingredient.description}</Caption>
-                {evidence[ingredient.id] && <Note tone="soft">“{evidence[ingredient.id]}”</Note>}
+                {/* Quotation marks only around your own words, not the recording's. */}
+                {evidence[ingredient.id] && (
+                  <Note tone="soft">
+                    {fromRecording(capture, evidence[ingredient.id]) ? evidence[ingredient.id] : `“${evidence[ingredient.id]}”`}
+                  </Note>
+                )}
               </Checkbox>
             </li>
           ))}
@@ -61,6 +67,7 @@ function Ingredients({ capture, decisions = {}, editing = false, checked = {}, o
               ingredient={ingredient}
               evidence={evidence[ingredient.id]}
               decision={decisions[ingredient.id]}
+              fromRecording={fromRecording(capture, evidence[ingredient.id])}
               learnHref={capture.id ? `?ingredients=${ingredient.id}&from=${encodeURIComponent(capture.id)}` : undefined}
             />
           ))}

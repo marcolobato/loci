@@ -10,9 +10,11 @@ import Caption from './Caption.jsx'
 //   ingredient – { name, description } from src/ingredients.js
 //   evidence   – the sentence that suggested it, or null if nothing was found
 //   decision   – "kept", or undefined (suggested, not decided yet)
+//   fromRecording – true when the evidence is the recording, not a sentence
+//                from the note (only Sound). It then isn't quoted as your words.
 //   learnHref  – optional: where the ingredient's title and description lead,
 //                e.g. its own screen. Without it, they are plain text.
-function IngredientRow({ ingredient, evidence, decision, learnHref }) {
+function IngredientRow({ ingredient, evidence, decision, fromRecording = false, learnHref }) {
   // The name and what it means. With learnHref, they are one link: the name
   // is underlined in cold light (like every link), the description stays quiet.
   const heading = (
@@ -23,7 +25,8 @@ function IngredientRow({ ingredient, evidence, decision, learnHref }) {
   )
 
   // How it got here. Kept with no sentence behind it means you added it.
-  const status = decision === 'kept' ? (evidence ? 'Kept.' : 'Added by you.') : 'Suggested from your note.'
+  const suggested = fromRecording ? 'Suggested from your recording.' : 'Suggested from your note.'
+  const status = decision === 'kept' ? (evidence ? 'Kept.' : 'Added by you.') : suggested
 
   return (
     <li className="ingredient-row stack-tight">
@@ -34,7 +37,8 @@ function IngredientRow({ ingredient, evidence, decision, learnHref }) {
       ) : (
         <div>{heading}</div>
       )}
-      {evidence && <Note tone="soft">“{evidence}”</Note>}
+      {/* Quotation marks only around your own words. */}
+      {evidence && <Note tone="soft">{fromRecording ? evidence : `“${evidence}”`}</Note>}
       <Caption>{status}</Caption>
     </li>
   )
