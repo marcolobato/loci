@@ -3,7 +3,8 @@
 // Pattern: offline first.
 //
 // A saved capture looks like:
-//   { id, capturedAt, seconds, audio: { bytes, type }, place, note, photo }
+//   { id, capturedAt, seconds, loudness, audio: { bytes, type }, place, note, photo }
+// loudness: how loud the room was on average, 0 to 1 (null if not measured).
 // place, note and photo are added after recording (empty until then).
 // Added later, when you edit its ingredients (see src/ingredients.js):
 //   ingredients     – { [ingredientId]: "kept" | "dismissed" }
@@ -11,7 +12,7 @@
 // Older captures simply don't have these fields; everything reads them as empty.
 //
 // Functions (all return Promises, so use them with await):
-//   saveCapture({ audio, seconds })  – keep a new capture; returns it
+//   saveCapture({ audio, seconds, loudness }) – keep a new capture; returns it
 //   listCaptures()                   – every capture, newest first
 //   countCaptures()                  – how many are kept
 //   updateCapture(id, changes)       – change some fields, e.g. place and note
@@ -55,13 +56,14 @@ async function captures(mode) {
   return db.transaction(STORE, mode).objectStore(STORE)
 }
 
-export async function saveCapture({ audio, seconds }) {
+export async function saveCapture({ audio, seconds, loudness = null }) {
   // Older iPhones can't store sound files directly, so store the raw bytes
   // plus their format, and rebuild the file when reading. Works everywhere.
   const capture = {
     id: crypto.randomUUID(),
     capturedAt: new Date().toISOString(),
     seconds,
+    loudness,
     audio: { bytes: await audio.arrayBuffer(), type: audio.type },
     place: '',
     note: '',

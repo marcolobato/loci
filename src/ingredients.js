@@ -104,6 +104,22 @@ function uses(sentence, words) {
   return pattern.test(sentence)
 }
 
+// Measurements only suggest when they are clear (a "confidence threshold"):
+// anything in between suggests nothing. First guesses, to tune on a phone.
+// Loudness is 0 (silent) to 1 (loud), averaged over the recording.
+const QUIET = 0.15 // the same "very quiet" line as the recorder's quiet hint (useRecorder.js)
+const LOUD = 0.5
+
+// Sound, from the recording. Older captures have no loudness measured: they
+// keep the plain "N seconds of sound" so nothing they showed disappears.
+function soundFromRecording(capture) {
+  if (!capture.seconds) return null
+  if (typeof capture.loudness !== 'number') return `${capture.seconds} seconds of sound, recorded here.`
+  if (capture.loudness < QUIET) return 'The recording is very quiet.'
+  if (capture.loudness > LOUD) return 'The recording is loud.'
+  return null
+}
+
 // For one capture: what Loci can suggest for each ingredient, and from where.
 // Returns { [ingredientId]: { text, from } or null if nothing was found }.
 //   text – the evidence: a sentence from the note, or Loci's own words
@@ -116,7 +132,8 @@ export function suggest(capture) {
     const sentence = parts.find((s) => uses(s, ingredient.words))
     found[ingredient.id] = sentence ? { text: sentence, from: 'note' } : null
   }
-  if (capture.seconds && !found.sound) found.sound = { text: `${capture.seconds} seconds of sound, recorded here.`, from: 'recording' }
+  const heard = !found.sound && soundFromRecording(capture)
+  if (heard) found.sound = { text: heard, from: 'recording' }
   return found
 }
 

@@ -85,11 +85,12 @@ function Capture() {
     }
   }, [photoLink])
 
-  // Called once each time a recording finishes: keep it on the phone.
-  async function keep(file, seconds) {
+  // Called once each time a recording finishes: keep it on the phone, with
+  // how loud the room was (Loci uses it to suggest Sound).
+  async function keep(file, seconds, loudness) {
     setSaveState('saving')
     try {
-      const capture = await saveCapture({ audio: file, seconds })
+      const capture = await saveCapture({ audio: file, seconds, loudness })
       setCurrentId(capture.id)
       setSaveState('saved')
       askToKeepStorage().catch(() => {}) // a "no" here is fine; nothing to show

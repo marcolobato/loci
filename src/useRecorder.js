@@ -16,8 +16,11 @@
 //   stop()      – stop early; otherwise it stops by itself at 10 s
 //
 // Option:
-//   onRecorded(file, seconds) – called once when a recording finishes, with
-//                               the sound file, so the screen can save it.
+//   onRecorded(file, seconds, loudness) – called once when a recording
+//                               finishes, with the sound file, so the screen
+//                               can save it. loudness is how loud the room
+//                               was on average, 0 to 1 (null if it couldn't
+//                               be measured).
 import { useEffect, useRef, useState } from 'react'
 
 const RECORD_SECONDS = 10
@@ -122,6 +125,9 @@ export function useRecorder({ onRecorded } = {}) {
     const recorder = new MediaRecorder(stream, format ? { mimeType: format } : undefined)
     recorderRef.current = recorder
     const chunks = []
+    // A running total of every loudness reading, for the average at the end.
+    let levelSum = 0
+    let levelCount = 0
 
     // The recorder hands over sound in pieces; collect them.
     recorder.ondataavailable = (event) => {
@@ -138,7 +144,8 @@ export function useRecorder({ onRecorded } = {}) {
       setRecordedSeconds(seconds)
       setSecondsLeft(0)
       setStatus('done')
-      onRecordedRef.current?.(blob, seconds)
+      const averageLoudness = levelCount > 0 ? levelSum / levelCount : null
+      onRecordedRef.current?.(blob, seconds, averageLoudness)
     }
 
     const startedAt = Date.now()
@@ -168,6 +175,8 @@ export function useRecorder({ onRecorded } = {}) {
       const meter = setInterval(() => {
         analyser.getFloatTimeDomainData(samples)
         const now = loudness(samples)
+        levelSum += now
+        levelCount += 1
         // Only redraw when it changed enough to see.
         if (Math.abs(now - shown) > 0.02) {
           shown = now

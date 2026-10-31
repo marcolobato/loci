@@ -30,6 +30,28 @@ test('with no sound words, an old moment (no loudness measured) still gets Sound
   assert.deepEqual(suggest(quietNote).sound, { text: '10 seconds of sound, recorded here.', from: 'recording' })
 })
 
+// ---------- Sound, from how loud the recording was ----------
+
+test('a very quiet recording suggests Sound, from the recording', () => {
+  const capture = { note: 'The stone is cold.', seconds: 10, loudness: 0.08 }
+  assert.deepEqual(suggest(capture).sound, { text: 'The recording is very quiet.', from: 'recording' })
+})
+
+test('a loud recording suggests Sound, from the recording', () => {
+  const capture = { note: 'The stone is cold.', seconds: 10, loudness: 0.7 }
+  assert.deepEqual(suggest(capture).sound, { text: 'The recording is loud.', from: 'recording' })
+})
+
+test('an ordinary room suggests nothing: only clear measurements count', () => {
+  const capture = { note: 'The stone is cold.', seconds: 10, loudness: 0.3 }
+  assert.equal(suggest(capture).sound, null)
+})
+
+test('your note still comes first, even when the recording was quiet', () => {
+  const capture = { ...pantheon, loudness: 0.05 }
+  assert.equal(suggest(capture).sound.from, 'note')
+})
+
 // ---------- What a row shows when reading ----------
 
 test('an untouched suggestion says where it came from, in quotation marks', () => {
