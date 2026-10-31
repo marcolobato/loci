@@ -6,8 +6,10 @@
 //     are and how it feels.
 //   - Done: the note is kept, the sheet closes, and the new moment appears
 //     at the top of the list.
+// The top bar ("Loci" and About Loci) stays put, like on About and a moment;
+// the list scrolls under it. The Shutter stays fixed at the bottom.
 import { useEffect, useState } from 'react'
-import Label from './components/Label.jsx'
+import TopBar from './components/TopBar.jsx'
 import Heading from './components/Heading.jsx'
 import Note from './components/Note.jsx'
 import Caption from './components/Caption.jsx'
@@ -157,41 +159,41 @@ function Capture() {
 
   return (
     // has-backdrop: the granite, edge to edge, behind everything.
-    // capture: leaves room at the bottom for the Shutter.
-    <main className="page stack-loose has-backdrop capture">
+    // screen-with-bar: the bar stays put; the body below it scrolls.
+    <main className="screen-with-bar has-backdrop">
       <Backdrop image={granite} cover="screen" />
 
-      {/* Top: the app name, and how many moments are kept. */}
-      <div className="stack-tight">
-        <Label as="h1">Loci</Label>
-        {kept.status === 'ready' && count > 0 && <Caption>{moments(count)} on this phone · newest first</Caption>}
-        <div>
-          <TextLink href="?about">About Loci</TextLink>
-        </div>
-      </div>
+      {/* Pinned: the app name, and About Loci where other screens have the X. */}
+      <TopBar title="Loci" action={<TextLink href="?about">About Loci</TextLink>} />
 
-      {/* Loading, failure, or nothing kept yet. */}
-      <div role="status">
-        {kept.status === 'loading' && <Note tone="soft">Opening your moments…</Note>}
-        {kept.status === 'error' && <Notice>Couldn’t open your moments. Reload the page to try again.</Notice>}
-        {/* Nothing kept yet. Picks up from the splash ("Tap to begin"): the
-            first tap brought you here, the second one records. The second line
-            warns about the microphone question before it appears. */}
-        {kept.status === 'ready' && count === 0 && (
-          <div className="stack-normal">
-            <Heading size="title" as="p">Tap again to record.</Heading>
-            <Note tone="soft">
-              Ten seconds of how this place sounds. Loci will ask to use your microphone. Everything stays on this
-              phone.
-            </Note>
-          </div>
+      {/* capture__body: leaves room at the bottom for the Shutter. */}
+      <div className="screen-with-bar__body capture__body stack-loose">
+        {/* How many moments are kept. */}
+        {kept.status === 'ready' && count > 0 && <Caption>{moments(count)} on this phone · newest first</Caption>}
+
+        {/* Loading, failure, or nothing kept yet. */}
+        <div role="status">
+          {kept.status === 'loading' && <Note tone="soft">Opening your moments…</Note>}
+          {kept.status === 'error' && <Notice>Couldn’t open your moments. Reload the page to try again.</Notice>}
+          {/* Nothing kept yet. Picks up from the splash ("Tap to begin"): the
+              first tap brought you here, the second one records. The second line
+              warns about the microphone question before it appears. */}
+          {kept.status === 'ready' && count === 0 && (
+            <div className="stack-normal">
+              <Heading size="title" as="p">Tap again to record.</Heading>
+              <Note tone="soft">
+                Ten seconds of how this place sounds. Loci will ask to use your microphone. Everything stays on this
+                phone.
+              </Note>
+            </div>
+          )}
+        </div>
+
+        {/* Your moments. */}
+        {kept.status === 'ready' && count > 0 && (
+          <MomentList items={kept.items} />
         )}
       </div>
-
-      {/* Your moments. */}
-      {kept.status === 'ready' && count > 0 && (
-        <MomentList items={kept.items} />
-      )}
 
       {/* Bottom: the Shutter, always within reach. It opens the sheet. */}
       <div className="capture__dock">

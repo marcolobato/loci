@@ -34,7 +34,7 @@ Each screen must name the pattern it shows. Keep this table current.
 | Offline first: kept on the phone (IndexedDB), works offline as a Home Screen app, new-version notice | App | done |
 | Type scale in use | All | done |
 | Component catalog | Catalog (`?catalog`) | done |
-| One screen: moments list on Capture; capturing opens as a bottom sheet over the list | Capture | done |
+| One screen: moments list on Capture; capturing opens as a bottom sheet over the list. The top bar ("Loci", About Loci) stays put like on every screen; the list scrolls under it | Capture | done |
 | About: what Loci is (a sample app built on Zumthor's *Atmospheres*), in my own words. To check: where and to whom the talk was given. The top bar (title and X) is pinned; only the text scrolls, and it links to the nine ingredients | About (`?about`) | done |
 | Moment detail: each moment on its own page (photo, place, time, mood, sound), opened from the list; edit the photo, place and note; the nine ingredients; Delete, asked first. The list rows stay slim: a square photo thumbnail, the words (mood cut at two lines) and the player. Tapping an ingredient's title opens its own screen, and the X returns to the moment | Moment (`?moment=<id>`) | done |
 | The nine ingredients as paged screens: one per screen, swipe or Next, dots show where you are. Opens on one ingredient from a moment (`?ingredients=<id>&from=<momentId>`). Drawings still to come | Ingredients (`?ingredients`) | in progress |

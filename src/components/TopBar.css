@@ -17,3 +17,9 @@
     + env(safe-area-inset-right, 0rem)
   );
 }
+
+/* With words on the right instead of the X: the normal page margin, so the
+   words line up with the text edge like everything else. */
+.top-bar--action {
+  padding-right: calc(var(--space-page-inset) + env(safe-area-inset-right, 0rem));
+}

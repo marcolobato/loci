@@ -13,11 +13,13 @@ import CloseButton from './CloseButton.jsx'
 //   title     – the screen's name. It is the page's main heading (h1), so
 //               screen readers announce which screen this is.
 //   closeHref – where the X goes (default: Capture)
-function TopBar({ title, closeHref }) {
+//   action    – optional: something else for the right side instead of the X,
+//               e.g. a TextLink on Capture, which has nowhere to close to.
+function TopBar({ title, closeHref, action }) {
   return (
-    <header className="top-bar">
+    <header className={action ? 'top-bar top-bar--action' : 'top-bar'}>
       <Label as="h1">{title}</Label>
-      <CloseButton href={closeHref} />
+      {action ?? <CloseButton href={closeHref} />}
     </header>
   )
 }

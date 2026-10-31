@@ -255,11 +255,12 @@ h2 {
 }
 
 /*
-  Capture (one screen): the list scrolls; the Shutter stays fixed at the
-  bottom center. The page leaves room at the bottom so the last moment
-  never hides behind the Shutter.
+  Capture (one screen): the bar stays put, the list scrolls under it, and
+  the Shutter stays fixed at the bottom center. The scrolling body leaves
+  room at the bottom so the last moment never hides behind the Shutter.
+  (Written after .screen-with-bar__body, so this bottom padding wins.)
 */
-.capture {
+.capture__body {
   padding-bottom: calc(var(--size-shutter-ring) + var(--space-stack-loose) * 2 + env(safe-area-inset-bottom, 0rem));
 }
 .capture__dock {
