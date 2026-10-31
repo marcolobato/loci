@@ -109,6 +109,9 @@ function uses(sentence, words) {
 // Loudness is 0 (silent) to 1 (loud), averaged over the recording.
 const QUIET = 0.15 // the same "very quiet" line as the recorder's quiet hint (useRecorder.js)
 const LOUD = 0.5
+// Brightness is 0 (black) to 1 (white), averaged over the photo (photo.js).
+const DARK = 0.25
+const BRIGHT = 0.7
 
 // Sound, from the recording. Older captures have no loudness measured: they
 // keep the plain "N seconds of sound" so nothing they showed disappears.
@@ -120,10 +123,19 @@ function soundFromRecording(capture) {
   return null
 }
 
+// Light, from the photo. Only photos added since this was built have a
+// brightness; older ones suggest nothing, as before.
+function lightFromPhoto(capture) {
+  if (typeof capture.brightness !== 'number') return null
+  if (capture.brightness < DARK) return 'The photo is very dark.'
+  if (capture.brightness > BRIGHT) return 'The photo is very bright.'
+  return null
+}
+
 // For one capture: what Loci can suggest for each ingredient, and from where.
 // Returns { [ingredientId]: { text, from } or null if nothing was found }.
 //   text – the evidence: a sentence from the note, or Loci's own words
-//   from – "note" or "recording": which source suggested it
+//   from – "note", "recording" or "photo": which source suggested it
 // Your note comes first: a sentence of yours beats Loci's measurement.
 export function suggest(capture) {
   const parts = sentences(capture.note)
@@ -134,6 +146,8 @@ export function suggest(capture) {
   }
   const heard = !found.sound && soundFromRecording(capture)
   if (heard) found.sound = { text: heard, from: 'recording' }
+  const seen = !found.light && lightFromPhoto(capture)
+  if (seen) found.light = { text: seen, from: 'photo' }
   return found
 }
 
@@ -152,7 +166,7 @@ export function isPresent(evidence, decision) {
 //            "In your words."   you wrote (or rewrote) its words
 //            "Kept."            Loci suggested it, you chose it
 //            "Added by you."    you ticked it, with no words behind it
-//            "Suggested from your note." (or recording) – untouched
+//            "Suggested from your note." (or recording, or photo) – untouched
 export function describe(capture, ingredientId) {
   const evidence = suggest(capture)[ingredientId]
   const decision = (capture.ingredients || {})[ingredientId]

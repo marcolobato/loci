@@ -52,6 +52,30 @@ test('your note still comes first, even when the recording was quiet', () => {
   assert.equal(suggest(capture).sound.from, 'note')
 })
 
+// ---------- Light, from how bright the photo is ----------
+
+const noLightWords = { note: 'The stone is cold.', seconds: 10 }
+
+test('a very bright photo suggests Light, from the photo, not quoted', () => {
+  const capture = { ...noLightWords, brightness: 0.85 }
+  assert.deepEqual(suggest(capture).light, { text: 'The photo is very bright.', from: 'photo' })
+  assert.deepEqual(describe(capture, 'light'), { text: 'The photo is very bright.', quoted: false, status: 'Suggested from your photo.' })
+})
+
+test('a very dark photo suggests Light', () => {
+  assert.equal(suggest({ ...noLightWords, brightness: 0.1 }).light.text, 'The photo is very dark.')
+})
+
+test('an ordinary photo, or one with no brightness measured, suggests nothing', () => {
+  assert.equal(suggest({ ...noLightWords, brightness: 0.5 }).light, null)
+  assert.equal(suggest(noLightWords).light, null)
+})
+
+test('your note still comes first over the photo', () => {
+  const capture = { note: 'Light moves across the floor.', brightness: 0.9 }
+  assert.equal(suggest(capture).light.from, 'note')
+})
+
 // ---------- What a row shows when reading ----------
 
 test('an untouched suggestion says where it came from, in quotation marks', () => {

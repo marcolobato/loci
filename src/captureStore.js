@@ -6,6 +6,7 @@
 //   { id, capturedAt, seconds, loudness, audio: { bytes, type }, place, note, photo }
 // loudness: how loud the room was on average, 0 to 1 (null if not measured).
 // place, note and photo are added after recording (empty until then).
+// brightness: how bright the photo is, 0 to 1, saved with each photo.
 // Added later, when you edit its ingredients (see src/ingredients.js):
 //   ingredients     – { [ingredientId]: "kept" | "dismissed" }
 //   ingredientWords – { [ingredientId]: your own words for it }

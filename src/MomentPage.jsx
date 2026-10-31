@@ -26,7 +26,7 @@ import Backdrop from './components/Backdrop.jsx'
 import granite from './assets/granite-dusk.webp'
 import { useMoments } from './useMoments.js'
 import { updateCapture, photoForStore } from './captureStore.js'
-import { shrinkPhoto } from './photo.js'
+import { shrinkPhoto, photoBrightness } from './photo.js'
 import { afterglow } from './afterglow.js'
 import { startChecklist, startWords, choicesFrom } from './ingredients.js'
 
@@ -46,7 +46,7 @@ function MomentPage({ id }) {
   const [editing, setEditing] = useState(false)
   const [place, setPlace] = useState('')
   const [note, setNote] = useState('')
-  // A photo picked while editing, not kept yet: { file, link } or null.
+  // A photo picked while editing, not kept yet: { file, link, brightness } or null.
   const [newPhoto, setNewPhoto] = useState(null)
   // Preparing the picked photo: 'idle', 'shrinking' or 'failed'.
   const [photoState, setPhotoState] = useState('idle')
@@ -71,13 +71,14 @@ function MomentPage({ id }) {
     setEditing(true)
   }
 
-  // Shrink the chosen photo (like the capture sheet does) and show it,
-  // but don't keep it until Save.
+  // Shrink the chosen photo (like the capture sheet does), measure how
+  // bright it is, and show it, but don't keep it until Save.
   async function pickPhoto(file) {
     setPhotoState('shrinking')
     try {
       const small = await shrinkPhoto(file)
-      setNewPhoto({ file: small, link: URL.createObjectURL(small) })
+      const brightness = await photoBrightness(small).catch(() => null)
+      setNewPhoto({ file: small, link: URL.createObjectURL(small), brightness })
       setPhotoState('idle')
     } catch {
       setPhotoState('failed')
@@ -91,7 +92,10 @@ function MomentPage({ id }) {
     setSaveState('saving')
     try {
       const changes = { place: place.trim(), note: note.trim() }
-      if (newPhoto) changes.photo = await photoForStore(newPhoto.file)
+      if (newPhoto) {
+        changes.photo = await photoForStore(newPhoto.file)
+        changes.brightness = newPhoto.brightness // a new photo brings its own brightness
+      }
       await updateCapture(id, changes)
       await kept.reload()
       setNewPhoto(null)

@@ -27,7 +27,7 @@ import { useRecorder } from './useRecorder.js'
 import { useMoments } from './useMoments.js'
 import { pickHint, quietHint } from './hints.js'
 import { saveCapture, askToKeepStorage, updateCapture, photoForStore } from './captureStore.js'
-import { shrinkPhoto } from './photo.js'
+import { shrinkPhoto, photoBrightness } from './photo.js'
 
 // "1 moment" or "3 moments".
 const moments = (n) => (n === 1 ? '1 moment' : `${n} moments`)
@@ -119,12 +119,15 @@ function Capture() {
     start()
   }
 
-  // Shrink the chosen photo, keep it with the capture, and show it.
+  // Shrink the chosen photo, keep it with the capture (with how bright it
+  // is, so Loci can suggest Light), and show it. If measuring fails, the
+  // photo is still kept, just without a brightness.
   async function addPhoto(file) {
     setPhotoState('saving')
     try {
       const small = await shrinkPhoto(file)
-      await updateCapture(currentId, { photo: await photoForStore(small) })
+      const brightness = await photoBrightness(small).catch(() => null)
+      await updateCapture(currentId, { photo: await photoForStore(small), brightness })
       setPhotoLink(URL.createObjectURL(small))
       setPhotoState('saved')
     } catch {
