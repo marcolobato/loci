@@ -186,13 +186,19 @@ function MomentPage({ id }) {
                   placeholder="Light, sound, temperature, what's close to you"
                   hint="Tip: tap the microphone on the keyboard to say it instead."
                 />
-                <div role="status">
-                  {saveState === 'failed' && <Notice>Couldn’t save. Your changes are still here. Try Save again.</Notice>}
-                </div>
-                {/* Save and Cancel sit where Edit moment was. */}
-                <div className="inline-group">
-                  <TextButton onClick={save}>{saveState === 'saving' ? 'Saving…' : 'Save'}</TextButton>
-                  <TextButton onClick={cancel}>Cancel</TextButton>
+                {/* Save and Cancel sit where Edit moment was, right under the
+                    note. The (usually empty) message slot comes after them, so
+                    it never adds space above Save: Save stays close to the
+                    note, clear of the keyboard. A failure shows right under
+                    the Save you just tapped. */}
+                <div className="stack-tight">
+                  <div className="inline-group">
+                    <TextButton onClick={save}>{saveState === 'saving' ? 'Saving…' : 'Save'}</TextButton>
+                    <TextButton onClick={cancel}>Cancel</TextButton>
+                  </div>
+                  <div role="status">
+                    {saveState === 'failed' && <Notice>Couldn’t save. Your changes are still here. Try Save again.</Notice>}
+                  </div>
                 </div>
               </div>
             ) : (
