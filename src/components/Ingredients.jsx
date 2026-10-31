@@ -3,29 +3,28 @@ import Note from './Note.jsx'
 import Caption from './Caption.jsx'
 import Checkbox from './Checkbox.jsx'
 import IngredientRow from './IngredientRow.jsx'
-import { ingredients, suggest, isPresent, fromRecording } from '../ingredients.js'
+import { ingredients, suggest, isPresent, describe } from '../ingredients.js'
 import './Ingredients.css'
 
 // Ingredients: Zumthor's nine ingredients for one capture. A section that
 // edits in place (pattern: edit by section).
 //   Reading: only the ingredients that are part of this moment, each saying
-//   how it got here (kept, added by you, suggested from your note or, for
-//   Sound, from your recording).
+//   how it got here (see describe in src/ingredients.js).
 //   Editing: all nine as a checklist, with the present ones ticked.
 // The header holds the section's buttons (actions), so Save and Cancel
 // appear exactly where Edit ingredients was.
 //
 // Props:
-//   capture   – the capture, with its note and seconds of sound. When it has
-//               an id, each ingredient's title links to its own screen, and
-//               the way back leads to this moment.
-//   decisions – { [ingredientId]: "kept" | "dismissed" }, saved per capture
+//   capture   – the capture: its note, seconds of sound, and saved choices
+//               (capture.ingredients). When it has an id, each ingredient's
+//               title links to its own screen, and the way back leads here.
 //   editing   – true to show the checklist
 //   checked   – while editing: { [ingredientId]: true or false }, the ticks
 //   onCheck   – while editing: called with (ingredientId, true or false)
 //   actions   – the buttons for the header: Edit ingredients, or Save and Cancel
-function Ingredients({ capture, decisions = {}, editing = false, checked = {}, onCheck, actions }) {
+function Ingredients({ capture, editing = false, checked = {}, onCheck, actions }) {
   const evidence = suggest(capture)
+  const decisions = capture.ingredients || {}
   const present = ingredients.filter((i) => isPresent(evidence[i.id], decisions[i.id]))
   // The count follows the ticks while editing, so it changes as you tap.
   const count = editing ? ingredients.filter((i) => checked[i.id]).length : present.length
@@ -49,10 +48,10 @@ function Ingredients({ capture, decisions = {}, editing = false, checked = {}, o
                 onChange={(value) => onCheck(ingredient.id, value)}
               >
                 <Caption>{ingredient.description}</Caption>
-                {/* Quotation marks only around your own words, not the recording's. */}
+                {/* Quotation marks only around your own words, not Loci's. */}
                 {evidence[ingredient.id] && (
                   <Note tone="soft">
-                    {fromRecording(capture, evidence[ingredient.id]) ? evidence[ingredient.id] : `“${evidence[ingredient.id]}”`}
+                    {evidence[ingredient.id].from === 'note' ? `“${evidence[ingredient.id].text}”` : evidence[ingredient.id].text}
                   </Note>
                 )}
               </Checkbox>
@@ -65,9 +64,7 @@ function Ingredients({ capture, decisions = {}, editing = false, checked = {}, o
             <IngredientRow
               key={ingredient.id}
               ingredient={ingredient}
-              evidence={evidence[ingredient.id]}
-              decision={decisions[ingredient.id]}
-              fromRecording={fromRecording(capture, evidence[ingredient.id])}
+              {...describe(capture, ingredient.id)}
               learnHref={capture.id ? `?ingredients=${ingredient.id}&from=${encodeURIComponent(capture.id)}` : undefined}
             />
           ))}

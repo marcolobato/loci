@@ -61,8 +61,7 @@ function SampleIngredients() {
   const [checked, setChecked] = useState({})
   return (
     <Ingredients
-      capture={sampleCapture}
-      decisions={decisions}
+      capture={{ ...sampleCapture, ingredients: decisions }}
       editing={editing}
       checked={checked}
       onCheck={(id, value) => setChecked((current) => ({ ...current, [id]: value }))}

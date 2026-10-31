@@ -101,32 +101,43 @@ function uses(sentence, words) {
   return pattern.test(sentence)
 }
 
-// For one capture: what Loci can suggest for each ingredient.
-// Returns { [ingredientId]: evidence text, or null if nothing was found }.
-// A capture with sound always has evidence for "The Sound of a Space".
+// For one capture: what Loci can suggest for each ingredient, and from where.
+// Returns { [ingredientId]: { text, from } or null if nothing was found }.
+//   text – the evidence: a sentence from the note, or Loci's own words
+//   from – "note" or "recording": which source suggested it
+// Your note comes first: a sentence of yours beats Loci's measurement.
 export function suggest(capture) {
   const parts = sentences(capture.note)
   const found = {}
   for (const ingredient of ingredients) {
-    found[ingredient.id] = parts.find((s) => uses(s, ingredient.words)) ?? null
+    const sentence = parts.find((s) => uses(s, ingredient.words))
+    found[ingredient.id] = sentence ? { text: sentence, from: 'note' } : null
   }
-  if (capture.seconds && !found.sound) found.sound = recorded(capture)
+  if (capture.seconds && !found.sound) found.sound = { text: `${capture.seconds} seconds of sound, recorded here.`, from: 'recording' }
   return found
-}
-
-// The evidence for Sound when nothing in the note matched: the recording itself.
-const recorded = (capture) => `${capture.seconds} seconds of sound, recorded here.`
-
-// Did this suggestion come from the recording, not the note? Then it isn't
-// your words, so it isn't shown as a quote or called "from your note".
-export function fromRecording(capture, evidence) {
-  return Boolean(capture.seconds) && evidence === recorded(capture)
 }
 
 // Is this ingredient part of the moment? Yes if you kept it, or if Loci
 // suggested it and you haven't said "not this".
 export function isPresent(evidence, decision) {
   return decision === 'kept' || (Boolean(evidence) && decision !== 'dismissed')
+}
+
+// What one ingredient shows when reading a moment.
+// Returns { text, quoted, status }:
+//   text   – the words to show under it, or null
+//   quoted – true for your own words (they get quotation marks), false for
+//            Loci's (e.g. "10 seconds of sound, recorded here.")
+//   status – how it got here: "Kept.", "Added by you." or "Suggested from your note."
+export function describe(capture, ingredientId) {
+  const evidence = suggest(capture)[ingredientId]
+  const decision = (capture.ingredients || {})[ingredientId]
+  if (decision === 'kept') {
+    if (!evidence) return { text: null, quoted: false, status: 'Added by you.' }
+    return { text: evidence.text, quoted: evidence.from === 'note', status: 'Kept.' }
+  }
+  if (!evidence) return { text: null, quoted: false, status: null } // not part of the moment
+  return { text: evidence.text, quoted: evidence.from === 'note', status: `Suggested from your ${evidence.from}.` }
 }
 
 // Edit ingredients: the checklist starts with every present ingredient ticked.

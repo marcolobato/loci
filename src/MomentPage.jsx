@@ -252,7 +252,6 @@ function MomentPage({ id }) {
                 the (usually empty) message slot after them, as above. */}
             <Ingredients
               capture={item}
-              decisions={item.ingredients}
               editing={editingIngredients}
               checked={checked}
               onCheck={check}
