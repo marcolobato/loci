@@ -69,7 +69,7 @@ function SampleIngredients() {
       actions={
         editing ? (
           <div className="inline-group">
-            <TextButton onClick={() => { setDecisions(decisionsFrom(sampleCapture, checked)); setEditing(false) }}>Save</TextButton>
+            <TextButton onClick={() => { setDecisions(decisionsFrom(sampleCapture, decisions, checked)); setEditing(false) }}>Save</TextButton>
             <TextButton onClick={() => setEditing(false)}>Cancel</TextButton>
           </div>
         ) : (

@@ -132,7 +132,7 @@ function MomentPage({ id }) {
   async function saveIngredients() {
     setIngredientsSave('saving')
     try {
-      await updateCapture(id, { ingredients: decisionsFrom(item, checked) })
+      await updateCapture(id, { ingredients: decisionsFrom(item, item.ingredients, checked) })
       await kept.reload()
       setIngredientsSave('idle')
       setEditingIngredients(false)

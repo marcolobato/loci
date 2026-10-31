@@ -127,16 +127,26 @@ export function startChecklist(capture, decisions = {}) {
   return Object.fromEntries(ingredients.map((i) => [i.id, isPresent(evidence[i.id], decisions[i.id])]))
 }
 
-// Save: turn the ticks into choices to keep with the capture.
-//   ticked                 → "kept"
-//   unticked, but suggested → "dismissed", so Loci stops suggesting it
-//   unticked, never suggested → nothing to keep
-export function decisionsFrom(capture, checked) {
+// Save: turn the ticks into choices to keep with the capture. Only rows you
+// changed get a new choice, so "Kept." always means you did something:
+// a suggestion left ticked stays "Suggested from your note."
+//   not changed            → whatever it was before
+//   ticked on              → "kept" (shown as "Added by you." if Loci never suggested it)
+//   ticked off, suggested  → "dismissed", so Loci stops suggesting it
+//   ticked off, otherwise  → nothing to keep
+export function decisionsFrom(capture, decisions = {}, checked) {
   const evidence = suggest(capture)
-  const decisions = {}
+  const next = {}
   for (const i of ingredients) {
-    if (checked[i.id]) decisions[i.id] = 'kept'
-    else if (evidence[i.id]) decisions[i.id] = 'dismissed'
+    const before = isPresent(evidence[i.id], decisions[i.id])
+    const after = Boolean(checked[i.id])
+    if (after === before) {
+      if (decisions[i.id]) next[i.id] = decisions[i.id]
+    } else if (after) {
+      next[i.id] = 'kept'
+    } else if (evidence[i.id]) {
+      next[i.id] = 'dismissed'
+    }
   }
-  return decisions
+  return next
 }
