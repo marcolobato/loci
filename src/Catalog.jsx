@@ -88,6 +88,17 @@ function SampleIngredients() {
   )
 }
 
+// Every source at once, for reading: a note, a very quiet recording, a very
+// bright photo, and one ingredient in your own words.
+const sampleSources = {
+  note: 'The dome feels vast.',
+  seconds: 10,
+  loudness: 0.08,
+  brightness: 0.82,
+  ingredients: { objects: 'kept' },
+  ingredientWords: { objects: 'A bench worn smooth by visitors.' },
+}
+
 // A sample sheet: opens from a button, closes with Done (or Escape).
 function SampleSheet() {
   const [open, setOpen] = useState(false)
@@ -271,6 +282,10 @@ function Catalog() {
         <div className="stack-tight">
           <Caption>sample note · Pantheon, Rome</Caption>
           <SampleIngredients />
+        </div>
+        <div className="stack-tight">
+          <Caption>every source · note, quiet recording, bright photo, your words</Caption>
+          <Ingredients capture={sampleSources} />
         </div>
       </section>
 

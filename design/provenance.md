@@ -4,16 +4,19 @@ A running note on one pattern in Loci: showing where each ingredient on a moment
 
 ## The pattern
 
-Loci reads my note and suggests some of Zumthor's nine ingredients. It uses simple word matching, not AI, but to me it behaves like an AI suggestion. Each ingredient on a moment says how it got there:
+Loci reads my note, my recording and my photo, and suggests some of Zumthor's nine ingredients. It uses simple rules, not AI: matching words, and two measurements. To me it still behaves like an AI suggestion. Each ingredient on a moment says how it got there, strongest first:
 
 | Status | What happened | What I see |
 |---|---|---|
-| Suggested from your note. | Loci proposed it. I haven't touched it. | The sentence that matched, as a quote |
-| Kept. | Loci proposed it. I chose it. | The quote stays |
-| Added by you. | I ticked it myself. Nothing in my note matched. | No quote |
+| In your words. | I wrote, or rewrote, why it belongs. | My words, in quotation marks |
+| Kept. | Loci proposed it. I chose it. | Loci's evidence stays |
+| Added by you. | I ticked it myself and wrote nothing. | No words |
+| Suggested from your note. | Loci matched a sentence. I haven't touched it. | The sentence, in quotation marks |
+| Suggested from your recording. | The room was clearly quiet or loud. | Loci's words, no quotation marks |
+| Suggested from your photo. | The photo was clearly bright or dark. | Loci's words, no quotation marks |
 | (dismissed) | Loci proposed it. I unticked it. | Hidden, and never suggested again |
 
-Editing is a checklist of all nine. Suggestions start ticked, to save taps.
+Editing is a checklist of all nine. Suggestions start ticked, to save taps. Each ticked row opens "In your words", filled with Loci's sentence when there is one.
 
 ## The question
 
@@ -52,7 +55,40 @@ On pre-selected answers: Johnson and Goldstein, "Do Defaults Save Lives?" (Scien
 
 Sound can be suggested by the recording itself, when nothing in my note matches. Its label used to say "Suggested from your note.", which was untrue. Now it says "Suggested from your recording.", and its evidence ("10 seconds of sound, recorded here.") has no quotation marks. Quotation marks mean "you said this". Loci's own words don't get them.
 
+## Decision 4: I can correct the words, not just the ticks
+
+Testing on my phone, The Temperature of a Space picked up a sentence that was really about the objects around me. I could untick Temperature and tick Surrounding Objects, but I couldn't say why. Accept or reject wasn't enough: I needed to correct.
+
+Now each ticked row has a field, "In your words". It starts with Loci's sentence, so a small fix is quick, and it's empty for an ingredient Loci never suggested. What I write becomes the strongest status: "In your words." Microsoft calls this "support efficient correction" (G9).
+
+Two rules keep the label honest:
+
+- Loci's sentence left exactly as it was is still Loci's, so the row stays "Kept." or "Suggested". Only words I changed count as mine.
+- Empty words count as no words. The row is then "Added by you."
+
+The mismatch also had a plain cause. Loci matches the start of a word, so "heat" caught "heater", an object, and "hot" caught "hotel". Those two now match whole words only.
+
+## Decision 5: three sources, and only clear measurements
+
+The recording and the photo now suggest too. The recorder already measured loudness about 15 times a second to move the Shutter, so Loci keeps the average. A photo is shrunk to 32 × 32 and its pixels averaged for brightness. Nothing leaves the phone.
+
+A measurement only suggests when it's clear. Apple calls this a confidence threshold: below it, offer nothing.
+
+| Source | Suggests | When | Loci says |
+|---|---|---|---|
+| Recording | Sound | Average loudness under 0.15 | The recording is very quiet. |
+| Recording | Sound | Over 0.5 | The recording is loud. |
+| Photo | Light | Average brightness under 0.25 | The photo is very dark. |
+| Photo | Light | Over 0.7 | The photo is very bright. |
+
+My note always comes first. If I wrote about the light, my sentence is the evidence, not the photo's brightness.
+
+The cost: an ordinary room no longer suggests Sound at all. Before, every recording did ("10 seconds of sound, recorded here."). Moments recorded before this change keep that line, so nothing they showed disappears.
+
+The thresholds are first guesses. To watch: do they match what I hear and see?
+
 ## Still open
 
-- Should Loci say plainly that it matches words, so I don't trust it more than it deserves? (Microsoft G2)
-- Later, a photo or a recording might suggest an ingredient (brightness for Light, loudness for Sound). Each source may need its own label.
+- Should Loci say plainly that it matches words and measures, so I don't trust it more than it deserves? (Microsoft G2)
+- There's still no way to confirm a suggestion without touching it (Decision 1). Writing my own words now counts as touching it.
+- Are the four thresholds right? Tune them on the phone.

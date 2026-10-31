@@ -27,7 +27,7 @@ Each screen must name the pattern it shows. Keep this table current.
 | Record audio (10 s) with clear state: filling ring, disc follows the sound, hints to play the space | Capture sheet | done |
 | Take a photo (camera or library, shrunk to 1600px) | Capture sheet | done |
 | Short text note (typed, or spoken with the keyboard's dictation), plus a place | Capture sheet | done |
-| Nine ingredients (Zumthor): suggested from the note by word matching. Reading shows only this moment's ingredients, each saying where it came from ("Suggested from your note.", "Kept.", "Added by you."). Editing is a checklist of all nine; Save changes only the rows I changed, so "Kept" always means I chose it. Notes: `design/provenance.md` | Each moment | done |
+| Nine ingredients (Zumthor): suggested from three sources: the note (word matching), the recording (clearly quiet or loud suggests Sound) and the photo (clearly bright or dark suggests Light). Reading shows only this moment's ingredients, each saying where it came from ("In your words.", "Kept.", "Added by you.", "Suggested from your note / recording / photo."). Editing is a checklist of all nine; a ticked row opens "In your words" to keep or rewrite. Save changes only the rows I changed, so "Kept" always means I chose it. Rules and tests: `src/ingredients.js`, `tests/`. Notes: `design/provenance.md` | Each moment | done |
 | Edit by section: each section of a moment (the moment, its ingredients) has its own Edit, with Save and Cancel in the same place. One section at a time; nothing is kept until Save | Moment (`?moment=<id>`) | done |
 | Playback with scrubber (uses the phone's built-in player for now; custom scrubber still to design) | Each moment | in progress |
 | The five states (ideal, empty, error, partial, loading) | All | in progress |
@@ -85,7 +85,8 @@ Color: stone `#17353B` is the constant (dark background). Dark ground `#0B1A21`,
 5. Say "people," not "users."
 6. Nothing ships without a two-sentence why.
 7. Cut on Thursday, never on Friday.
-8. Every visible element is a reusable component in `src/components/`. It takes props, uses only tokens, and has no raw colors or pixel sizes. No one-off components. Run `npm run check:tokens` before each commit.
+8. Every visible element is a reusable component in `src/components/`. It takes props, uses only tokens, and has no raw colors or pixel sizes. No one-off components. Run `npm run check:tokens` and `npm test` before each commit.
+9. Rules that decide what people see (like which ingredient is suggested, and its status) live as plain functions with tests in `tests/` (Node's built-in test runner, no packages). Screens and components only draw the result.
 
 ## Public repo note
 Keep this repo free of private notes, interview names, and job-search details.
