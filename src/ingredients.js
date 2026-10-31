@@ -9,7 +9,8 @@
 // short is the one-word name used in the closed summary line.
 // about is a longer explanation, in our own words, for the About screen.
 // The word lists are a first draft: edit them freely. A word also matches
-// longer forms that start with it ("echo" matches "echoes").
+// longer forms that start with it ("echo" matches "echoes"). Add \\b after a
+// word to match only that word ("hot\\b" matches "hot", not "hotel").
 
 export const ingredients = [
   {
@@ -42,7 +43,9 @@ export const ingredients = [
     name: 'The Temperature of a Space',
     description: 'Thermal atmosphere: warmth, draught, stone chill, sun heat.',
     about: "Spaces have a temperature beyond the thermometer: the chill of stone, the warmth of wood, the heat stored in a sunny wall.",
-    words: ['warm', 'cold', 'cool', 'chill', 'damp', 'heat', 'hot', 'draught', 'draft', 'humid', 'steam', 'breeze', 'frost'],
+    // "hot\\b" and "heat\\b" match the whole word only, so "hotel" and
+    // "heater" (an object) don't count as temperature.
+    words: ['warm', 'cold', 'cool', 'chill', 'damp', 'heat\\b', 'heated', 'hot\\b', 'draught', 'draft', 'humid', 'steam', 'breeze', 'frost'],
   },
   {
     id: 'objects',
@@ -128,10 +131,16 @@ export function isPresent(evidence, decision) {
 //   text   – the words to show under it, or null
 //   quoted – true for your own words (they get quotation marks), false for
 //            Loci's (e.g. "10 seconds of sound, recorded here.")
-//   status – how it got here: "Kept.", "Added by you." or "Suggested from your note."
+//   status – how it got here, strongest first:
+//            "In your words."   you wrote (or rewrote) its words
+//            "Kept."            Loci suggested it, you chose it
+//            "Added by you."    you ticked it, with no words behind it
+//            "Suggested from your note." (or recording) – untouched
 export function describe(capture, ingredientId) {
   const evidence = suggest(capture)[ingredientId]
   const decision = (capture.ingredients || {})[ingredientId]
+  const yours = (capture.ingredientWords || {})[ingredientId]
+  if (yours) return { text: yours, quoted: true, status: 'In your words.' }
   if (decision === 'kept') {
     if (!evidence) return { text: null, quoted: false, status: 'Added by you.' }
     return { text: evidence.text, quoted: evidence.from === 'note', status: 'Kept.' }
@@ -142,31 +151,56 @@ export function describe(capture, ingredientId) {
 
 // Edit ingredients: the checklist starts with every present ingredient ticked.
 // Returns { [ingredientId]: true or false }.
-export function startChecklist(capture, decisions = {}) {
+export function startChecklist(capture) {
   const evidence = suggest(capture)
+  const decisions = capture.ingredients || {}
   return Object.fromEntries(ingredients.map((i) => [i.id, isPresent(evidence[i.id], decisions[i.id])]))
 }
 
-// Save: turn the ticks into choices to keep with the capture. Only rows you
-// changed get a new choice, so "Kept." always means you did something:
-// a suggestion left ticked stays "Suggested from your note."
-//   not changed            → whatever it was before
-//   ticked on              → "kept" (shown as "Added by you." if Loci never suggested it)
-//   ticked off, suggested  → "dismissed", so Loci stops suggesting it
-//   ticked off, otherwise  → nothing to keep
-export function decisionsFrom(capture, decisions = {}, checked) {
+// Edit ingredients: what each "In your words" field starts with.
+// Your saved words if you wrote some, else Loci's sentence, else empty.
+// Returns { [ingredientId]: text }.
+export function startWords(capture) {
   const evidence = suggest(capture)
-  const next = {}
+  const yours = capture.ingredientWords || {}
+  return Object.fromEntries(ingredients.map((i) => [i.id, yours[i.id] ?? evidence[i.id]?.text ?? '']))
+}
+
+// Are these words really yours? Trimmed; empty counts as none; Loci's own
+// sentence left as it was isn't yours either. Returns the words, or null.
+function yourWords(text, evidence) {
+  const trimmed = (text || '').trim()
+  if (!trimmed || trimmed === evidence?.text) return null
+  return trimmed
+}
+
+// Save: turn the ticks and the words into what's kept with the capture.
+// Returns { ingredients, ingredientWords }, ready for updateCapture.
+// Only rows you changed get a new choice, so "Kept." always means you did
+// something: a suggestion left ticked, with its words untouched, stays
+// "Suggested from your note."
+//   ticked on, or your own words written → "kept"
+//   not changed                           → whatever it was before
+//   ticked off, suggested                 → "dismissed", so Loci stops suggesting it
+//   ticked off, otherwise                 → nothing to keep
+// Words are kept only for ticked rows.
+export function choicesFrom(capture, checked, words = {}) {
+  const evidence = suggest(capture)
+  const decisions = capture.ingredients || {}
+  const nextDecisions = {}
+  const nextWords = {}
   for (const i of ingredients) {
     const before = isPresent(evidence[i.id], decisions[i.id])
     const after = Boolean(checked[i.id])
-    if (after === before) {
-      if (decisions[i.id]) next[i.id] = decisions[i.id]
-    } else if (after) {
-      next[i.id] = 'kept'
+    const written = after ? yourWords(words[i.id], evidence[i.id]) : null
+    if (written) nextWords[i.id] = written
+    if (after && (!before || written)) {
+      nextDecisions[i.id] = 'kept'
+    } else if (after === before) {
+      if (decisions[i.id]) nextDecisions[i.id] = decisions[i.id]
     } else if (evidence[i.id]) {
-      next[i.id] = 'dismissed'
+      nextDecisions[i.id] = 'dismissed'
     }
   }
-  return next
+  return { ingredients: nextDecisions, ingredientWords: nextWords }
 }

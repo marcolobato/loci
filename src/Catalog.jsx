@@ -25,7 +25,7 @@ import Moment from './components/Moment.jsx'
 import CaptureRow from './components/CaptureRow.jsx'
 import granite from './assets/granite-dusk.webp'
 import { afterglow } from './afterglow.js'
-import { startChecklist, decisionsFrom } from './ingredients.js'
+import { startChecklist, startWords, choicesFrom } from './ingredients.js'
 // Sample captures (placeholders), one per afterglow step.
 import sample from '../data/sample.json'
 
@@ -56,24 +56,29 @@ const shutterStates = [
 const sampleNote = 'Rain falling through the oculus. The stone is cold under my hand. Light moves across the floor. The dome feels vast, and I want to linger.'
 const sampleCapture = { note: sampleNote, seconds: 10 }
 function SampleIngredients() {
-  const [decisions, setDecisions] = useState({})
+  // What Save keeps: { ingredients, ingredientWords }, like a real moment.
+  const [saved, setSaved] = useState({})
   const [editing, setEditing] = useState(false)
   const [checked, setChecked] = useState({})
+  const [words, setWords] = useState({})
+  const capture = { ...sampleCapture, ...saved }
   return (
     <Ingredients
-      capture={{ ...sampleCapture, ingredients: decisions }}
+      capture={capture}
       editing={editing}
       checked={checked}
       onCheck={(id, value) => setChecked((current) => ({ ...current, [id]: value }))}
+      words={words}
+      onWords={(id, text) => setWords((current) => ({ ...current, [id]: text }))}
       actions={
         editing ? (
           <div className="inline-group">
-            <TextButton onClick={() => { setDecisions(decisionsFrom(sampleCapture, decisions, checked)); setEditing(false) }}>Save</TextButton>
+            <TextButton onClick={() => { setSaved(choicesFrom(capture, checked, words)); setEditing(false) }}>Save</TextButton>
             <TextButton onClick={() => setEditing(false)}>Cancel</TextButton>
           </div>
         ) : (
           <div>
-            <TextButton onClick={() => { setChecked(startChecklist(sampleCapture, decisions)); setEditing(true) }}>
+            <TextButton onClick={() => { setChecked(startChecklist(capture)); setWords(startWords(capture)); setEditing(true) }}>
               Edit ingredients
             </TextButton>
           </div>

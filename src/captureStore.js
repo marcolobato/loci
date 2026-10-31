@@ -5,6 +5,10 @@
 // A saved capture looks like:
 //   { id, capturedAt, seconds, audio: { bytes, type }, place, note, photo }
 // place, note and photo are added after recording (empty until then).
+// Added later, when you edit its ingredients (see src/ingredients.js):
+//   ingredients     – { [ingredientId]: "kept" | "dismissed" }
+//   ingredientWords – { [ingredientId]: your own words for it }
+// Older captures simply don't have these fields; everything reads them as empty.
 //
 // Functions (all return Promises, so use them with await):
 //   saveCapture({ audio, seconds })  – keep a new capture; returns it

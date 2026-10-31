@@ -4,7 +4,7 @@
 // Each test gives a rule a small sample moment and says what must come back.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { suggest, describe, startChecklist, decisionsFrom } from '../src/ingredients.js'
+import { suggest, describe, startChecklist, startWords, choicesFrom } from '../src/ingredients.js'
 
 const pantheon = {
   note: 'Rain falling through the oculus. The stone is cold under my hand. The dome feels vast, and I want to linger.',
@@ -59,22 +59,80 @@ test('a kept ingredient with nothing behind it says Added by you.', () => {
   assert.deepEqual(describe(capture, 'objects'), { text: null, quoted: false, status: 'Added by you.' })
 })
 
+test('your own words come first, in quotation marks, as In your words.', () => {
+  const capture = { ...pantheon, ingredients: { objects: 'kept' }, ingredientWords: { objects: 'A bench worn smooth by visitors.' } }
+  assert.deepEqual(describe(capture, 'objects'), { text: 'A bench worn smooth by visitors.', quoted: true, status: 'In your words.' })
+})
+
+// ---------- Word matching ----------
+
+test('"hotel" and "heater" are not temperature; "hot" and "heat" are', () => {
+  assert.equal(suggest({ note: 'The hotel lobby has a heater by the door.' }).temperature, null)
+  assert.equal(suggest({ note: 'It is hot in here.' }).temperature?.from, 'note')
+  assert.equal(suggest({ note: 'The heat rises from the floor.' }).temperature?.from, 'note')
+})
+
 // ---------- The checklist and Save ----------
 
 test('the checklist starts with present ingredients ticked and dismissed ones unticked', () => {
   const capture = { ...pantheon, ingredients: { temperature: 'dismissed' } }
-  const checked = startChecklist(capture, capture.ingredients)
+  const checked = startChecklist(capture)
   assert.equal(checked.material, true)
   assert.equal(checked.temperature, false)
   assert.equal(checked.objects, false)
 })
 
+test('each field starts with your words, else Loci’s sentence, else empty', () => {
+  const capture = { ...pantheon, ingredientWords: { sound: 'Drops echo in the dome.' } }
+  const words = startWords(capture)
+  assert.equal(words.sound, 'Drops echo in the dome.')
+  assert.equal(words.material, 'The stone is cold under my hand.')
+  assert.equal(words.objects, '')
+})
+
 test('Save with nothing changed stores nothing: suggestions stay suggestions', () => {
-  const checked = startChecklist(pantheon, {})
-  assert.deepEqual(decisionsFrom(pantheon, {}, checked), {})
+  const choices = choicesFrom(pantheon, startChecklist(pantheon), startWords(pantheon))
+  assert.deepEqual(choices, { ingredients: {}, ingredientWords: {} })
 })
 
 test('ticking on keeps it; ticking off a suggestion dismisses it', () => {
-  const checked = { ...startChecklist(pantheon, {}), objects: true, material: false }
-  assert.deepEqual(decisionsFrom(pantheon, {}, checked), { objects: 'kept', material: 'dismissed' })
+  const checked = { ...startChecklist(pantheon), objects: true, material: false }
+  assert.deepEqual(choicesFrom(pantheon, checked, startWords(pantheon)).ingredients, { objects: 'kept', material: 'dismissed' })
+})
+
+// ---------- Your words: the case that started this ----------
+// Temperature picked up a sentence that was really about objects. Untick
+// Temperature, tick Surrounding Objects, and say why in your own words.
+
+test('moving a sentence: untick one ingredient, tick another, write your words', () => {
+  const checked = { ...startChecklist(pantheon), temperature: false, objects: true }
+  const words = { ...startWords(pantheon), objects: '  A bench worn smooth by visitors.  ' }
+  const choices = choicesFrom(pantheon, checked, words)
+  assert.equal(choices.ingredients.temperature, 'dismissed')
+  assert.equal(choices.ingredients.objects, 'kept')
+  assert.equal(choices.ingredientWords.objects, 'A bench worn smooth by visitors.', 'trimmed')
+  assert.equal(describe({ ...pantheon, ...choices }, 'objects').status, 'In your words.')
+})
+
+test('rewriting a suggestion’s words keeps it, in your words', () => {
+  const words = { ...startWords(pantheon), material: 'Travertine, pale and cold.' }
+  const choices = choicesFrom(pantheon, startChecklist(pantheon), words)
+  assert.equal(choices.ingredients.material, 'kept')
+  assert.equal(choices.ingredientWords.material, 'Travertine, pale and cold.')
+})
+
+test('validation: empty words, or Loci’s sentence left as it was, are not stored as yours', () => {
+  const checked = { ...startChecklist(pantheon), objects: true }
+  const words = { ...startWords(pantheon), objects: '   ' }
+  const choices = choicesFrom(pantheon, checked, words)
+  assert.deepEqual(choices.ingredientWords, {})
+  assert.equal(describe({ ...pantheon, ...choices }, 'objects').status, 'Added by you.')
+})
+
+test('unticking an ingredient drops its words', () => {
+  const capture = { ...pantheon, ingredients: { objects: 'kept' }, ingredientWords: { objects: 'A bench.' } }
+  const checked = { ...startChecklist(capture), objects: false }
+  const choices = choicesFrom(capture, checked, startWords(capture))
+  assert.equal(choices.ingredientWords.objects, undefined)
+  assert.equal(choices.ingredients.objects, undefined)
 })

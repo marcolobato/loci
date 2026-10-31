@@ -2,6 +2,7 @@ import Label from './Label.jsx'
 import Note from './Note.jsx'
 import Caption from './Caption.jsx'
 import Checkbox from './Checkbox.jsx'
+import Field from './Field.jsx'
 import IngredientRow from './IngredientRow.jsx'
 import { ingredients, suggest, isPresent, describe } from '../ingredients.js'
 import './Ingredients.css'
@@ -10,19 +11,24 @@ import './Ingredients.css'
 // edits in place (pattern: edit by section).
 //   Reading: only the ingredients that are part of this moment, each saying
 //   how it got here (see describe in src/ingredients.js).
-//   Editing: all nine as a checklist, with the present ones ticked.
+//   Editing: all nine as a checklist, with the present ones ticked. A ticked
+//   row opens "In your words": Loci's sentence to keep or rewrite, or your
+//   own words for an ingredient Loci didn't suggest.
 // The header holds the section's buttons (actions), so Save and Cancel
 // appear exactly where Edit ingredients was.
 //
 // Props:
 //   capture   – the capture: its note, seconds of sound, and saved choices
-//               (capture.ingredients). When it has an id, each ingredient's
-//               title links to its own screen, and the way back leads here.
+//               (capture.ingredients, capture.ingredientWords). When it has
+//               an id, each ingredient's title links to its own screen, and
+//               the way back leads here.
 //   editing   – true to show the checklist
 //   checked   – while editing: { [ingredientId]: true or false }, the ticks
 //   onCheck   – while editing: called with (ingredientId, true or false)
+//   words     – while editing: { [ingredientId]: text }, the words being typed
+//   onWords   – while editing: called with (ingredientId, text)
 //   actions   – the buttons for the header: Edit ingredients, or Save and Cancel
-function Ingredients({ capture, editing = false, checked = {}, onCheck, actions }) {
+function Ingredients({ capture, editing = false, checked = {}, onCheck, words = {}, onWords, actions }) {
   const evidence = suggest(capture)
   const decisions = capture.ingredients || {}
   const present = ingredients.filter((i) => isPresent(evidence[i.id], decisions[i.id]))
@@ -48,8 +54,18 @@ function Ingredients({ capture, editing = false, checked = {}, onCheck, actions 
                 onChange={(value) => onCheck(ingredient.id, value)}
               >
                 <Caption>{ingredient.description}</Caption>
-                {/* Quotation marks only around your own words, not Loci's. */}
-                {evidence[ingredient.id] && (
+                {/* Ticked: the words are yours to keep or rewrite.
+                    Not ticked: what Loci found, to read. Quotation marks
+                    only around your own words, not Loci's. */}
+                {checked[ingredient.id] ? (
+                  <Field
+                    label="In your words"
+                    multiline
+                    value={words[ingredient.id] ?? ''}
+                    onChange={(text) => onWords(ingredient.id, text)}
+                    placeholder="Why it belongs to this place"
+                  />
+                ) : evidence[ingredient.id] && (
                   <Note tone="soft">
                     {evidence[ingredient.id].from === 'note' ? `“${evidence[ingredient.id].text}”` : evidence[ingredient.id].text}
                   </Note>

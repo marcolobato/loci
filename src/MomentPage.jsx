@@ -6,8 +6,8 @@
 // place, with Save and Cancel where Edit was. Nothing is kept until Save, so
 // Cancel puts everything back, the photo too.
 // Its nine ingredients edit the same way: "Edit ingredients" opens a checklist
-// of all nine, and Save keeps the whole set at once. Delete is at the very
-// bottom and asks first.
+// of all nine, each ticked one with "In your words" to keep or rewrite, and
+// Save keeps the whole set at once. Delete is at the very bottom and asks first.
 import { useEffect, useState } from 'react'
 import TopBar from './components/TopBar.jsx'
 import Heading from './components/Heading.jsx'
@@ -28,7 +28,7 @@ import { useMoments } from './useMoments.js'
 import { updateCapture, photoForStore } from './captureStore.js'
 import { shrinkPhoto } from './photo.js'
 import { afterglow } from './afterglow.js'
-import { startChecklist, decisionsFrom } from './ingredients.js'
+import { startChecklist, startWords, choicesFrom } from './ingredients.js'
 
 // Props:
 //   id – the moment's id, from the address (?moment=<id>)
@@ -108,15 +108,19 @@ function MomentPage({ id }) {
     setEditing(false)
   }
 
-  // Editing the ingredients section. The ticks are drafts: only Save keeps them.
+  // Editing the ingredients section. The ticks and the words are drafts:
+  // only Save keeps them.
   const [editingIngredients, setEditingIngredients] = useState(false)
   const [checked, setChecked] = useState({}) // { [ingredientId]: true or false }
+  const [words, setWords] = useState({}) // { [ingredientId]: text being typed }
   // Saving the ingredients: 'idle', 'saving' or 'failed'.
   const [ingredientsSave, setIngredientsSave] = useState('idle')
 
-  // Edit ingredients: tick what's part of the moment now.
+  // Edit ingredients: tick what's part of the moment now, and fill each
+  // "In your words" with your words or Loci's sentence.
   function startEditingIngredients() {
-    setChecked(startChecklist(item, item.ingredients))
+    setChecked(startChecklist(item))
+    setWords(startWords(item))
     setIngredientsSave('idle')
     setConfirming(false)
     setEditingIngredients(true)
@@ -127,12 +131,18 @@ function MomentPage({ id }) {
     setChecked((current) => ({ ...current, [ingredientId]: value }))
   }
 
-  // Save: keep the whole set in one go, read the moment again, and leave the
-  // checklist. If it fails, stay in the checklist so no tick is lost.
+  // Type in one ingredient's "In your words" (a draft, not kept yet).
+  function write(ingredientId, text) {
+    setWords((current) => ({ ...current, [ingredientId]: text }))
+  }
+
+  // Save: keep the ticks and the words in one go, read the moment again, and
+  // leave the checklist. If it fails, stay in the checklist so nothing typed
+  // is lost.
   async function saveIngredients() {
     setIngredientsSave('saving')
     try {
-      await updateCapture(id, { ingredients: decisionsFrom(item, item.ingredients, checked) })
+      await updateCapture(id, choicesFrom(item, checked, words))
       await kept.reload()
       setIngredientsSave('idle')
       setEditingIngredients(false)
@@ -255,6 +265,8 @@ function MomentPage({ id }) {
               editing={editingIngredients}
               checked={checked}
               onCheck={check}
+              words={words}
+              onWords={write}
               actions={
                 editingIngredients ? (
                   <div className="stack-tight">
