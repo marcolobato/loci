@@ -61,8 +61,9 @@ function Home() {
   return (
     <>
       {/* inert: while the splash covers Capture, the keyboard and screen
-          readers skip it, so nobody lands on a screen they can't see. */}
-      <div inert={splash}>
+          readers skip it, so nobody lands on a screen they can't see.
+          home: full height, so Capture's pinned bar stays put (see index.css). */}
+      <div className="home" inert={splash}>
         <Capture />
       </div>
       {splash && <Splash onDone={splashDone} />}

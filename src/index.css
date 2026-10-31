@@ -147,8 +147,18 @@ h2 {
 }
 
 /*
+  Home: the box App puts around Capture (to switch it off under the splash).
+  It must be the full height too: a screen-with-bar inside it is 100% of
+  this box, and a box with no height would let Capture grow as tall as its
+  list, so the whole page, bar and all, scrolled.
+*/
+.home {
+  height: 100%;
+}
+
+/*
   Screen with a bar: a TopBar pinned at the top, and a body that scrolls
-  under it (About, a moment). Two rows:
+  under it (About, a moment, Capture). Two rows:
     1. the TopBar, only as tall as it needs to be
     2. the body, which takes all the room left
   The frame (#root, above) is exactly the screen's height, so height: 100%
