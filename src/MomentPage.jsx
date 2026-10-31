@@ -2,10 +2,12 @@
 // when, how it felt, and its sound. Opened by tapping a moment in the list
 // on Capture; the address is ?moment=<id>.
 // The top bar (title and X) stays put; the moment scrolls under it.
-// You can add a photo here, or change it, any time after capturing.
+// Pattern: edit by section. "Edit moment" opens the photo, place and note in
+// place, with Save and Cancel where Edit was. Nothing is kept until Save, so
+// Cancel puts everything back, the photo too.
 // Its nine ingredients are here too: Loci suggests them from the note, and you
 // keep or dismiss each one. Delete is at the very bottom and asks first.
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import TopBar from './components/TopBar.jsx'
 import Heading from './components/Heading.jsx'
 import Note from './components/Note.jsx'
@@ -14,6 +16,7 @@ import Moment from './components/Moment.jsx'
 import Photo from './components/Photo.jsx'
 import AudioClip from './components/AudioClip.jsx'
 import PhotoPicker from './components/PhotoPicker.jsx'
+import Field from './components/Field.jsx'
 import Ingredients from './components/Ingredients.jsx'
 import Notice from './components/Notice.jsx'
 import TextButton from './components/TextButton.jsx'
@@ -36,21 +39,71 @@ function MomentPage({ id }) {
   // When it was captured, in words ("3 hr ago") and exactly (for <time>).
   const when = item ? afterglow(item.minutesAgo) : null
 
-  // The photo: 'idle', 'saving' or 'failed'.
+  // Editing the moment section. While editing, the place and note being typed
+  // are drafts: only Save keeps them.
+  const [editing, setEditing] = useState(false)
+  const [place, setPlace] = useState('')
+  const [note, setNote] = useState('')
+  // A photo picked while editing, not kept yet: { file, link } or null.
+  const [newPhoto, setNewPhoto] = useState(null)
+  // Preparing the picked photo: 'idle', 'shrinking' or 'failed'.
   const [photoState, setPhotoState] = useState('idle')
+  // Saving: 'idle', 'saving' or 'failed'.
+  const [saveState, setSaveState] = useState('idle')
 
-  // Same steps as on the capture sheet: shrink the chosen photo, keep it with
-  // the moment, then read the moment again so the new photo shows up.
-  async function addPhoto(file) {
-    setPhotoState('saving')
+  // When the picked photo is replaced or dropped, free its memory.
+  useEffect(() => {
+    return () => {
+      if (newPhoto) URL.revokeObjectURL(newPhoto.link)
+    }
+  }, [newPhoto])
+
+  // Edit moment: fill the drafts with what's there now.
+  function startEditing() {
+    setPlace(item.place || '')
+    setNote(item.note || '')
+    setNewPhoto(null)
+    setPhotoState('idle')
+    setSaveState('idle')
+    setConfirming(false)
+    setEditing(true)
+  }
+
+  // Shrink the chosen photo (like the capture sheet does) and show it,
+  // but don't keep it until Save.
+  async function pickPhoto(file) {
+    setPhotoState('shrinking')
     try {
       const small = await shrinkPhoto(file)
-      await updateCapture(id, { photo: await photoForStore(small) })
-      await kept.reload()
+      setNewPhoto({ file: small, link: URL.createObjectURL(small) })
       setPhotoState('idle')
     } catch {
       setPhotoState('failed')
     }
+  }
+
+  // Save: keep the place, note and any new photo in one go, read the moment
+  // again so the page shows them, and leave edit mode. If it fails, stay in
+  // edit mode so nothing typed is lost.
+  async function save() {
+    setSaveState('saving')
+    try {
+      const changes = { place: place.trim(), note: note.trim() }
+      if (newPhoto) changes.photo = await photoForStore(newPhoto.file)
+      await updateCapture(id, changes)
+      await kept.reload()
+      setNewPhoto(null)
+      setSaveState('idle')
+      setEditing(false)
+    } catch {
+      setSaveState('failed')
+    }
+  }
+
+  // Cancel: drop the drafts. The moment is as it was.
+  function cancel() {
+    setNewPhoto(null)
+    setEditing(false)
   }
 
   // Keep or dismiss an ingredient. It shows straight away (useMoments); if
@@ -106,29 +159,60 @@ function MomentPage({ id }) {
             Any part that's missing (no photo, no place, no note) is left out. */}
         {item && (
           <div className="stack-loose">
-            <div className="stack-normal">
-              {item.photoLink && (
-                <Photo src={item.photoLink} alt={item.place ? `Photo of ${item.place}` : 'Photo of this moment'} />
-              )}
-              <div className="stack-tight">
-                <Heading size="title">{item.place || `${item.seconds} s of sound`}</Heading>
-                {/* <time> carries the exact moment for screen readers and other
-                    tools, even when the visible text says "3 hr ago". */}
-                <Caption><time dateTime={when.iso}>{when.label}</time></Caption>
-              </div>
-              {item.note && <Moment minutesAgo={item.minutesAgo}>{item.note}</Moment>}
-
-              {/* Add a photo now, or swap the one you have. While it is being
-                  kept, a short line replaces the button. */}
-              <div role="status">
-                {photoState === 'saving' ? (
-                  <Caption>Keeping the photo…</Caption>
-                ) : (
-                  <PhotoPicker label={item.photoLink ? 'Change the photo' : 'Add a photo'} onPick={addPhoto} />
+            {editing ? (
+              // Editing the moment section: the photo (the newly picked one,
+              // if any), then the same two fields as the capture sheet.
+              <div className="stack-normal">
+                {(newPhoto || item.photoLink) && (
+                  <Photo src={newPhoto ? newPhoto.link : item.photoLink} alt="Photo of this moment" />
                 )}
+                <div role="status">
+                  {photoState === 'shrinking' ? (
+                    <Caption>Preparing the photo…</Caption>
+                  ) : (
+                    <PhotoPicker
+                      label={newPhoto || item.photoLink ? 'Change the photo' : 'Add a photo'}
+                      onPick={pickPhoto}
+                    />
+                  )}
+                </div>
+                {photoState === 'failed' && <Notice>Couldn’t use that photo. Try another one.</Notice>}
+                <Field label="Where are you?" value={place} onChange={setPlace} placeholder="A street, a room, a ruin" />
+                <Field
+                  label="What does it feel like?"
+                  multiline
+                  value={note}
+                  onChange={setNote}
+                  placeholder="Light, sound, temperature, what's close to you"
+                  hint="Tip: tap the microphone on the keyboard to say it instead."
+                />
+                <div role="status">
+                  {saveState === 'failed' && <Notice>Couldn’t save. Your changes are still here. Try Save again.</Notice>}
+                </div>
+                {/* Save and Cancel sit where Edit moment was. */}
+                <div className="inline-group">
+                  <TextButton onClick={save}>{saveState === 'saving' ? 'Saving…' : 'Save'}</TextButton>
+                  <TextButton onClick={cancel}>Cancel</TextButton>
+                </div>
               </div>
-              {photoState === 'failed' && <Notice>Couldn’t keep the photo. Try another one.</Notice>}
-            </div>
+            ) : (
+              // Reading: the moment as kept, and the way into editing it.
+              <div className="stack-normal">
+                {item.photoLink && (
+                  <Photo src={item.photoLink} alt={item.place ? `Photo of ${item.place}` : 'Photo of this moment'} />
+                )}
+                <div className="stack-tight">
+                  <Heading size="title">{item.place || `${item.seconds} s of sound`}</Heading>
+                  {/* <time> carries the exact moment for screen readers and other
+                      tools, even when the visible text says "3 hr ago". */}
+                  <Caption><time dateTime={when.iso}>{when.label}</time></Caption>
+                </div>
+                {item.note && <Moment minutesAgo={item.minutesAgo}>{item.note}</Moment>}
+                <div>
+                  <TextButton onClick={startEditing}>Edit moment</TextButton>
+                </div>
+              </div>
+            )}
 
             <AudioClip src={item.url} label={`Play ${item.seconds} seconds of sound`} />
 
@@ -144,7 +228,8 @@ function MomentPage({ id }) {
               </div>
             </div>
 
-            {confirming ? (
+            {/* Delete hides while editing, so it can't be tapped by mistake. */}
+            {editing ? null : confirming ? (
               <div className="stack-tight">
                 <Note>Delete this moment? This can’t be undone.</Note>
                 {deleteFailed && <Notice>Couldn’t delete it. Try again.</Notice>}
