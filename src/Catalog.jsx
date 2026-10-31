@@ -8,6 +8,7 @@ import { useState } from 'react'
 import Label from './components/Label.jsx'
 import Note from './components/Note.jsx'
 import Field from './components/Field.jsx'
+import Checkbox from './components/Checkbox.jsx'
 import Ingredients from './components/Ingredients.jsx'
 import Photo from './components/Photo.jsx'
 import Sheet from './components/Sheet.jsx'
@@ -109,6 +110,27 @@ function SampleFields() {
           placeholder="Light, sound, temperature, what's close to you"
           hint="Tip: tap the microphone on the keyboard to say it instead."
         />
+      </div>
+    </>
+  )
+}
+
+// Two checkboxes: one ticked, one not. Tapping works; nothing is saved.
+function SampleCheckboxes() {
+  const [thresholds, setThresholds] = useState(true)
+  const [light, setLight] = useState(false)
+  return (
+    <>
+      <div className="stack-tight">
+        <Caption>ticked, with lines under the name</Caption>
+        <Checkbox label="Tension Between Inside and Outside" checked={thresholds} onChange={setThresholds}>
+          <Caption>Thresholds, portals, frames, and boundaries.</Caption>
+          <Note tone="soft">“Rain falling through the oculus.”</Note>
+        </Checkbox>
+      </div>
+      <div className="stack-tight">
+        <Caption>not ticked, name only</Caption>
+        <Checkbox label="The Light on Things" checked={light} onChange={setLight} />
       </div>
     </>
   )
@@ -273,6 +295,12 @@ function Catalog() {
       <section className="stack-loose">
         <Label as="h2">Field</Label>
         <SampleFields />
+      </section>
+
+      {/* Checkbox: ticked and not ticked. Tap the box or the name. */}
+      <section className="stack-loose">
+        <Label as="h2">Checkbox</Label>
+        <SampleCheckboxes />
       </section>
 
       {/* UpdateBanner: normally floats at the top of the screen; here it

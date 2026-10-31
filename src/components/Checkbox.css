@@ -1,0 +1,56 @@
+/* The words line up on the left, even on a centered screen. */
+.checkbox {
+  text-align: left;
+}
+
+/* Box and name side by side. The whole row is the tap area, at least 48px. */
+.checkbox__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-s);
+  min-height: var(--size-hit-target);
+  cursor: pointer;
+}
+
+/* The box you see: icon size, never squeezed by a long name. */
+.checkbox__box {
+  flex-shrink: 0;
+  width: var(--size-icon);
+  height: var(--size-icon);
+}
+
+/* Not ticked: an empty square in the muted text color. */
+.checkbox__frame {
+  fill: none;
+  stroke: var(--text-muted);
+}
+.checkbox__tick {
+  stroke: var(--bg-deep);
+  visibility: hidden;
+}
+
+/* Ticked: the square fills with cold light and the tick appears in dark
+   stone. The real checkbox is hidden, so its state is read with :checked
+   and shown on the drawing right after it (+). */
+.checkbox__input:checked + .checkbox__box .checkbox__frame {
+  fill: var(--accent-cold);
+  stroke: var(--accent-cold);
+}
+.checkbox__input:checked + .checkbox__box .checkbox__tick {
+  visibility: visible;
+}
+
+/* Keyboard focus: the same cold ring as every other control, on the box. */
+.checkbox__input:focus-visible + .checkbox__box {
+  outline: var(--size-focus-ring) solid var(--focus);
+  outline-offset: var(--size-focus-ring);
+}
+
+.checkbox__label {
+  color: var(--text-strong);
+}
+
+/* Lines under the name start where the name starts: past the box and the gap. */
+.checkbox__more {
+  padding-left: calc(var(--size-icon) + var(--space-s));
+}
